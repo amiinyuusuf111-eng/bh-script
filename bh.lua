@@ -1,10 +1,10 @@
 --[[
-    Be Halal | v3.6
-    client side  ·  by EZ_NOOB11220
+    Be Halal | v3.7
+    client side    by EZ_NOOB11220
 
     Modules:
-      Janitor · Utils · Theme · Translations · Audio · Skin · Hide
-      Dances · Targets · Lists · Saves · UI kit · Pages · Main window · Lifecycle · Boot
+      Janitor  Utils  Theme  Translations  Audio  Skin  Hide
+      Dances  Targets  Lists  Saves  UI kit  Pages  Main window  Lifecycle  Boot
 ]]
 
 local Players      = game:GetService("Players")
@@ -23,7 +23,7 @@ pcall(function() CoreGui = game:GetService("CoreGui") end)
 local LP = Players.LocalPlayer
 local PG = LP:WaitForChild("PlayerGui")
 local CREATOR_NAME = "EZ_NOOB11220"
-local VERSION = "3.6"
+local VERSION = "3.7"
 
 local ENV = (getgenv and getgenv()) or _G
 if ENV.__BeHalal and type(ENV.__BeHalal.destroy) == "function" then
@@ -138,34 +138,34 @@ local Theme = {
 
 local T = {
     ar = {
-        title = "بي حلال", subtitle = "أدوات إسلامية للسيرفر", footer = "بي حلال",
-        navHome = "الرئيسية", navMusic = "سجل الموسيقى", navDances = "سجل الرقصات", navPlayers = "اللاعبون", navSaves = "الحفظ",
-        statPlayers = "لاعبون", statSounds = "أصوات مسجّلة", statSaves = "حفظات",
-        secAudio = "الصوت", secAppearance = "المظهر", secMotion = "الحركة",
-        muteMusic = "كتم الموسيقى", muteMusicD = "يكتم موسيقى الخلفية في السيرفر",
-        noobSkin = "سكنات نوب", noobSkinD = "يعرض اللاعبين الآخرين بمظهر النوب",
-        stopDance = "إيقاف الرقصات", stopDanceD = "يوقف رقصات اللاعبين الآخرين",
-        broadDance = "كشف شامل للرقصات", broadDanceD = "يوقف أي حركة Action من اللعبة، وقد يشمل حركات الماب",
-        catMusic = "موسيقى", catAmbient = "أجواء", catSfx = "مؤثرات", catUi = "واجهة", catOther = "أخرى",
-        logOn = "زر كتم الموسيقى: مفعّل", logOff = "زر كتم الموسيقى: معطّل",
-        logHint = "الأصوات اللي يكتمها زر كتم الموسيقى. استمع للصوت لحاله، أو استثنِه من الكتم.",
-        logSearch = "ابحث في السجل", clear = "مسح", refresh = "تحديث", emptyLog = "ما اشتغل أي صوت بعد",
-        listen = "استمع", stop = "إيقاف", stopListening = "إيقاف الاستماع", loop = "تكرار",
-        exempt = "مستثنى", willMute = "يُكتم",
-        stExempt = "مستثنى من الكتم", stByButton = "مكتوم بالزر", stWillMute = "يُكتم لما تفعّل الزر",
-        stPlaying = "شغّال", stIdle = "متوقف", stGone = "اختفى من الماب",
-        animHint = "رقصات اللاعبين وحركات اللعبة تظهر هنا. اضغط على الزر عشان تحجب أو تسمح.",
-        animAll = "الكل", animPlayers = "رقصات اللاعبين", animGame = "من اللعبة",
-        tagPlayer = "رقصة لاعب", tagGame = "من اللعبة", tagSaved = "محفوظة",
-        animAllowed = "مسموحة", animBlocked = "محجوبة", emptyAnim = "ما انرصدت أي حركة بعد",
-        segOnline = "المتصلون", segAllowed = "المسموحون", segBlocked = "المحجوبون",
-        searchPlayer = "ابحث عن لاعب", addPlayer = "اسم اللاعب", add = "إضافة",
-        allow = "سماح", block = "حجب", remove = "إزالة", restore = "استعادة",
-        noPlayers = "لا يوجد لاعبون", empty = "القائمة فارغة", inView = "في مرمى نظرك", noneInView = "لا أحد أمامك", creator = "المطوّر",
-        saveNamePh = "اسم الحفظ", saveNow = "حفظ", loadShort = "تحميل", delete = "حذف",
-        saveHint = "يحفظ كل إعداداتك الحالية (الأزرار والقوائم والأصوات) بالاسم اللي تختاره.",
-        emptySaves = "ما فيه حفظ بعد", saved = "تم الحفظ", thisMap = "هذا الماب",
-        resetAll = "مسح كل البيانات", resetConfirm = "اضغط مرة ثانية للتأكيد",
+        title = "\u{628}\u{64A} \u{62D}\u{644}\u{627}\u{644}", subtitle = "\u{623}\u{62F}\u{648}\u{627}\u{62A} \u{625}\u{633}\u{644}\u{627}\u{645}\u{64A}\u{629} \u{644}\u{644}\u{633}\u{64A}\u{631}\u{641}\u{631}", footer = "\u{628}\u{64A} \u{62D}\u{644}\u{627}\u{644}",
+        navHome = "\u{627}\u{644}\u{631}\u{626}\u{64A}\u{633}\u{64A}\u{629}", navMusic = "\u{633}\u{62C}\u{644} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}", navDances = "\u{633}\u{62C}\u{644} \u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A}", navPlayers = "\u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{648}\u{646}", navSaves = "\u{627}\u{644}\u{62D}\u{641}\u{638}",
+        statPlayers = "\u{644}\u{627}\u{639}\u{628}\u{648}\u{646}", statSounds = "\u{623}\u{635}\u{648}\u{627}\u{62A} \u{645}\u{633}\u{62C}\u{651}\u{644}\u{629}", statSaves = "\u{62D}\u{641}\u{638}\u{627}\u{62A}",
+        secAudio = "\u{627}\u{644}\u{635}\u{648}\u{62A}", secAppearance = "\u{627}\u{644}\u{645}\u{638}\u{647}\u{631}", secMotion = "\u{627}\u{644}\u{62D}\u{631}\u{643}\u{629}",
+        muteMusic = "\u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}", muteMusicD = "\u{64A}\u{643}\u{62A}\u{645} \u{645}\u{648}\u{633}\u{64A}\u{642}\u{649} \u{627}\u{644}\u{62E}\u{644}\u{641}\u{64A}\u{629} \u{641}\u{64A} \u{627}\u{644}\u{633}\u{64A}\u{631}\u{641}\u{631}",
+        noobSkin = "\u{633}\u{643}\u{646}\u{627}\u{62A} \u{646}\u{648}\u{628}", noobSkinD = "\u{64A}\u{639}\u{631}\u{636} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646} \u{627}\u{644}\u{622}\u{62E}\u{631}\u{64A}\u{646} \u{628}\u{645}\u{638}\u{647}\u{631} \u{627}\u{644}\u{646}\u{648}\u{628}",
+        stopDance = "\u{625}\u{64A}\u{642}\u{627}\u{641} \u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A}", stopDanceD = "\u{64A}\u{648}\u{642}\u{641} \u{631}\u{642}\u{635}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646} \u{627}\u{644}\u{622}\u{62E}\u{631}\u{64A}\u{646} (\u{627}\u{644}\u{625}\u{64A}\u{645}\u{648}\u{62A}\u{627}\u{62A} \u{648}\u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A})",
+        broadDance = "\u{625}\u{64A}\u{642}\u{627}\u{641} \u{634}\u{627}\u{645}\u{644}", broadDanceD = "\u{64A}\u{648}\u{642}\u{641} \u{631}\u{642}\u{635}\u{627}\u{62A} \u{648}\u{62D}\u{631}\u{643}\u{627}\u{62A} \u{627}\u{644}\u{645}\u{627}\u{628} (Action) \u{627}\u{644}\u{644}\u{64A} \u{645}\u{648} \u{645}\u{646} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646}",
+        catMusic = "\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}", catAmbient = "\u{623}\u{62C}\u{648}\u{627}\u{621}", catSfx = "\u{645}\u{624}\u{62B}\u{631}\u{627}\u{62A}", catUi = "\u{648}\u{627}\u{62C}\u{647}\u{629}", catOther = "\u{623}\u{62E}\u{631}\u{649}",
+        logOn = "\u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}: \u{645}\u{641}\u{639}\u{651}\u{644}", logOff = "\u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}: \u{645}\u{639}\u{637}\u{651}\u{644}",
+        logHint = "\u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{64A} \u{64A}\u{643}\u{62A}\u{645}\u{647}\u{627} \u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}. \u{627}\u{633}\u{62A}\u{645}\u{639} \u{644}\u{644}\u{635}\u{648}\u{62A} \u{644}\u{62D}\u{627}\u{644}\u{647}\u{60C} \u{623}\u{648} \u{627}\u{633}\u{62A}\u{62B}\u{646}\u{650}\u{647} \u{645}\u{646} \u{627}\u{644}\u{643}\u{62A}\u{645}.",
+        logSearch = "\u{627}\u{628}\u{62D}\u{62B} \u{641}\u{64A} \u{627}\u{644}\u{633}\u{62C}\u{644}", clear = "\u{645}\u{633}\u{62D}", refresh = "\u{62A}\u{62D}\u{62F}\u{64A}\u{62B}", emptyLog = "\u{645}\u{627} \u{627}\u{634}\u{62A}\u{63A}\u{644} \u{623}\u{64A} \u{635}\u{648}\u{62A} \u{628}\u{639}\u{62F}",
+        listen = "\u{627}\u{633}\u{62A}\u{645}\u{639}", stop = "\u{625}\u{64A}\u{642}\u{627}\u{641}", stopListening = "\u{625}\u{64A}\u{642}\u{627}\u{641} \u{627}\u{644}\u{627}\u{633}\u{62A}\u{645}\u{627}\u{639}", loop = "\u{62A}\u{643}\u{631}\u{627}\u{631}",
+        exempt = "\u{645}\u{633}\u{62A}\u{62B}\u{646}\u{649}", willMute = "\u{64A}\u{64F}\u{643}\u{62A}\u{645}",
+        stExempt = "\u{645}\u{633}\u{62A}\u{62B}\u{646}\u{649} \u{645}\u{646} \u{627}\u{644}\u{643}\u{62A}\u{645}", stByButton = "\u{645}\u{643}\u{62A}\u{648}\u{645} \u{628}\u{627}\u{644}\u{632}\u{631}", stWillMute = "\u{64A}\u{64F}\u{643}\u{62A}\u{645} \u{644}\u{645}\u{627} \u{62A}\u{641}\u{639}\u{651}\u{644} \u{627}\u{644}\u{632}\u{631}",
+        stPlaying = "\u{634}\u{63A}\u{651}\u{627}\u{644}", stIdle = "\u{645}\u{62A}\u{648}\u{642}\u{641}", stGone = "\u{627}\u{62E}\u{62A}\u{641}\u{649} \u{645}\u{646} \u{627}\u{644}\u{645}\u{627}\u{628}",
+        animHint = "\u{631}\u{642}\u{635}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646} \u{648}\u{62D}\u{631}\u{643}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629} \u{62A}\u{638}\u{647}\u{631} \u{647}\u{646}\u{627}. \u{627}\u{636}\u{63A}\u{637} \u{639}\u{644}\u{649} \u{627}\u{644}\u{632}\u{631} \u{639}\u{634}\u{627}\u{646} \u{62A}\u{62D}\u{62C}\u{628} \u{623}\u{648} \u{62A}\u{633}\u{645}\u{62D}.",
+        animAll = "\u{627}\u{644}\u{643}\u{644}", animPlayers = "\u{631}\u{642}\u{635}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646}", animGame = "\u{645}\u{646} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629}",
+        tagPlayer = "\u{631}\u{642}\u{635}\u{629} \u{644}\u{627}\u{639}\u{628}", tagGame = "\u{645}\u{646} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629}", tagSaved = "\u{645}\u{62D}\u{641}\u{648}\u{638}\u{629}",
+        animAllowed = "\u{645}\u{633}\u{645}\u{648}\u{62D}\u{629}", animBlocked = "\u{645}\u{62D}\u{62C}\u{648}\u{628}\u{629}", emptyAnim = "\u{645}\u{627} \u{627}\u{646}\u{631}\u{635}\u{62F}\u{62A} \u{623}\u{64A} \u{62D}\u{631}\u{643}\u{629} \u{628}\u{639}\u{62F}",
+        segOnline = "\u{627}\u{644}\u{645}\u{62A}\u{635}\u{644}\u{648}\u{646}", segAllowed = "\u{627}\u{644}\u{645}\u{633}\u{645}\u{648}\u{62D}\u{648}\u{646}", segBlocked = "\u{627}\u{644}\u{645}\u{62D}\u{62C}\u{648}\u{628}\u{648}\u{646}",
+        searchPlayer = "\u{627}\u{628}\u{62D}\u{62B} \u{639}\u{646} \u{644}\u{627}\u{639}\u{628}", addPlayer = "\u{627}\u{633}\u{645} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}", add = "\u{625}\u{636}\u{627}\u{641}\u{629}",
+        allow = "\u{633}\u{645}\u{627}\u{62D}", block = "\u{62D}\u{62C}\u{628}", remove = "\u{625}\u{632}\u{627}\u{644}\u{629}", restore = "\u{627}\u{633}\u{62A}\u{639}\u{627}\u{62F}\u{629}",
+        noPlayers = "\u{644}\u{627} \u{64A}\u{648}\u{62C}\u{62F} \u{644}\u{627}\u{639}\u{628}\u{648}\u{646}", empty = "\u{627}\u{644}\u{642}\u{627}\u{626}\u{645}\u{629} \u{641}\u{627}\u{631}\u{63A}\u{629}", inView = "\u{641}\u{64A} \u{645}\u{631}\u{645}\u{649} \u{646}\u{638}\u{631}\u{643}", noneInView = "\u{644}\u{627} \u{623}\u{62D}\u{62F} \u{623}\u{645}\u{627}\u{645}\u{643}", creator = "\u{627}\u{644}\u{645}\u{637}\u{648}\u{651}\u{631}",
+        saveNamePh = "\u{627}\u{633}\u{645} \u{627}\u{644}\u{62D}\u{641}\u{638}", saveNow = "\u{62D}\u{641}\u{638}", loadShort = "\u{62A}\u{62D}\u{645}\u{64A}\u{644}", delete = "\u{62D}\u{630}\u{641}",
+        saveHint = "\u{64A}\u{62D}\u{641}\u{638} \u{643}\u{644} \u{625}\u{639}\u{62F}\u{627}\u{62F}\u{627}\u{62A}\u{643} \u{627}\u{644}\u{62D}\u{627}\u{644}\u{64A}\u{629} (\u{627}\u{644}\u{623}\u{632}\u{631}\u{627}\u{631} \u{648}\u{627}\u{644}\u{642}\u{648}\u{627}\u{626}\u{645} \u{648}\u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A}) \u{628}\u{627}\u{644}\u{627}\u{633}\u{645} \u{627}\u{644}\u{644}\u{64A} \u{62A}\u{62E}\u{62A}\u{627}\u{631}\u{647}.",
+        emptySaves = "\u{645}\u{627} \u{641}\u{64A}\u{647} \u{62D}\u{641}\u{638} \u{628}\u{639}\u{62F}", saved = "\u{62A}\u{645} \u{627}\u{644}\u{62D}\u{641}\u{638}", thisMap = "\u{647}\u{630}\u{627} \u{627}\u{644}\u{645}\u{627}\u{628}",
+        resetAll = "\u{645}\u{633}\u{62D} \u{643}\u{644} \u{627}\u{644}\u{628}\u{64A}\u{627}\u{646}\u{627}\u{62A}", resetConfirm = "\u{627}\u{636}\u{63A}\u{637} \u{645}\u{631}\u{629} \u{62B}\u{627}\u{646}\u{64A}\u{629} \u{644}\u{644}\u{62A}\u{623}\u{643}\u{64A}\u{62F}",
     },
     en = {
         title = "Be Halal", subtitle = "Islamic server tools", footer = "Be Halal",
@@ -174,8 +174,8 @@ local T = {
         secAudio = "Audio", secAppearance = "Appearance", secMotion = "Motion",
         muteMusic = "Mute Music", muteMusicD = "Silences background music on the server",
         noobSkin = "Noob Skins", noobSkinD = "Shows other players with the noob look",
-        stopDance = "Stop Dances", stopDanceD = "Stops dance animations of other players",
-        broadDance = "Broad Dance Detection", broadDanceD = "Also stops any Action animation from the game, may include map animations",
+        stopDance = "Stop Dances", stopDanceD = "Stops emotes and dances of other players",
+        broadDance = "Stop Map Dances", broadDanceD = "Stops dance/Action animations that come from the map, not from players",
         catMusic = "Music", catAmbient = "Ambient", catSfx = "Effects", catUi = "Interface", catOther = "Other",
         logOn = "Mute Music button: on", logOff = "Mute Music button: off",
         logHint = "Sounds caught by the Mute Music button. Listen to one alone, or exempt it from muting.",
@@ -686,6 +686,9 @@ function Hide.restore(c)
 end
 
 ---------------------------------------------------------------- Dances
+-- "Stop Dances"     -> stops dances/emotes of other players   (kind = "dance")
+-- "Stop Map Dances" -> stops Action animations from the map   (kind = "game")
+-- manual block/allow from the dance log always wins
 local Dances = {}
 local DANCE_IDS = {
     ["507771019"]=true, ["507776043"]=true, ["507777268"]=true, ["507777826"]=true, ["507771013"]=true,
@@ -700,9 +703,11 @@ local emoteCache, emoteFail = {}, {}
 local seenTracks = setmetatable({}, {__mode = "k"})
 Dances.log = {}   -- [key] = {key, name, kind = "dance"|"game", who, n, t}
 
-function Dances.isEmoteAsset(num)
+-- true = catalog emote, false = normal/custom animation, nil = still checking
+function Dances.emoteState(num)
     local c = emoteCache[num]
-    if c ~= nil then return c == true end
+    if c == true or c == false then return c end
+    if c == "pending" then return nil end
     emoteCache[num] = "pending"
     task.spawn(function()
         local ok, info = pcall(function()
@@ -720,7 +725,7 @@ function Dances.isEmoteAsset(num)
             end
         end
     end)
-    return false
+    return nil
 end
 
 function Dances.keyOf(track)
@@ -730,32 +735,37 @@ function Dances.keyOf(track)
     return "n:" .. lower(track.Name or "?")
 end
 
--- returns: "dance" = player dance/emote, "game" = game animation, nil = ignore
+-- returns: "dance" = player dance/emote, "game" = map animation, nil = ignore
 function Dances.detect(track, char)
     local a = track.Animation
     local num = a and tostring(a.AnimationId or ""):match("%d+")
-    if num then
-        if DANCE_IDS[num] then return "dance" end
-        if Dances.isEmoteAsset(num) then return "dance" end
-    end
+    if num and DANCE_IDS[num] then return "dance" end
     if a and a.Parent and a:FindFirstAncestorOfClass("Tool") then return nil end
     local own = a and a.Parent and char and a:IsDescendantOf(char)
-    local names = {lower(track.Name or ""), a and lower(a.Name or "") or "", (a and a.Parent) and lower(a.Parent.Name) or ""}
+    -- the character's own Animate script, or an engine-created track: judge by name
     if own or not a then
+        local names = {lower(track.Name or ""), a and lower(a.Name or "") or "", (a and a.Parent) and lower(a.Parent.Name) or ""}
         for _, n in ipairs(names) do
             if n:find("dance") or n:find("emote") then return "dance" end
         end
     end
     if own then return nil end
-    if ACTION_PRI[track.Priority] then return "game" end
-    return nil
+    -- everything below only matters for Action-class animations
+    if not ACTION_PRI[track.Priority] then return nil end
+    if num then
+        local st = Dances.emoteState(num)
+        if st == true then return "dance" end
+        if st == nil then return nil end          -- still checking, decide on the next scan
+    end
+    return "game"
 end
 
 function Dances.blocked(k, kind)
     if State.animAllow[k] then return false end
     if State.animBlock[k] then return true end
-    if kind == "dance" then return true end
-    return kind == "game" and State.broadDances
+    if kind == "dance" then return State.dances end
+    if kind == "game" then return State.broadDances end
+    return false
 end
 
 function Dances.record(track, kind, p)
@@ -791,8 +801,7 @@ function Dances.handle(track, char, p)
     local kind = Dances.detect(track, char)
     local k = Dances.keyOf(track)
     if kind then Dances.record(track, kind, p) end
-    if (kind or State.animBlock[k]) and Dances.blocked(k, kind)
-        and State.dances and Dances.shouldStop(p) then
+    if Dances.blocked(k, kind) and Dances.shouldStop(p) then
         Dances.stop(track)
     end
 end
@@ -1161,7 +1170,7 @@ function Kit.segmented(parent, pos, size, names, J, onSelect)
     return seg
 end
 
--- شعار الهلال (مرسوم بدون إيموجي)
+-- crescent logo (drawn, no emoji)
 function Kit.crescent(parent, pos, size, fg, bg)
     local w = Kit.frame(parent, {Position = pos, Size = UDim2.fromOffset(size, size), BackgroundTransparency = 1})
     local a = Kit.frame(w, {Size = UDim2.fromScale(1, 1), BackgroundColor3 = fg})
@@ -1172,19 +1181,49 @@ function Kit.crescent(parent, pos, size, fg, bg)
     return w
 end
 
-local function makeDraggable(handle, target, j, onMove)
+-- critically damped spring: smooth even when input events are sparse (touch)
+local function smoothDamp(cur, goal, vel, smooth, dt)
+    local omega = 2 / smooth
+    local x = omega * dt
+    local e = 1 / (1 + x + 0.48 * x * x + 0.235 * x * x * x)
+    local change = cur - goal
+    local temp = (vel + change * omega) * dt
+    local nvel = (vel - temp * omega) * e
+    return goal + (change + temp) * e, nvel
+end
+
+local function makeDraggable(handle, target, j, onMove, onDrop)
     local st = {moved = false}
     local dragging, startIn, startAbs = false, nil, nil
+    local goal, cur, vel = nil, nil, Vector2.zero
+    local pendingDrop = false
     handle.Active = true
+    j:Add(RunService.RenderStepped:Connect(function(dt)
+        if not goal then return end
+        cur, vel = smoothDamp(cur, goal, vel, 0.075, math.min(dt, 1 / 20))
+        local settled = (not dragging) and (goal - cur).Magnitude < 0.4 and vel.Magnitude < 6
+        if settled then cur, vel = goal, Vector2.zero end
+        target.Position = UDim2.fromOffset(math.floor(cur.X + 0.5), math.floor(cur.Y + 0.5))
+        if onMove then onMove() end
+        if settled then
+            goal = nil
+            if pendingDrop then
+                pendingDrop = false
+                if onDrop then onDrop() end
+            end
+        end
+    end))
     j:Add(handle.InputBegan:Connect(function(i)
         if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
             dragging, st.moved = true, false
             startIn, startAbs = i.Position, target.AbsolutePosition
+            cur, vel, goal = startAbs, Vector2.zero, nil
             local conn
             conn = i.Changed:Connect(function()
                 if i.UserInputState == Enum.UserInputState.End then
                     dragging = false
                     conn:Disconnect()
+                    if st.moved then pendingDrop = true end
                 end
             end)
         end
@@ -1193,17 +1232,18 @@ local function makeDraggable(handle, target, j, onMove)
         if not dragging then return end
         if i.UserInputType ~= Enum.UserInputType.MouseMovement and i.UserInputType ~= Enum.UserInputType.Touch then return end
         local d = i.Position - startIn
-        if d.Magnitude > 5 then st.moved = true end
+        if d.Magnitude > 4 then st.moved = true end
+        if not st.moved then return end
         local sz, vp = target.AbsoluteSize, viewport()
-        local x = math.clamp(startAbs.X + d.X, -sz.X + 80, vp.X - 80)
-        local y = math.clamp(startAbs.Y + d.Y, 0, vp.Y - 40)
-        target.Position = UDim2.fromOffset(x, y)
-        if onMove then onMove() end
+        goal = Vector2.new(
+            math.clamp(startAbs.X + d.X, -sz.X + 80, vp.X - 80),
+            math.clamp(startAbs.Y + d.Y, 0, vp.Y - 40)
+        )
     end))
     return st
 end
 
--- شريط الصوت 0% - 200%
+-- volume slider 0% - 200%
 local function makeSlider(parent, pos, size, J, onChange)
     local hit = N("TextButton", {Size = size, Position = pos, BackgroundTransparency = 1, Text = "", AutoButtonColor = false}, parent)
     local track = Kit.frame(hit, {Size = UDim2.new(1, 0, 0, 4), Position = UDim2.new(0, 0, 0.5, -2), BackgroundColor3 = Theme.Raised})
@@ -1258,7 +1298,7 @@ local function pctText(f) return math.floor(f * 100 + 0.5) .. "%" end
 local function killRow(r) r.j:Clean() r.frame:Destroy() end
 
 
--- animated gold border (same idea as the original glow)
+-- animated gold border
 function Kit.pulse(stroke, J, base)
     stroke.Color = WHITE
     local g = N("UIGradient", {Color = ColorSequence.new({
@@ -1415,10 +1455,10 @@ local function pageMusic(ctx)
             local live = g ~= nil
             nameL.Text = g and g.name or e.name or k
             local cat = Audio.catCache[k]
-            metaL.Text = (cat and (tr(CAT_KEY[cat]) .. "  ·  ") or "") .. Audio.fmtTime(e.len) .. (e.looped and ("  ·  " .. tr("loop")) or "") .. ((g and g.count > 1) and ("  ·  ×" .. g.count) or "") .. "  ·  " .. (e.path or "")
+            metaL.Text = (cat and (tr(CAT_KEY[cat]) .. "  \u{B7}  ") or "") .. Audio.fmtTime(e.len) .. (e.looped and ("  \u{B7}  " .. tr("loop")) or "") .. ((g and g.count > 1) and ("  \u{B7}  \u{D7}" .. g.count) or "") .. "  \u{B7}  " .. (e.path or "")
             local state = exempt and tr("stExempt") or (State.muteMusic and tr("stByButton") or tr("stWillMute"))
             local play = (not live) and tr("stGone") or (g.playing and tr("stPlaying") or tr("stIdle"))
-            stateL.Text = state .. "  ·  " .. play
+            stateL.Text = state .. "  \u{B7}  " .. play
             dot.BackgroundColor3 = exempt and Theme.Gold or ((State.muteMusic and Theme.Danger) or Theme.TextFaint)
             if Audio.solo == k then
                 listenB.inst.Text = tr("stop")
@@ -1537,7 +1577,7 @@ local function pageDances(ctx)
             nameL.Text = e and e.name or k
             local tag = (kind == "dance" and tr("tagPlayer")) or (kind == "game" and tr("tagGame")) or tr("tagSaved")
             local id = (k:sub(1, 2) == "n:") and "-" or ("ID " .. k)
-            subL.Text = tag .. "  ·  " .. id .. ((e and e.who) and ("  ·  " .. e.who) or "") .. (e and ("  ·  x" .. e.n) or "")
+            subL.Text = tag .. "  \u{B7}  " .. id .. ((e and e.who) and ("  \u{B7}  " .. e.who) or "") .. (e and ("  \u{B7}  x" .. e.n) or "")
             dot.BackgroundColor3 = blocked and Theme.Danger or Theme.Gold
             btn.inst.Text = blocked and tr("animBlocked") or tr("animAllowed")
             btn.set(blocked and "danger" or "primary")
@@ -1603,7 +1643,7 @@ local function pagePlayers(ctx)
     local addF, addBox = Kit.search(page, UDim2.fromOffset(0, 36), UDim2.new(1, -72, 0, 30), tr("addPlayer"), J)
     local addB = Kit.button(page, {Size = UDim2.fromOffset(64, 30), Position = UDim2.new(1, -64, 0, 36), TextSize = 12, Text = tr("add")}, "primary", J)
 
-    -- بطاقة الاقتراح
+    -- suggestion card
     local card = Kit.frame(page, {Size = UDim2.new(1, 0, 0, 56), Position = UDim2.fromOffset(0, 72)})
     Kit.corner(card, 8)
     Kit.stroke(card, Theme.Line)
@@ -1655,7 +1695,7 @@ local function pagePlayers(ctx)
             local isCreator = lower(inf.Name) == lower(CREATOR_NAME)
             nameL.Text = dn
             nameL.TextColor3 = isCreator and Theme.Gold or Theme.Text
-            subL.Text = "@" .. inf.Name .. (isCreator and ("  ·  " .. tr("creator")) or "")
+            subL.Text = "@" .. inf.Name .. (isCreator and ("  \u{B7}  " .. tr("creator")) or "")
             if not r.avSet then
                 if inf.UserId then
                     av.Image = "rbxthumb://type=AvatarHeadShot&id=" .. inf.UserId .. "&w=150&h=150"
@@ -1698,7 +1738,7 @@ local function pagePlayers(ctx)
         if best then
             sName.Text = (best.DisplayName ~= "" and best.DisplayName or best.Name)
             sName.TextColor3 = Theme.Text
-            sSub.Text = tr("inView") .. "  ·  @" .. best.Name
+            sSub.Text = tr("inView") .. "  \u{B7}  @" .. best.Name
             sAv.Image = "rbxthumb://type=AvatarHeadShot&id=" .. best.UserId .. "&w=150&h=150"
         else
             sName.Text = tr("noneInView")
@@ -1818,7 +1858,7 @@ local function pageSaves(ctx)
             Kit.label(row, {Size = UDim2.new(1, -160, 0, 18), Position = UDim2.fromOffset(26, 8), Text = tostring(e.name), TextSize = 13})
             local sub = thisMap and tr("thisMap") or tostring(e.placeName or e.place)
             local okd, ds = pcall(function() return os.date("%d/%m %H:%M", e.t) end)
-            if okd then sub = sub .. "  ·  " .. ds end
+            if okd then sub = sub .. "  \u{B7}  " .. ds end
             Kit.label(row, {Size = UDim2.new(1, -160, 0, 14), Position = UDim2.fromOffset(26, 30), Text = sub, TextSize = 11, TextColor3 = Theme.TextDim})
             local loadB = Kit.button(row, {Size = UDim2.fromOffset(62, 28), Position = UDim2.new(1, -134, 0.5, -14), TextSize = 11, Text = tr("loadShort")}, "primary", lj)
             local delB = Kit.button(row, {Size = UDim2.fromOffset(58, 28), Position = UDim2.new(1, -66, 0.5, -14), TextSize = 11, Text = tr("delete")}, "danger", lj)
@@ -1893,8 +1933,8 @@ local function showLangScreen(onDone)
     N("UIGradient", {Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5, 0), NumberSequenceKeypoint.new(1, 1)})}, hair)
 
     Kit.crescent(card, UDim2.new(0.5, -14, 0, 22), 28, Theme.Gold, Theme.Base)
-    Kit.label(card, {Size = UDim2.new(1, -30, 0, 22), Position = UDim2.fromOffset(15, 62), Text = "بي حلال  /  Be Halal", Font = Enum.Font.GothamBold, TextSize = 17, TextXAlignment = Enum.TextXAlignment.Center})
-    Kit.label(card, {Size = UDim2.new(1, -30, 0, 16), Position = UDim2.fromOffset(15, 86), Text = "اختر اللغة  /  Select language", TextSize = 11, TextColor3 = Theme.TextDim, TextXAlignment = Enum.TextXAlignment.Center})
+    Kit.label(card, {Size = UDim2.new(1, -30, 0, 22), Position = UDim2.fromOffset(15, 62), Text = "\u{628}\u{64A} \u{62D}\u{644}\u{627}\u{644}  /  Be Halal", Font = Enum.Font.GothamBold, TextSize = 17, TextXAlignment = Enum.TextXAlignment.Center})
+    Kit.label(card, {Size = UDim2.new(1, -30, 0, 16), Position = UDim2.fromOffset(15, 86), Text = "\u{627}\u{62E}\u{62A}\u{631} \u{627}\u{644}\u{644}\u{63A}\u{629}  /  Select language", TextSize = 11, TextColor3 = Theme.TextDim, TextXAlignment = Enum.TextXAlignment.Center})
 
     local function option(text, sub, y, lang)
         local b = Kit.button(card, {Size = UDim2.new(1, -40, 0, 46), Position = UDim2.fromOffset(20, y), Text = ""}, "secondary", J)
@@ -1911,7 +1951,7 @@ local function showLangScreen(onDone)
             onDone(lang)
         end))
     end
-    option("العربية", "واجهة عربية كاملة", 116, "ar")
+    option("\u{627}\u{644}\u{639}\u{631}\u{628}\u{64A}\u{629}", "\u{648}\u{627}\u{62C}\u{647}\u{629} \u{639}\u{631}\u{628}\u{64A}\u{629} \u{643}\u{627}\u{645}\u{644}\u{629}", 116, "ar")
     option("English", "Full English interface", 170, "en")
     TweenService:Create(card, TweenInfo.new(0.32, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.fromOffset(cx, cy)}):Play()
 end
@@ -1919,6 +1959,22 @@ end
 --==============================================================
 -- Main window
 --==============================================================
+-- window position survives closing/re-running the script (file if the executor allows it, otherwise getgenv)
+local PosStore = {file = "BeHalal_Pos.json"}
+function PosStore.load()
+    local d = readJSON(PosStore.file)
+    if not (d and tonumber(d.x) and tonumber(d.y)) then d = ENV.__BeHalalPos end
+    if type(d) == "table" and tonumber(d.x) and tonumber(d.y) then
+        UI.pos = UDim2.fromOffset(tonumber(d.x), tonumber(d.y))
+    end
+end
+function PosStore.save()
+    if not UI.pos then return end
+    local d = {x = UI.pos.X.Offset, y = UI.pos.Y.Offset}
+    ENV.__BeHalalPos = d
+    writeJSON(PosStore.file, d)
+end
+
 function UI.destroy()
     if UI.j then UI.j:Clean() UI.j = nil end
     UI.refresh = function() end
@@ -1934,18 +1990,22 @@ function UI.build()
     local W, H = math.min(640, vp.X - 24), math.min(440, vp.Y - 30)
     local RAIL = (W < 500) and 92 or 124
     local TH = 40
-    local sx, sy = (vp.X - W) / 2, (vp.Y - H) / 2
-    local firstShow = (UI.pos == nil)
-    local win = Kit.frame(G, {Name = "Window", Size = UDim2.fromOffset(W, H), Position = UI.pos or UDim2.fromOffset(sx, sy + 14), BackgroundColor3 = Theme.Base, ClipsDescendants = true})
+    local firstShow = not UI.shown
+    UI.shown = true
+    local px, py = (vp.X - W) / 2, (vp.Y - H) / 2
+    if UI.pos then px, py = UI.pos.X.Offset, UI.pos.Y.Offset end
+    px = math.clamp(px, -W + 80, vp.X - 80)
+    py = math.clamp(py, 0, vp.Y - 40)
+    local win = Kit.frame(G, {Name = "Window", Size = UDim2.fromOffset(W, H), Position = UDim2.fromOffset(px, firstShow and py + 14 or py), BackgroundColor3 = Theme.Base, ClipsDescendants = true})
     Kit.corner(win, 10)
     Kit.pulse(Kit.stroke(win, Theme.Line), J)
 
     -- title bar
     local bar = Kit.frame(win, {Size = UDim2.new(1, 0, 0, TH), BackgroundTransparency = 1})
-    makeDraggable(bar, win, J, function() UI.pos = win.Position end)
+    makeDraggable(bar, win, J, function() UI.pos = win.Position end, PosStore.save)
     Kit.crescent(bar, UDim2.fromOffset(14, 10), 20, Theme.Gold, Theme.Base)
     Kit.label(bar, {Size = UDim2.new(1, -170, 0, 18), Position = UDim2.fromOffset(44, 5), Text = tr("title"), Font = Enum.Font.GothamBold, TextSize = 14})
-    Kit.label(bar, {Size = UDim2.new(1, -170, 0, 12), Position = UDim2.fromOffset(44, 22), Text = tr("subtitle") .. "  ·  v" .. VERSION, TextSize = 10, TextColor3 = Theme.TextFaint})
+    Kit.label(bar, {Size = UDim2.new(1, -170, 0, 12), Position = UDim2.fromOffset(44, 22), Text = tr("subtitle") .. "  \u{B7}  v" .. VERSION, TextSize = 10, TextColor3 = Theme.TextFaint})
 
     local function iconBtn(xOff)
         return Kit.button(bar, {Size = UDim2.fromOffset(28, 28), Position = UDim2.new(1, xOff, 0, 6)}, "ghost", J)
@@ -2049,7 +2109,7 @@ function UI.build()
     Kit.pulse(Kit.stroke(mini, Theme.Gold, 1.5), J, 1.5)
     Kit.crescent(mini, UDim2.fromOffset(11, 11), 22, Theme.Gold, Theme.Base)
     local miniBtn = N("TextButton", {Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1, Text = "", AutoButtonColor = false}, mini)
-    local miniDrag = makeDraggable(miniBtn, mini, J)
+    local miniDrag = makeDraggable(miniBtn, mini, J, function() UI.pos = mini.Position end, PosStore.save)
     local function setMin(on)
         if on then
             mini.Position = win.Position
@@ -2065,8 +2125,8 @@ function UI.build()
     J:Add(closeB.inst.Activated:Connect(function() ENV.__BeHalal.destroy() end))
 
     show(UI.page or "home")
+    UI.pos = UDim2.fromOffset(px, py)
     if firstShow then
-        UI.pos = UDim2.fromOffset(sx, sy)
         TweenService:Create(win, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UI.pos}):Play()
     end
 end
@@ -2078,6 +2138,7 @@ local Hub = {}
 function Hub.destroy()
     if not State.running then return end
     State.running = false
+    pcall(PosStore.save)
     pcall(Audio.shutdown)
     pcall(Targets.shutdown)
     pcall(UI.destroy)
@@ -2103,6 +2164,7 @@ loop(0.25, function()
 end)
 loop(1, Targets.refreshAll)
 
+PosStore.load()
 showLangScreen(function(lang)
     State.lang = lang
     task.wait(0.1)
