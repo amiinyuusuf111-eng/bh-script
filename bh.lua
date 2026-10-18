@@ -189,7 +189,7 @@ local T = {
 local function tr(k) return (T[State.lang] or T.en)[k] or T.en[k] or k end
 
 --==============================================================
--- Config (v4.0 unchanged)
+-- Config
 --==============================================================
 local Config = {file = "BeHalal_Config.json", data = {}, queued = false}
 local Audio
@@ -224,7 +224,7 @@ function Config.apply()
 end
 
 --==============================================================
--- Audio (v4.0 unchanged — same behavior)
+-- Audio
 --==============================================================
 Audio = {
     place = tostring(game.PlaceId), file = "BeHalal_Sounds.json",
@@ -508,7 +508,7 @@ function Audio.shutdown()
 end
 
 --==============================================================
--- Skin / Hide / Dances / Targets (v4.0 unchanged)
+-- Skin
 --==============================================================
 local Skin = {}
 local backups = {}
@@ -592,6 +592,9 @@ function Skin.restore(c)
     for _, m in ipairs(b.meshes) do pcall(function() m.Parent = c end) end
 end
 
+--==============================================================
+-- Hide
+--==============================================================
 local Hide = {}
 local EFFECT = {ParticleEmitter = true, Trail = true, Beam = true, Fire = true, Smoke = true, Sparkles = true}
 function Hide.inst(i)
@@ -631,6 +634,9 @@ function Hide.restore(c)
     c:SetAttribute("BH_Hidden", nil)
 end
 
+--==============================================================
+-- Dances
+--==============================================================
 local Dances = {}
 local DANCE_IDS = {
     ["507771019"]=true, ["507776043"]=true, ["507777268"]=true, ["507777826"]=true, ["507771013"]=true,
@@ -729,6 +735,9 @@ function Dances.hookChar(c, p, j)
     end)
 end
 
+--==============================================================
+-- Targets
+--==============================================================
 local Targets = {}
 local PS = {}
 local UI = {refresh = function() end}
@@ -802,7 +811,7 @@ local function onPlayer(p)
 end
 
 --==============================================================
--- Lists API (v4.0)
+-- Lists API
 --==============================================================
 local function resolveName(text)
     text = trim(text)
@@ -827,7 +836,7 @@ local function listSet(name, mode)
 end
 
 --==============================================================
--- UILib (v3.7 style)
+-- UILib
 --==============================================================
 local UILib = {}
 function UILib.corner(o, r) return N("UICorner", {CornerRadius = UDim.new(0, r or 12)}, o) end
@@ -885,7 +894,7 @@ function UILib.halo(target, radius, J)
 end
 
 --==============================================================
--- Icons (v3.7 hand drawn from frames)
+-- Icons
 --==============================================================
 local Icon = {}
 local function part(parent, cx, cy, w, h, color, rot, round)
@@ -1005,7 +1014,6 @@ function ICONS.home(f, c)
     part(f, 0.5, 0.32, 0.86, 0.5, c, 45)
     part(f, 0.5, 0.72, 0.22, 0.32, c, 0, 0.08)
 end
-
 function Icon.draw(name, parent, color, size, bg)
     local f = N("Frame", {
         AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(0.5, 0, 0.5, 0),
@@ -1084,7 +1092,7 @@ local function makeSlider(parent, pos, size, J, onChange)
     local knob = N("Frame", {Size = UDim2.new(0, 16, 0, 16), AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(0.5, 0, 0.5, 0), BackgroundColor3 = Theme.Accent2, BorderSizePixel = 0}, hit)
     UILib.corner(knob, 8)
     UILib.stroke(knob, Theme.BG1, 2, 0)
-    local sl = {value = 1, max = 2, dragging = false}
+    local sl = {value = 1, max = 2, dragging = false, hit = hit}
     local conns = {}
     local function dropConns() for _, c in ipairs(conns) do pcall(function() c:Disconnect() end) end conns = {} end
     J:Add(dropConns)
@@ -1124,7 +1132,7 @@ local function makeSlider(parent, pos, size, J, onChange)
 end
 
 --==============================================================
--- Toast (v3.7 style)
+-- Toast
 --==============================================================
 local function makeToast(TG, J, vp)
     local curToast
@@ -1148,7 +1156,7 @@ local function makeToast(TG, J, vp)
 end
 
 --==============================================================
--- Splash (v3.7)
+-- Splash
 --==============================================================
 local function showSplash(onDone)
     local gui = Root:Add(N("ScreenGui", {Name = "BH_Splash", ResetOnSpawn = false, IgnoreGuiInset = true, DisplayOrder = 998, ZIndexBehavior = Enum.ZIndexBehavior.Sibling}, PG))
@@ -1175,11 +1183,10 @@ local function showSplash(onDone)
 end
 
 --==============================================================
--- Language screen (v3.7 style)
+-- Language screen
 --==============================================================
 local function showLangScreen(onDone)
     local mobile = isMobile()
-    local vp = viewport()
     local gui = Root:Add(N("ScreenGui", {Name = "BHLang", ResetOnSpawn = false, IgnoreGuiInset = true, DisplayOrder = 999, ZIndexBehavior = Enum.ZIndexBehavior.Sibling}, PG))
     local chosen = false
     N("Frame", {Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = Color3.fromRGB(3, 2, 1), BackgroundTransparency = 0.25, BorderSizePixel = 0}, gui)
@@ -1223,7 +1230,7 @@ local function showLangScreen(onDone)
 end
 
 --==============================================================
--- Kit (v3.7 visuals, v4.0 API)
+-- Kit
 --==============================================================
 local Kit = {}
 local KIND = {
@@ -1344,19 +1351,19 @@ end
 function Kit.card(parent, order)
     local c = Kit.frame(parent, {Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = order})
     Kit.corner(c, 12)
-    local cs = UILib.stroke(c, Theme.Accent, 1.2, 0.6)
+    UILib.stroke(c, Theme.Accent, 1.2, 0.6)
     UILib.gradient(c, Theme.Card, Theme.BG3, 90)
     N("UIListLayout", {SortOrder = Enum.SortOrder.LayoutOrder}, c)
-    return {inst = c, n = 0, stroke = cs}
+    return {inst = c, n = 0}
 end
 function Kit.cardRow(card, height)
     if card.n > 0 then
-        local d = Kit.frame(card.inst, {Size = UDim2.new(1, -28, 0, 1), Position = UDim2.new(0, 14, 0, 0), BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.6, LayoutOrder = card.n * 2 - 1})
+        Kit.frame(card.inst, {Size = UDim2.new(1, -28, 0, 1), Position = UDim2.new(0, 14, 0, 0), BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.6, LayoutOrder = card.n * 2 - 1})
     end
     card.n = card.n + 1
     return Kit.frame(card.inst, {Size = UDim2.new(1, 0, 0, height), BackgroundTransparency = 1, LayoutOrder = card.n * 2})
 end
-function Kit.segmented(parent, pos, size, names, J, onSelect, labelsFn)
+function Kit.segmented(parent, pos, size, names, J, onSelect)
     local f = Kit.frame(parent, {Position = pos, Size = size, BackgroundColor3 = Theme.BG3})
     Kit.corner(f, 10)
     UILib.stroke(f, Theme.Accent, 1, 0.65)
@@ -1386,7 +1393,6 @@ end
 --==============================================================
 local CATS = {"music", "ambient", "sfx", "ui", "other"}
 local CAT_KEY = {music = "catMusic", ambient = "catAmbient", sfx = "catSfx", ui = "catUi", other = "catOther"}
-local CAT_ICON = {music = "eq", ambient = "speaker", sfx = "speaker", ui = "log", other = "log"}
 local function sortByName(arr, nameOf, keyOf)
     table.sort(arr, function(a, b)
         local na, nb = lower(nameOf(a)), lower(nameOf(b))
@@ -1395,17 +1401,19 @@ local function sortByName(arr, nameOf, keyOf)
     end)
 end
 
--- Icon plate for cards/toggles
+-- IMPORTANT: killRow is defined BEFORE pageSounds so closures can reach it
+local function killRow(r) if r.j then r.j:Clean() end if r.frame then r.frame:Destroy() end end
+
 local function iconPlate(parent, icon, on, size, padL)
     local s = size or 36
-    local ib = N("Frame", {Size = UDim2.new(0, s, 0, s), Position = UDim2.new(0, padL or 12, 0.5, -s / 2), BackgroundColor3 = on and Theme.OnBG or Theme.BG3, BorderSizePixel = 0, ZIndex = parent.ZIndex + 1}, parent)
+    local ib = N("Frame", {Size = UDim2.new(0, s, 0, s), Position = UDim2.new(0, padL or 12, 0.5, -s / 2), BackgroundColor3 = on and Theme.OnBG or Theme.BG3, BorderSizePixel = 0}, parent)
     UILib.corner(ib, math.floor(s / 3))
     UILib.stroke(ib, on and Theme.Accent or Theme.TextDim, 1, on and 0.3 or 0.6)
     local ic = Icon.draw(icon, ib, on and Theme.Accent or Theme.TextDim, math.floor(s * 0.55))
     return ib, ic
 end
 
--- Home page
+-- Home
 local function pageHome(ctx)
     local J, page, toast = ctx.J, ctx.page, ctx.toast
     local sc = Kit.scroller(page)
@@ -1414,13 +1422,12 @@ local function pageHome(ctx)
     local ord = 0
     local function nxt() ord = ord + 1 return ord end
 
-    -- Stats tiles (v3.7 card style)
     local tilesF = Kit.frame(sc, {Size = UDim2.new(1, 0, 0, 62), BackgroundTransparency = 1, LayoutOrder = nxt()})
     N("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder}, tilesF)
     local function tile(i, icon, caption)
         local t = Kit.frame(tilesF, {Size = UDim2.new(1 / 3, -6, 1, 0), LayoutOrder = i})
         Kit.corner(t, 12)
-        local ts = UILib.stroke(t, Theme.Accent, 1.2, 0.55)
+        UILib.stroke(t, Theme.Accent, 1.2, 0.55)
         UILib.gradient(t, Theme.Card, Theme.BG3, 90)
         local ib = N("Frame", {Size = UDim2.new(0, 34, 0, 34), Position = UDim2.new(0, 10, 0.5, -17), BackgroundColor3 = Theme.OnBG, BorderSizePixel = 0}, t)
         UILib.corner(ib, 10)
@@ -1452,7 +1459,6 @@ local function pageHome(ctx)
                 local us = d:FindFirstChildOfClass("UIStroke"); if us then us.Color = v and Theme.Accent or Theme.TextDim end
             end
             sub.TextColor3 = v and Theme.Accent or Theme.TextDim
-            sub.Text = v and "ON" or "OFF"
         end)
     end
 
@@ -1486,9 +1492,9 @@ local function pageHome(ctx)
     end}
 end
 
--- Sounds page (v4.0 logic, v3.7 cards)
+-- Sounds
 local function pageSounds(ctx)
-    local J, page, toast = ctx.J, ctx.page, ctx.toast
+    local J, page = ctx.J, ctx.page
     local tab, catFilter, query, sortMode = "playing", "all", "", "name"
     local rows, curGroups, visibleKeys = {}, {}, {}
     local refresh
@@ -1522,8 +1528,7 @@ local function pageSounds(ctx)
 
     local headers = {}
     for i, c in ipairs(CATS) do
-        local hf = Kit.label(list, {Size = UDim2.new(1, 0, 0, 18), LayoutOrder = i * 10000, Visible = false, TextColor3 = Theme.Accent, Font = Enum.Font.GothamBold, TextSize = 11})
-        headers[c] = hf
+        headers[c] = Kit.label(list, {Size = UDim2.new(1, 0, 0, 18), LayoutOrder = i * 10000, Visible = false, TextColor3 = Theme.Accent, Font = Enum.Font.GothamBold, TextSize = 11})
     end
     local empty = Kit.label(list, {Size = UDim2.new(1, 0, 0, 60), Text = tr("emptyFilter"), TextColor3 = Theme.TextDim, LayoutOrder = 99999, TextXAlignment = Enum.TextXAlignment.Center})
 
@@ -1554,7 +1559,7 @@ local function pageSounds(ctx)
             pctL.Text = math.floor(v * 100 + 0.5) .. "%"
         end)
         slider.hit.Visible = false
-        local r = {frame = row, j = rj, expanded = false, stroke = rs}
+        local r = {frame = row, j = rj, expanded = false}
         local function layout()
             row.Size = UDim2.new(1, 0, 0, r.expanded and 92 or 52)
             pctL.Visible, listenB.inst.Visible, editB.inst.Visible, slider.hit.Visible = r.expanded, r.expanded, r.expanded, r.expanded
@@ -1588,7 +1593,6 @@ local function pageSounds(ctx)
             nameBox.Visible, nameLbl.Visible = false, true
             refresh()
         end))
-
         function r.update(g)
             local st = Audio.settings[k]
             local muted = st and st.m == true
@@ -1606,7 +1610,7 @@ local function pageSounds(ctx)
             rs.Color = muted and Theme.Danger or Theme.Accent
             muteB.inst.Text = muted and tr("unmute") or tr("mute")
             muteB.set(muted and "primary" or "secondary")
-            if Audio.solo == k then listenB.inst.Text, listenB.set("primary")
+            if Audio.solo == k then listenB.inst.Text = tr("stop"); listenB.set("primary")
             else listenB.inst.Text = tr("listen"); listenB.set(g.count > 0 and "secondary" or "off") end
         end
         return r
@@ -1711,9 +1715,8 @@ local function pageSounds(ctx)
     J:Add(function() for _, r in pairs(rows) do r.j:Clean() end end)
     return {refresh = refresh}
 end
-local function killRow(r) r.j:Clean() r.frame:Destroy() end
 
--- Music log (v4.0 logic, v3.7 cards)
+-- Music log
 local function pageMusic(ctx)
     local J, page = ctx.J, ctx.page
     local rows, query = {}, ""
@@ -1749,7 +1752,6 @@ local function pageMusic(ctx)
         local stateL = Kit.label(row, {Size = UDim2.new(1, -170, 0, 14), Position = UDim2.fromOffset(26, 42), TextSize = 11, TextColor3 = Theme.TextDim})
         local listenB = Kit.button(row, {Size = UDim2.fromOffset(66, 26), Position = UDim2.new(1, -148, 0, 20), TextSize = 11}, "secondary", rj)
         local exemptB = Kit.button(row, {Size = UDim2.fromOffset(66, 26), Position = UDim2.new(1, -76, 0, 20), TextSize = 11}, "danger", rj)
-        local listenIc, exemptIc = Icon.attach(listenB.inst, 12), Icon.attach(exemptB.inst, 12)
         rj:Add(listenB.inst.Activated:Connect(function()
             if Audio.solo == k then Audio.soloStop()
             elseif Audio.isLive(k) then Audio.soloPlay(k) end
@@ -1762,7 +1764,7 @@ local function pageMusic(ctx)
             Audio.commit(k)
             refresh()
         end))
-        local r = {frame = row, j = rj, stroke = rs}
+        local r = {frame = row, j = rj}
         function r.update(e, g)
             local st = Audio.settings[k]
             local exempt = st and st.x
@@ -1774,18 +1776,10 @@ local function pageMusic(ctx)
             stateL.Text = state .. "  ·  " .. play
             dot.BackgroundColor3 = exempt and Theme.Accent or ((State.muteMusic and Theme.Danger) or Theme.TextDim)
             rs.Color = exempt and Theme.Accent or Theme.Accent2
-            if Audio.solo == k then
-                listenB.inst.Text = tr("stop")
-                listenB.set("primary")
-                Icon.set(listenIc, "stop", DARK)
-            else
-                listenB.inst.Text = tr("listen")
-                listenB.set(live and "secondary" or "off")
-                Icon.set(listenIc, "play", live and Theme.Text or Theme.TextDim)
-            end
+            if Audio.solo == k then listenB.inst.Text = tr("stop"); listenB.set("primary")
+            else listenB.inst.Text = tr("listen"); listenB.set(live and "secondary" or "off") end
             exemptB.inst.Text = exempt and tr("exempt") or tr("willMute")
             exemptB.set(exempt and "primary" or "danger")
-            Icon.set(exemptIc, exempt and "speaker" or "mute", exempt and DARK or WHITE)
         end
         return r
     end
@@ -1829,7 +1823,7 @@ local function pageMusic(ctx)
     return {refresh = refresh}
 end
 
--- Animations page (v4.0 logic, v3.7 cards)
+-- Animations
 local function pageAnim(ctx)
     local J, page = ctx.J, ctx.page
     local rows = {}
@@ -1847,7 +1841,7 @@ local function pageAnim(ctx)
         local rs = UILib.stroke(row, Theme.Danger, 1.2, 0.7)
         local ib = N("Frame", {Size = UDim2.new(0, 34, 0, 34), Position = UDim2.new(0, 10, 0.5, -17), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0}, row)
         UILib.corner(ib, 10)
-        local ic = Icon.draw("dancer", ib, Theme.Accent, 18)
+        Icon.draw("dancer", ib, Theme.Accent, 18)
         local nameL = Kit.label(row, {Size = UDim2.new(1, -140, 0, 18), Position = UDim2.fromOffset(52, 8), TextSize = 13, Font = Enum.Font.GothamBold})
         local idL = Kit.label(row, {Size = UDim2.new(1, -140, 0, 14), Position = UDim2.fromOffset(52, 28), TextSize = 11, TextColor3 = Theme.TextDim})
         local btn = Kit.button(row, {Size = UDim2.fromOffset(86, 28), Position = UDim2.new(1, -96, 0.5, -14), TextSize = 11}, "danger", rj)
@@ -1857,7 +1851,7 @@ local function pageAnim(ctx)
             Config.save()
             refresh()
         end))
-        local r = {frame = row, j = rj, stroke = rs}
+        local r = {frame = row, j = rj}
         function r.update(e)
             local allowed = State.animAllow[k] == true
             nameL.Text = e and e.name or k
@@ -1898,7 +1892,7 @@ local function pageAnim(ctx)
     return {refresh = refresh}
 end
 
--- Players page (v4.0 logic, v3.7 rows)
+-- Players
 local function pagePlayers(ctx)
     local J, page = ctx.J, ctx.page
     local segName, query = "online", ""
@@ -1912,7 +1906,6 @@ local function pagePlayers(ctx)
     local addF, addBox = Kit.search(page, UDim2.fromOffset(0, 36), UDim2.new(1, -72, 0, 30), tr("addPlayer"), J)
     local addB = Kit.button(page, {Size = UDim2.fromOffset(64, 30), Position = UDim2.new(1, -64, 0, 36), TextSize = 12, Text = tr("add")}, "primary", J)
 
-    -- Suggest card
     local card = N("Frame", {Size = UDim2.new(1, 0, 0, 60), Position = UDim2.fromOffset(0, 72), BackgroundColor3 = Theme.Card, BorderSizePixel = 0}, page)
     UILib.corner(card, 12)
     UILib.stroke(card, Theme.Accent, 1.2, 0.6)
@@ -2082,7 +2075,7 @@ local function pagePlayers(ctx)
 end
 
 --==============================================================
--- Main window (v3.7 look, v4.0 5-page sidebar)
+-- UI build
 --==============================================================
 function UI.destroy()
     if UI.j then UI.j:Clean() UI.j = nil end
@@ -2113,7 +2106,6 @@ function UI.build()
     UILib.glow(UILib.stroke(win, Theme.Accent, 1.5, 0.35), J)
     UILib.halo(win, 18, J)
 
-    -- Header
     local header = N("Frame", {Size = UDim2.new(1, 0, 0, TH), BackgroundColor3 = Theme.BG1, BorderSizePixel = 0, ZIndex = 3}, win)
     UILib.corner(header, 18)
     UILib.gradient(header, Color3.fromRGB(40, 33, 17), Color3.fromRGB(16, 13, 8), 90)
@@ -2133,7 +2125,6 @@ function UI.build()
     UILib.stroke(closeBtn, Theme.Danger, 1.5, 0.5)
     Icon.draw("x", closeBtn, Theme.DangerHi, 12)
 
-    -- Sidebar (RAIL)
     local rail = N("Frame", {Size = UDim2.new(0, RAIL, 1, -TH - 1), Position = UDim2.fromOffset(0, TH + 1), BackgroundTransparency = 1, ZIndex = 3}, win)
     Kit.pad(rail, 8, 12, 8, 8)
     N("UIListLayout", {Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder}, rail)
@@ -2145,8 +2136,6 @@ function UI.build()
 
     local pages, navBtns, current = {}, {}, nil
     local show
-
-    -- Sidebar nav (icon + label)
     local NAV_ICON = {home = "home", sounds = "eq", music = "log", anim = "dancer", players = "user"}
     local function navButton(id, text, order)
         local b = N("TextButton", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = Theme.Card, BackgroundTransparency = 1, Text = "", AutoButtonColor = false, BorderSizePixel = 0, LayoutOrder = order, ZIndex = 5}, rail)
@@ -2173,7 +2162,6 @@ function UI.build()
             local on = (id == name)
             nb.ind.Visible = on
             nb.btn.BackgroundTransparency = on and 0 or 1
-            nb.btn.BackgroundColor3 = on and Theme.Card or Theme.Card
             nb.lbl.TextColor3 = on and Theme.Accent2 or Theme.TextDim
             nb.lbl.Font = on and Enum.Font.GothamBold or Enum.Font.GothamMedium
             for _, d in ipairs(nb.icon:GetDescendants()) do
@@ -2215,7 +2203,6 @@ function UI.build()
         end
     end)
 
-    -- Minimized icon (crescent, glow, halo)
     local mini = Btn(G, {Size = UDim2.new(0, 60, 0, 60), Position = win.Position, BackgroundColor3 = Theme.BG2, Text = "", Visible = false, ZIndex = 4}, 30)
     UILib.glow(UILib.stroke(mini, Theme.Accent, 2, 0.2), J, 2)
     Icon.draw("crescent", mini, Theme.Accent, 38, Theme.BG2)
