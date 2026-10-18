@@ -1,6 +1,6 @@
 --[[
     Be Halal |  
-    v3.6 - client side
+    v3.7 - client side
     by EZ_NOOB11220
 
     :
@@ -25,13 +25,13 @@ pcall(function() CoreGui = game:GetService("CoreGui") end)
 local LP = Players.LocalPlayer
 local PG = LP:WaitForChild("PlayerGui")
 local CREATOR_NAME = "EZ_NOOB11220"
-local VERSION = "3.6"
+local VERSION = "3.7"
 
 local ENV = (getgenv and getgenv()) or _G
 if ENV.__BeHalal and type(ENV.__BeHalal.destroy) == "function" then
     pcall(ENV.__BeHalal.destroy)
 end
-for _, n in ipairs({"BH", "BH_SoundsMgr", "BH_SoundLog", "BH_AnimLog", "BH_Saves", "BHLang"}) do
+for _, n in ipairs({"BH", "BH_SoundsMgr", "BH_SoundLog", "BH_AnimLog", "BH_Saves", "BH_Toast", "BH_Splash", "BHLang"}) do
     local old = PG:FindFirstChild(n)
     if old then old:Destroy() end
 end
@@ -118,13 +118,13 @@ local function isBlack(p) return p ~= LP and State.B[lower(p.Name)] == true end
 
 ---------------------------------------------------------------- Theme
 local Theme = {
-    BG1 = Color3.fromRGB(14, 18, 24),   BG2 = Color3.fromRGB(20, 26, 34),   BG3 = Color3.fromRGB(26, 34, 44),
-    Card = Color3.fromRGB(30, 40, 52),  CardHi = Color3.fromRGB(38, 50, 64),
-    Accent = Color3.fromRGB(72, 219, 138), Accent2 = Color3.fromRGB(46, 204, 190), Gold = Color3.fromRGB(255, 200, 87),
-    Text = Color3.fromRGB(240, 244, 250), TextDim = Color3.fromRGB(150, 165, 185),
-    Danger = Color3.fromRGB(232, 89, 89), DangerHi = Color3.fromRGB(255, 116, 116),
-    Success = Color3.fromRGB(72, 219, 138), Info = Color3.fromRGB(85, 170, 255),
-    OnBG = Color3.fromRGB(28, 50, 38), Off = Color3.fromRGB(60, 68, 78),
+    BG1 = Color3.fromRGB(10, 9, 7),     BG2 = Color3.fromRGB(18, 16, 12),   BG3 = Color3.fromRGB(27, 24, 18),
+    Card = Color3.fromRGB(34, 30, 22),  CardHi = Color3.fromRGB(50, 43, 29),
+    Accent = Color3.fromRGB(212, 175, 55), Accent2 = Color3.fromRGB(240, 208, 120), Gold = Color3.fromRGB(255, 225, 130),
+    Text = Color3.fromRGB(245, 238, 222), TextDim = Color3.fromRGB(160, 148, 122),
+    Danger = Color3.fromRGB(190, 62, 52), DangerHi = Color3.fromRGB(235, 105, 90),
+    Success = Color3.fromRGB(222, 182, 64), Info = Color3.fromRGB(170, 130, 52),
+    OnBG = Color3.fromRGB(58, 48, 22), Off = Color3.fromRGB(68, 62, 50),
 }
 
 local T = {
@@ -136,21 +136,21 @@ local T = {
         suggest="\u{627}\u{642}\u{62A}\u{631}\u{627}\u{62D} \u{644}\u{627}\u{639}\u{628}", whitelist="\u{627}\u{644}\u{645}\u{633}\u{645}\u{648}\u{62D}\u{648}\u{646}", blocked="\u{627}\u{644}\u{645}\u{62D}\u{62C}\u{648}\u{628}\u{648}\u{646}",
         searchPH="\u{627}\u{628}\u{62D}\u{62B} \u{639}\u{646} \u{644}\u{627}\u{639}\u{628}...", on="\u{645}\u{641}\u{639}\u{651}\u{644}", off="\u{645}\u{639}\u{637}\u{651}\u{644}", noPlayers="\u{644}\u{627} \u{64A}\u{648}\u{62C}\u{62F} \u{644}\u{627}\u{639}\u{628}\u{648}\u{646}",
         wl="\u{633}\u{645}\u{627}\u{62D}", block="\u{62D}\u{62C}\u{628}", empty="\u{641}\u{627}\u{631}\u{63A}", footer="\u{628}\u{64A} \u{62D}\u{644}\u{627}\u{644}", none="\u{2014}",
-        soundLog="\u{1F3A7}  \u{633}\u{62C}\u{644} \u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A}", soundLogTitle="\u{633}\u{62C}\u{644} \u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A}", clearLog="\u{1F5D1} \u{645}\u{633}\u{62D}", stopShort="\u{23F9} \u{625}\u{64A}\u{642}\u{627}\u{641}", stopListen="\u{23F9} \u{625}\u{64A}\u{642}\u{627}\u{641} \u{627}\u{644}\u{627}\u{633}\u{62A}\u{645}\u{627}\u{639}",
-        emptyLog="\u{645}\u{627} \u{627}\u{634}\u{62A}\u{63A}\u{644} \u{623}\u{64A} \u{635}\u{648}\u{62A} \u{628}\u{639}\u{62F}", logSearch="\u{1F50D} \u{627}\u{628}\u{62D}\u{62B} \u{641}\u{64A} \u{627}\u{644}\u{633}\u{62C}\u{644}...",
-        soundHint="\u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{64A} \u{64A}\u{643}\u{62A}\u{645}\u{647}\u{627} \u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}. \u{1F3A7} \u{62A}\u{633}\u{645}\u{639}\u{647} \u{644}\u{62D}\u{627}\u{644}\u{647}\u{60C} \u{648}\u{1F50A} \u{62A}\u{633}\u{62A}\u{62B}\u{646}\u{64A}\u{647} \u{645}\u{646} \u{627}\u{644}\u{643}\u{62A}\u{645}.",
-        stPlaying="\u{25B6} \u{634}\u{63A}\u{627}\u{644}", stIdle="\u{23F8} \u{645}\u{62A}\u{648}\u{642}\u{641}", stGone="\u{2716} \u{627}\u{62E}\u{62A}\u{641}\u{649} \u{645}\u{646} \u{627}\u{644}\u{645}\u{627}\u{628}",
+        soundLog="\u{633}\u{62C}\u{644} \u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A}", soundLogTitle="\u{633}\u{62C}\u{644} \u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A}", clearLog="\u{645}\u{633}\u{62D}", stopShort="\u{625}\u{64A}\u{642}\u{627}\u{641}", stopListen="\u{625}\u{64A}\u{642}\u{627}\u{641} \u{627}\u{644}\u{627}\u{633}\u{62A}\u{645}\u{627}\u{639}",
+        emptyLog="\u{645}\u{627} \u{627}\u{634}\u{62A}\u{63A}\u{644} \u{623}\u{64A} \u{635}\u{648}\u{62A} \u{628}\u{639}\u{62F}", logSearch="\u{627}\u{628}\u{62D}\u{62B} \u{641}\u{64A} \u{627}\u{644}\u{633}\u{62C}\u{644}...",
+        soundHint="\u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{64A} \u{64A}\u{643}\u{62A}\u{645}\u{647}\u{627} \u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}.  \u{62A}\u{633}\u{645}\u{639}\u{647} \u{644}\u{62D}\u{627}\u{644}\u{647}\u{60C} \u{648} \u{62A}\u{633}\u{62A}\u{62B}\u{646}\u{64A}\u{647} \u{645}\u{646} \u{627}\u{644}\u{643}\u{62A}\u{645}.",
+        stPlaying="\u{634}\u{63A}\u{627}\u{644}", stIdle="\u{645}\u{62A}\u{648}\u{642}\u{641}", stGone="\u{627}\u{62E}\u{62A}\u{641}\u{649} \u{645}\u{646} \u{627}\u{644}\u{645}\u{627}\u{628}",
         btnOn="\u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}: \u{645}\u{641}\u{639}\u{651}\u{644}", btnOff="\u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}: \u{645}\u{639}\u{637}\u{651}\u{644}",
-        exemptOn="\u{645}\u{633}\u{62A}\u{62B}\u{646}\u{649}", exemptOff="\u{64A}\u{64F}\u{643}\u{62A}\u{645}", stExempt="\u{1F50A} \u{645}\u{633}\u{62A}\u{62B}\u{646}\u{649} \u{645}\u{646} \u{627}\u{644}\u{643}\u{62A}\u{645}", stByButton="\u{1F507} \u{645}\u{643}\u{62A}\u{648}\u{645} \u{628}\u{627}\u{644}\u{632}\u{631}", stWillMute="\u{23F3} \u{64A}\u{64F}\u{643}\u{62A}\u{645} \u{644}\u{645}\u{627} \u{62A}\u{641}\u{639}\u{651}\u{644} \u{627}\u{644}\u{632}\u{631}",
-        listenShort="\u{1F3A7} \u{627}\u{633}\u{62A}\u{645}\u{639}",
-        animLog="\u{1F4DC}  \u{633}\u{62C}\u{644} \u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A}", animTitle="\u{633}\u{62C}\u{644} \u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A}", allowedTag="\u{645}\u{633}\u{645}\u{648}\u{62D}\u{629}", blockedTag="\u{645}\u{62D}\u{62C}\u{648}\u{628}\u{629}",
+        exemptOn="\u{645}\u{633}\u{62A}\u{62B}\u{646}\u{649}", exemptOff="\u{64A}\u{64F}\u{643}\u{62A}\u{645}", stExempt="\u{645}\u{633}\u{62A}\u{62B}\u{646}\u{649} \u{645}\u{646} \u{627}\u{644}\u{643}\u{62A}\u{645}", stByButton="\u{645}\u{643}\u{62A}\u{648}\u{645} \u{628}\u{627}\u{644}\u{632}\u{631}", stWillMute="\u{64A}\u{64F}\u{643}\u{62A}\u{645} \u{644}\u{645}\u{627} \u{62A}\u{641}\u{639}\u{651}\u{644} \u{627}\u{644}\u{632}\u{631}",
+        listenShort="\u{627}\u{633}\u{62A}\u{645}\u{639}",
+        animLog="\u{633}\u{62C}\u{644} \u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A}", animTitle="\u{633}\u{62C}\u{644} \u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A}", allowedTag="\u{645}\u{633}\u{645}\u{648}\u{62D}\u{629}", blockedTag="\u{645}\u{62D}\u{62C}\u{648}\u{628}\u{629}",
         animHint="\u{631}\u{642}\u{635}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646} \u{648}\u{62D}\u{631}\u{643}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629} \u{62A}\u{638}\u{647}\u{631} \u{647}\u{646}\u{627}. \u{627}\u{636}\u{63A}\u{637} \u{639}\u{644}\u{649} \u{627}\u{644}\u{632}\u{631} \u{639}\u{634}\u{627}\u{646} \u{62A}\u{62D}\u{62C}\u{628} \u{623}\u{648} \u{62A}\u{633}\u{645}\u{62D}.",
         emptyAnim="\u{645}\u{627} \u{627}\u{646}\u{631}\u{635}\u{62F}\u{62A} \u{623}\u{64A} \u{62D}\u{631}\u{643}\u{629} \u{628}\u{639}\u{62F}", animAll="\u{627}\u{644}\u{643}\u{644}", animPlayers="\u{631}\u{642}\u{635}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646}", animGame="\u{645}\u{646} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629}",
-        tagPlayer="\u{1F483} \u{631}\u{642}\u{635}\u{629} \u{644}\u{627}\u{639}\u{628}", tagGame="\u{1F3AE} \u{645}\u{646} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629}", tagSaved="\u{1F4CC} \u{645}\u{62D}\u{641}\u{648}\u{638}\u{629}",
-        saveBtn="\u{1F4BE}  \u{62D}\u{641}\u{638}", savesTitle="\u{627}\u{644}\u{62D}\u{641}\u{638}", saveNamePh="\u{627}\u{633}\u{645} \u{627}\u{644}\u{62D}\u{641}\u{638}...", saveNow="\u{62D}\u{641}\u{638}", loadShort="\u{62A}\u{62D}\u{645}\u{64A}\u{644}",
+        tagPlayer="\u{631}\u{642}\u{635}\u{629} \u{644}\u{627}\u{639}\u{628}", tagGame="\u{645}\u{646} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629}", tagSaved="\u{645}\u{62D}\u{641}\u{648}\u{638}\u{629}",
+        saveBtn="\u{62D}\u{641}\u{638}", savesTitle="\u{627}\u{644}\u{62D}\u{641}\u{638}", saveNamePh="\u{627}\u{633}\u{645} \u{627}\u{644}\u{62D}\u{641}\u{638}...", saveNow="\u{62D}\u{641}\u{638}", loadShort="\u{62A}\u{62D}\u{645}\u{64A}\u{644}",
         saveHint="\u{64A}\u{62D}\u{641}\u{638} \u{643}\u{644} \u{625}\u{639}\u{62F}\u{627}\u{62F}\u{627}\u{62A}\u{643} \u{627}\u{644}\u{62D}\u{627}\u{644}\u{64A}\u{629} (\u{627}\u{644}\u{623}\u{632}\u{631}\u{627}\u{631} \u{648}\u{627}\u{644}\u{642}\u{648}\u{627}\u{626}\u{645} \u{648}\u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A}) \u{628}\u{627}\u{644}\u{627}\u{633}\u{645} \u{627}\u{644}\u{644}\u{64A} \u{62A}\u{62E}\u{62A}\u{627}\u{631}\u{647}.",
-        emptySaves="\u{645}\u{627} \u{641}\u{64A}\u{647} \u{62D}\u{641}\u{638} \u{628}\u{639}\u{62F}", saved="\u{2713} \u{62A}\u{645} \u{627}\u{644}\u{62D}\u{641}\u{638}", thisMap="\u{647}\u{630}\u{627} \u{627}\u{644}\u{645}\u{627}\u{628}",
-        resetAll="\u{1F5D1}  \u{645}\u{633}\u{62D} \u{643}\u{644} \u{627}\u{644}\u{628}\u{64A}\u{627}\u{646}\u{627}\u{62A}", resetConfirm="\u{26A0} \u{627}\u{636}\u{63A}\u{637} \u{645}\u{631}\u{629} \u{62B}\u{627}\u{646}\u{64A}\u{629} \u{644}\u{644}\u{62A}\u{623}\u{643}\u{64A}\u{62F}",
+        emptySaves="\u{645}\u{627} \u{641}\u{64A}\u{647} \u{62D}\u{641}\u{638} \u{628}\u{639}\u{62F}", saved="\u{62A}\u{645} \u{627}\u{644}\u{62D}\u{641}\u{638}", thisMap="\u{647}\u{630}\u{627} \u{627}\u{644}\u{645}\u{627}\u{628}",
+        resetAll="\u{645}\u{633}\u{62D} \u{643}\u{644} \u{627}\u{644}\u{628}\u{64A}\u{627}\u{646}\u{627}\u{62A}", resetConfirm="\u{627}\u{636}\u{63A}\u{637} \u{645}\u{631}\u{629} \u{62B}\u{627}\u{646}\u{64A}\u{629} \u{644}\u{644}\u{62A}\u{623}\u{643}\u{64A}\u{62F}",
     },
     en = {
         title="Be Halal", subtitle="Islamic server tools",
@@ -160,21 +160,21 @@ local T = {
         suggest="Suggest Player", whitelist="Whitelisted", blocked="Blocked",
         searchPH="Search for player...", on="Active", off="Disabled", noPlayers="No players found",
         wl="Allow", block="Block", empty="Empty", footer="Be Halal", none="\u{2014}",
-        soundLog="\u{1F3A7}  Sound Log", soundLogTitle="Sound Log", clearLog="\u{1F5D1} Clear", stopShort="\u{23F9} Stop", stopListen="\u{23F9} Stop Listening",
-        emptyLog="No sound played yet", logSearch="\u{1F50D} Search the log...",
-        soundHint="Sounds caught by the Mute Music button. \u{1F3A7} listens to it alone, \u{1F50A} exempts it from muting.",
-        stPlaying="\u{25B6} Playing", stIdle="\u{23F8} Idle", stGone="\u{2716} Gone from map",
+        soundLog="Sound Log", soundLogTitle="Sound Log", clearLog="Clear", stopShort="Stop", stopListen="Stop Listening",
+        emptyLog="No sound played yet", logSearch="Search the log...",
+        soundHint="Sounds caught by the Mute Music button.  listens to it alone,  exempts it from muting.",
+        stPlaying="Playing", stIdle="Idle", stGone="Gone from map",
         btnOn="Mute Music button: ON", btnOff="Mute Music button: OFF",
-        exemptOn="Exempt", exemptOff="Muted", stExempt="\u{1F50A} Exempt from muting", stByButton="\u{1F507} Muted by button", stWillMute="\u{23F3} Will mute when button is on",
-        listenShort="\u{1F3A7} Listen",
-        animLog="\u{1F4DC}  Dance Log", animTitle="Dance Log", allowedTag="Allowed", blockedTag="Blocked",
+        exemptOn="Exempt", exemptOff="Muted", stExempt="Exempt from muting", stByButton="Muted by button", stWillMute="Will mute when button is on",
+        listenShort="Listen",
+        animLog="Dance Log", animTitle="Dance Log", allowedTag="Allowed", blockedTag="Blocked",
         animHint="Player dances and game animations show here. Tap the button to block or allow.",
         emptyAnim="No animation detected yet", animAll="All", animPlayers="Player dances", animGame="From game",
-        tagPlayer="\u{1F483} Player dance", tagGame="\u{1F3AE} From game", tagSaved="\u{1F4CC} Saved",
-        saveBtn="\u{1F4BE}  Save", savesTitle="Saves", saveNamePh="Save name...", saveNow="Save", loadShort="Load",
+        tagPlayer="Player dance", tagGame="From game", tagSaved="Saved",
+        saveBtn="Save", savesTitle="Saves", saveNamePh="Save name...", saveNow="Save", loadShort="Load",
         saveHint="Saves all your current settings (toggles, lists and sounds) under the name you choose.",
-        emptySaves="Nothing saved yet", saved="\u{2713} Saved", thisMap="This map",
-        resetAll="\u{1F5D1}  Clear all data", resetConfirm="\u{26A0} Tap again to confirm",
+        emptySaves="Nothing saved yet", saved="Saved", thisMap="This map",
+        resetAll="Clear all data", resetConfirm="Tap again to confirm",
     },
 }
 local function tr(k) return (T[State.lang] or T.en)[k] or T.en[k] or k end
@@ -1039,7 +1039,7 @@ function UILib.halo(target, radius, J)
     return f
 end
 local WHITE = Color3.new(1, 1, 1)
-local DARK = Color3.fromRGB(10, 24, 16)
+local DARK = Color3.fromRGB(22, 16, 4)
 local function Btn(parent, props, radius)
     local p = {BorderSizePixel = 0, AutoButtonColor = false, Font = Enum.Font.GothamBold, TextColor3 = WHITE, TextSize = 11}
     for k, v in pairs(props) do p[k] = v end
@@ -1138,34 +1138,198 @@ local function makeSlider(parent, pos, size, J, onChange)
     return sl
 end
 
+---------------------------------------------------------------- Icons (hand drawn from frames)
+local Icon = {}
+local function part(parent, cx, cy, w, h, color, rot, round)
+    local f = N("Frame", {
+        AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(cx, cy), Size = UDim2.fromScale(w, h),
+        BackgroundColor3 = color, BorderSizePixel = 0, Rotation = rot or 0, ZIndex = parent.ZIndex + 1,
+    }, parent)
+    if round then N("UICorner", {CornerRadius = UDim.new(round, 0)}, f) end
+    return f
+end
+local function ring(parent, cx, cy, d, color, th)
+    local f = part(parent, cx, cy, d, d, color, 0, 0.5)
+    f.BackgroundTransparency = 1
+    N("UIStroke", {Color = color, Thickness = th or 2}, f)
+    return f
+end
+
+local ICONS = {}
+function ICONS.speaker(f, c)
+    part(f, 0.24, 0.5, 0.2, 0.28, c, 0, 0.1)
+    part(f, 0.4, 0.5, 0.28, 0.28, c, 45)
+    part(f, 0.68, 0.5, 0.07, 0.28, c, 0, 0.5)
+    part(f, 0.82, 0.5, 0.07, 0.5, c, 0, 0.5)
+end
+function ICONS.eq(f, c)
+    local hs = {0.35, 0.7, 0.5, 0.85, 0.4}
+    for i, h in ipairs(hs) do part(f, 0.12 + (i - 1) * 0.19, 0.5, 0.1, h, c, 0, 0.5) end
+end
+function ICONS.shirt(f, c)
+    part(f, 0.5, 0.64, 0.44, 0.6, c, 0, 0.08)
+    part(f, 0.2, 0.36, 0.34, 0.2, c, -25, 0.2)
+    part(f, 0.8, 0.36, 0.34, 0.2, c, 25, 0.2)
+    part(f, 0.5, 0.3, 0.2, 0.1, c, 0, 0.3)
+end
+function ICONS.dancer(f, c)
+    part(f, 0.5, 0.17, 0.2, 0.2, c, 0, 0.5)
+    part(f, 0.5, 0.5, 0.1, 0.38, c, 0, 0.5)
+    part(f, 0.27, 0.34, 0.4, 0.08, c, -40, 0.5)
+    part(f, 0.73, 0.4, 0.4, 0.08, c, 40, 0.5)
+    part(f, 0.38, 0.8, 0.08, 0.36, c, 18, 0.5)
+    part(f, 0.62, 0.8, 0.08, 0.36, c, -18, 0.5)
+end
+function ICONS.target(f, c)
+    ring(f, 0.5, 0.5, 0.84, c, 2)
+    ring(f, 0.5, 0.5, 0.46, c, 2)
+    part(f, 0.5, 0.5, 0.14, 0.14, c, 0, 0.5)
+end
+function ICONS.search(f, c)
+    ring(f, 0.43, 0.43, 0.56, c, 2)
+    part(f, 0.78, 0.78, 0.34, 0.1, c, 45, 0.5)
+end
+function ICONS.user(f, c)
+    part(f, 0.5, 0.3, 0.3, 0.3, c, 0, 0.5)
+    part(f, 0.5, 0.74, 0.62, 0.34, c, 0, 0.5)
+end
+function ICONS.save(f, c)
+    local sq = part(f, 0.5, 0.5, 0.78, 0.78, c, 0, 0.1)
+    sq.BackgroundTransparency = 1
+    N("UIStroke", {Color = c, Thickness = 2}, sq)
+    part(f, 0.5, 0.3, 0.42, 0.18, c)
+    part(f, 0.5, 0.72, 0.46, 0.26, c, 0, 0.1)
+end
+function ICONS.log(f, c)
+    part(f, 0.5, 0.26, 0.74, 0.1, c, 0, 0.5)
+    part(f, 0.5, 0.5, 0.74, 0.1, c, 0, 0.5)
+    part(f, 0.37, 0.74, 0.48, 0.1, c, 0, 0.5)
+end
+function ICONS.refresh(f, c)
+    ring(f, 0.5, 0.5, 0.7, c, 2)
+    part(f, 0.84, 0.26, 0.22, 0.22, c, 45)
+end
+function ICONS.check(f, c)
+    part(f, 0.33, 0.6, 0.3, 0.12, c, 45, 0.5)
+    part(f, 0.6, 0.5, 0.62, 0.12, c, -50, 0.5)
+end
+function ICONS.undo(f, c)
+    part(f, 0.58, 0.5, 0.56, 0.11, c, 0, 0.5)
+    part(f, 0.28, 0.38, 0.32, 0.11, c, -40, 0.5)
+    part(f, 0.28, 0.62, 0.32, 0.11, c, 40, 0.5)
+end
+function ICONS.trash(f, c)
+    part(f, 0.5, 0.62, 0.5, 0.56, c, 0, 0.08)
+    part(f, 0.5, 0.28, 0.72, 0.1, c, 0, 0.5)
+    part(f, 0.5, 0.17, 0.26, 0.08, c, 0, 0.5)
+end
+function ICONS.folder(f, c)
+    part(f, 0.5, 0.6, 0.82, 0.5, c, 0, 0.1)
+    part(f, 0.3, 0.3, 0.36, 0.16, c, 0, 0.2)
+end
+function ICONS.x(f, c)
+    part(f, 0.5, 0.5, 0.8, 0.13, c, 45, 0.5)
+    part(f, 0.5, 0.5, 0.8, 0.13, c, -45, 0.5)
+end
+function ICONS.min(f, c)
+    part(f, 0.5, 0.5, 0.7, 0.13, c, 0, 0.5)
+end
+function ICONS.crescent(f, c, bg)
+    part(f, 0.46, 0.5, 0.74, 0.74, c, 0, 0.5)
+    part(f, 0.6, 0.44, 0.66, 0.66, bg, 0, 0.5)
+    part(f, 0.78, 0.32, 0.15, 0.15, c, 0)
+    part(f, 0.78, 0.32, 0.15, 0.15, c, 45)
+end
+
+function ICONS.play(f, c)
+    local cl = part(f, 0.6, 0.5, 0.5, 0.7, c)
+    cl.BackgroundTransparency = 1
+    cl.ClipsDescendants = true
+    part(cl, 0, 0.5, 1, 0.714, c, 45)
+end
+function ICONS.pause(f, c)
+    part(f, 0.36, 0.5, 0.2, 0.66, c, 0, 0.2)
+    part(f, 0.64, 0.5, 0.2, 0.66, c, 0, 0.2)
+end
+function ICONS.stop(f, c)
+    part(f, 0.5, 0.5, 0.56, 0.56, c, 0, 0.15)
+end
+function ICONS.mute(f, c)
+    ICONS.speaker(f, c)
+    part(f, 0.5, 0.5, 0.98, 0.1, c, -45, 0.5)
+end
+function ICONS.block(f, c)
+    ring(f, 0.5, 0.5, 0.8, c, 2)
+    part(f, 0.5, 0.5, 0.8, 0.12, c, -45, 0.5)
+end
+function ICONS.pad(f, c, bg)
+    part(f, 0.5, 0.55, 0.92, 0.5, c, 0, 0.3)
+    part(f, 0.3, 0.55, 0.22, 0.07, bg)
+    part(f, 0.3, 0.55, 0.07, 0.22, bg)
+    part(f, 0.72, 0.5, 0.1, 0.1, bg, 0, 0.5)
+    part(f, 0.84, 0.6, 0.1, 0.1, bg, 0, 0.5)
+end
+function ICONS.pin(f, c)
+    ring(f, 0.5, 0.4, 0.52, c, 2)
+    part(f, 0.5, 0.4, 0.14, 0.14, c, 0, 0.5)
+    part(f, 0.5, 0.82, 0.1, 0.26, c, 0, 0.5)
+end
+
+function Icon.draw(name, parent, color, size, bg)
+    local f = N("Frame", {
+        AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(0.5, 0, 0.5, 0),
+        Size = UDim2.new(0, size or 20, 0, size or 20), BackgroundTransparency = 1, ZIndex = parent.ZIndex + 1,
+    }, parent)
+    local fn = ICONS[name]
+    if fn then fn(f, color, bg or Theme.BG2) end
+    return f
+end
+
+-- redraw an icon inside an existing holder frame
+function Icon.set(holder, name, color)
+    for _, ch in ipairs(holder:GetChildren()) do ch:Destroy() end
+    local fn = ICONS[name]
+    if fn then fn(holder, color, Theme.BG1) end
+end
+-- reserve room on the left of a button and return the holder frame for its icon
+function Icon.attach(btn, size)
+    N("UIPadding", {PaddingLeft = UDim.new(0, size + 4)}, btn)
+    return N("Frame", {Size = UDim2.new(0, size, 0, size), Position = UDim2.new(0, 4 - size, 0.5, -size / 2), BackgroundTransparency = 1, ZIndex = btn.ZIndex + 1}, btn)
+end
+
 ---------------------------------------------------------------- Language screen
 local function showLangScreen(onDone)
     local mobile = isMobile()
     local gui = Root:Add(N("ScreenGui", {Name = "BHLang", ResetOnSpawn = false, IgnoreGuiInset = mobile, DisplayOrder = 999, ZIndexBehavior = Enum.ZIndexBehavior.Sibling}, PG))
     local chosen = false
-    N("Frame", {Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = Color3.fromRGB(5, 8, 12), BackgroundTransparency = 0.35, BorderSizePixel = 0}, gui)
-    local cw, ch = mobile and 300 or 400, 370
+    N("Frame", {Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = Color3.fromRGB(3, 2, 1), BackgroundTransparency = 0.25, BorderSizePixel = 0}, gui)
+    local cw, ch = mobile and 300 or 380, 350
     local card = N("Frame", {Size = UDim2.new(0, cw, 0, ch), Position = UDim2.new(0.5, -cw / 2, 0.5, -ch / 2 + 60), BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, Active = true}, gui)
-    UILib.corner(card, 24)
-    UILib.gradient(card, Color3.fromRGB(22, 30, 40), Color3.fromRGB(12, 18, 24), 135)
+    UILib.corner(card, 22)
+    UILib.gradient(card, Color3.fromRGB(30, 26, 18), Color3.fromRGB(12, 10, 7), 135)
     UILib.glow(UILib.stroke(card, Theme.Accent, 1.5, 0.3), Root)
 
-    local logo = N("Frame", {Size = UDim2.new(0, 80, 0, 80), Position = UDim2.new(0.5, -40, 0, 22), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0}, card)
-    UILib.corner(logo, 40) UILib.stroke(logo, Theme.Accent, 2, 0.2)
-    Label(logo, {Size = UDim2.new(1, 0, 1, 0), Text = "\u{1F54C}", TextSize = 42, Font = Enum.Font.GothamBold, TextXAlignment = Enum.TextXAlignment.Center})
-    Label(card, {Size = UDim2.new(1, -30, 0, 30), Position = UDim2.new(0, 15, 0, 112), Text = "\u{628}\u{64A} \u{62D}\u{644}\u{627}\u{644} \u{B7} Be Halal", Font = Enum.Font.GothamBold, TextSize = 22, TextColor3 = Theme.Accent2, TextXAlignment = Enum.TextXAlignment.Center})
-    Label(card, {Size = UDim2.new(1, -30, 0, 18), Position = UDim2.new(0, 15, 0, 146), Text = "\u{627}\u{62E}\u{62A}\u{631} \u{627}\u{644}\u{644}\u{63A}\u{629}  \u{2022}  Select Language", TextColor3 = Theme.TextDim, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Center})
+    local plate = N("Frame", {Size = UDim2.new(0, 76, 0, 76), Position = UDim2.new(0.5, -38, 0, 24), BackgroundColor3 = Theme.BG1, BorderSizePixel = 0}, card)
+    UILib.corner(plate, 38) UILib.stroke(plate, Theme.Accent, 2, 0.15)
+    Icon.draw("crescent", plate, Theme.Accent, 54, Theme.BG1)
+    Label(card, {Size = UDim2.new(1, -30, 0, 30), Position = UDim2.new(0, 15, 0, 110), Text = "Be Halal", Font = Enum.Font.GothamBold, TextSize = 24, TextColor3 = Theme.Accent2, TextXAlignment = Enum.TextXAlignment.Center})
+    Label(card, {Size = UDim2.new(1, -30, 0, 16), Position = UDim2.new(0, 15, 0, 142), Text = "Select language  |  \u{0627}\u{062e}\u{062a}\u{0631} \u{0627}\u{0644}\u{0644}\u{063a}\u{0629}", TextColor3 = Theme.TextDim, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Center})
+    local sep = N("Frame", {Size = UDim2.new(0.5, 0, 0, 1), Position = UDim2.new(0.25, 0, 0, 170), BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.5, BorderSizePixel = 0}, card)
+    UILib.gradient(sep, Theme.BG2, Theme.Accent, 0)
 
-    local function mkb(text, flag, desc, y, lang, col)
-        local bc = N("Frame", {Size = UDim2.new(1, -60, 0, 76), Position = UDim2.new(0, 30, 0, y), BackgroundColor3 = Theme.Card, BorderSizePixel = 0}, card)
-        UILib.corner(bc, 16) UILib.stroke(bc, col, 1.5, 0.4)
-        local fb = N("Frame", {Size = UDim2.new(0, 48, 0, 48), Position = UDim2.new(0, 14, 0.5, -24), BackgroundColor3 = Theme.BG1, BorderSizePixel = 0}, bc)
-        UILib.corner(fb, 12)
-        Label(fb, {Size = UDim2.new(1, 0, 1, 0), Text = flag, TextSize = 26, Font = Enum.Font.GothamBold, TextXAlignment = Enum.TextXAlignment.Center})
-        Label(bc, {Size = UDim2.new(1, -100, 0, 22), Position = UDim2.new(0, 72, 0, 16), Text = text, Font = Enum.Font.GothamBold, TextSize = 18})
-        Label(bc, {Size = UDim2.new(1, -100, 0, 16), Position = UDim2.new(0, 72, 0, 40), Text = desc, TextColor3 = Theme.TextDim, TextSize = 11})
-        Label(bc, {Size = UDim2.new(0, 30, 1, 0), Position = UDim2.new(1, -36, 0, 0), Text = "\u{203A}", TextColor3 = col, Font = Enum.Font.GothamBold, TextSize = 30, TextXAlignment = Enum.TextXAlignment.Center})
+    local function option(tag, text, desc, y, lang)
+        local bc = N("Frame", {Size = UDim2.new(1, -56, 0, 70), Position = UDim2.new(0, 28, 0, y), BackgroundColor3 = Theme.Card, BorderSizePixel = 0}, card)
+        UILib.corner(bc, 16)
+        local bs = UILib.stroke(bc, Theme.Accent, 1.2, 0.6)
+        local badge = N("Frame", {Size = UDim2.new(0, 44, 0, 44), Position = UDim2.new(0, 14, 0.5, -22), BackgroundColor3 = Theme.BG1, BorderSizePixel = 0}, bc)
+        UILib.corner(badge, 12) UILib.stroke(badge, Theme.Accent, 1, 0.5)
+        Label(badge, {Size = UDim2.new(1, 0, 1, 0), Text = tag, Font = Enum.Font.GothamBold, TextSize = 16, TextColor3 = Theme.Accent, TextXAlignment = Enum.TextXAlignment.Center})
+        Label(bc, {Size = UDim2.new(1, -110, 0, 22), Position = UDim2.new(0, 70, 0, 14), Text = text, Font = Enum.Font.GothamBold, TextSize = 17})
+        Label(bc, {Size = UDim2.new(1, -110, 0, 16), Position = UDim2.new(0, 70, 0, 38), Text = desc, TextColor3 = Theme.TextDim, TextSize = 11})
+        Label(bc, {Size = UDim2.new(0, 24, 1, 0), Position = UDim2.new(1, -30, 0, 0), Text = ">", TextColor3 = Theme.Accent, Font = Enum.Font.GothamBold, TextSize = 20, TextXAlignment = Enum.TextXAlignment.Center})
         local b = N("TextButton", {Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Text = "", AutoButtonColor = false}, bc)
+        b.MouseEnter:Connect(function() TweenService:Create(bc, TweenInfo.new(0.15), {BackgroundColor3 = Theme.CardHi}):Play() bs.Transparency = 0.1 end)
+        b.MouseLeave:Connect(function() TweenService:Create(bc, TweenInfo.new(0.15), {BackgroundColor3 = Theme.Card}):Play() bs.Transparency = 0.6 end)
         b.Activated:Connect(function()
             if chosen then return end
             chosen = true
@@ -1175,13 +1339,40 @@ local function showLangScreen(onDone)
             onDone(lang)
         end)
     end
-    mkb("\u{627}\u{644}\u{639}\u{631}\u{628}\u{64A}\u{629}", "\u{1F1F8}\u{1F1E6}", "\u{648}\u{627}\u{62C}\u{647}\u{629} \u{639}\u{631}\u{628}\u{64A}\u{629} \u{643}\u{627}\u{645}\u{644}\u{629}", 185, "ar", Theme.Accent)
-    mkb("English", "\u{1F1EC}\u{1F1E7}", "Full English interface", 270, "en", Theme.Accent2)
+    option("AR", "\u{0627}\u{0644}\u{0639}\u{0631}\u{0628}\u{064a}\u{0629}", "\u{0648}\u{0627}\u{062c}\u{0647}\u{0629} \u{0639}\u{0631}\u{0628}\u{064a}\u{0629} \u{0643}\u{0627}\u{0645}\u{0644}\u{0629}", 190, "ar")
+    option("EN", "English", "Full English interface", 270, "en")
     TweenService:Create(card, TweenInfo.new(0.6, Enum.EasingStyle.Back), {Position = UDim2.new(0.5, -cw / 2, 0.5, -ch / 2)}):Play()
 end
 
+---------------------------------------------------------------- Splash
+local function showSplash(onDone)
+    local gui = Root:Add(N("ScreenGui", {Name = "BH_Splash", ResetOnSpawn = false, IgnoreGuiInset = true, DisplayOrder = 998, ZIndexBehavior = Enum.ZIndexBehavior.Sibling}, PG))
+    local grp = N("CanvasGroup", {Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = Theme.BG1, BorderSizePixel = 0}, gui)
+    UILib.gradient(grp, Color3.fromRGB(24, 20, 12), Color3.fromRGB(6, 5, 3), 90)
+    local plate = N("Frame", {AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(0.5, 0, 0.5, -40), Size = UDim2.new(0, 0, 0, 0), BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, ClipsDescendants = true}, grp)
+    UILib.corner(plate, 48) UILib.stroke(plate, Theme.Accent, 2, 0.1)
+    Icon.draw("crescent", plate, Theme.Accent, 66, Theme.BG2)
+    local title = Label(grp, {AnchorPoint = Vector2.new(0.5, 0.5), Size = UDim2.new(0, 300, 0, 34), Position = UDim2.new(0.5, 0, 0.5, 52), Text = "BE HALAL", Font = Enum.Font.GothamBold, TextSize = 28, TextColor3 = Theme.Accent2, TextXAlignment = Enum.TextXAlignment.Center, TextTransparency = 1})
+    local sub = Label(grp, {AnchorPoint = Vector2.new(0.5, 0.5), Size = UDim2.new(0, 300, 0, 18), Position = UDim2.new(0.5, 0, 0.5, 82), Text = "v" .. VERSION .. "   |   " .. CREATOR_NAME, TextSize = 12, TextColor3 = Theme.TextDim, TextXAlignment = Enum.TextXAlignment.Center, TextTransparency = 1})
+    local line = N("Frame", {AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(0.5, 0, 0.5, 104), Size = UDim2.new(0, 0, 0, 2), BackgroundColor3 = Theme.Accent, BorderSizePixel = 0}, grp)
+    UILib.corner(line, 1)
+    task.spawn(function()
+        TweenService:Create(plate, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 96, 0, 96)}):Play()
+        task.wait(0.4)
+        TweenService:Create(title, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
+        TweenService:Create(sub, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
+        TweenService:Create(line, TweenInfo.new(0.7, Enum.EasingStyle.Quad), {Size = UDim2.new(0, 180, 0, 2)}):Play()
+        task.wait(1.1)
+        local t = TweenService:Create(grp, TweenInfo.new(0.4), {GroupTransparency = 1})
+        t:Play()
+        t.Completed:Wait()
+        gui:Destroy()
+        if State.running then onDone() end
+    end)
+end
+
 ---------------------------------------------------------------- Shared sound helpers
-local CAT_ICON = {music = "\u{1F3B5}", ambient = "\u{1F33F}", sfx = "\u{1F4A5}", ui = "\u{1F5B1}", other = "\u{1F4E6}"}
+local CAT_ICON = {music = "", ambient = "", sfx = "", ui = "", other = ""}
 local function sortByName(arr, nameOf, keyOf)
     table.sort(arr, function(a, b)
         local na, nb = lower(nameOf(a)), lower(nameOf(b))
@@ -1198,12 +1389,15 @@ local function buildSoundLog(J, vp)
     UILib.corner(panel, 18) UILib.gradient(panel, Theme.BG1, Theme.BG3, 135) UILib.glow(UILib.stroke(panel, Theme.Accent2, 1.5, 0.4), J)
     local top = N("Frame", {Size = UDim2.new(1, 0, 0, 40), BackgroundTransparency = 1}, panel)
     makeDraggable(top, panel, J)
-    Label(top, {Size = UDim2.new(1, -80, 0, 28), Position = UDim2.new(0, 14, 0, 8), Text = tr("soundLogTitle"), TextColor3 = Theme.Accent2, Font = Enum.Font.GothamBold, TextSize = 15})
-    local closeB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -36, 0, 8), BackgroundColor3 = Theme.Card, Text = "\u{2715}", TextColor3 = Theme.Danger, TextSize = 14}, 13)
+    Icon.set(N("Frame", {Size = UDim2.new(0, 18, 0, 18), Position = UDim2.new(0, 14, 0, 13), BackgroundTransparency = 1}, top), "eq", Theme.Accent2)
+    Label(top, {Size = UDim2.new(1, -110, 0, 28), Position = UDim2.new(0, 40, 0, 8), Text = tr("soundLogTitle"), TextColor3 = Theme.Accent2, Font = Enum.Font.GothamBold, TextSize = 15})
+    local closeB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -36, 0, 8), BackgroundColor3 = Theme.Card, Text = "", TextColor3 = Theme.Danger, TextSize = 14}, 13)
     UILib.stroke(closeB, Theme.Danger, 1.5, 0.5)
+    Icon.draw("x", closeB, Theme.DangerHi, 12)
     J:Add(closeB.Activated:Connect(function() panel.Visible = false end))
-    local refreshB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -68, 0, 8), BackgroundColor3 = Theme.Card, Text = "\u{1F504}", TextColor3 = Theme.Accent2, TextSize = 13}, 13)
+    local refreshB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -68, 0, 8), BackgroundColor3 = Theme.Card, Text = "", TextColor3 = Theme.Accent2, TextSize = 13}, 13)
     UILib.stroke(refreshB, Theme.Accent2, 1.5, 0.5)
+    Icon.draw("refresh", refreshB, Theme.Accent2, 14)
 
     local banner = Label(panel, {Size = UDim2.new(1, -28, 0, 18), Position = UDim2.new(0, 14, 0, 40), Font = Enum.Font.GothamBold, TextSize = 11})
     local searchF = N("Frame", {Size = UDim2.new(1, -112, 0, 28), Position = UDim2.new(0, 14, 0, 62), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0}, panel)
@@ -1219,6 +1413,7 @@ local function buildSoundLog(J, vp)
     local hint = Label(panel, {Size = UDim2.new(1, -28, 0, 34), Position = UDim2.new(0, 14, 0, 96), Text = tr("soundHint"), TextColor3 = Theme.TextDim, TextSize = 11, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
     local bar = N("Frame", {Size = UDim2.new(1, -28, 0, 34), Position = UDim2.new(0, 14, 0, 96), BackgroundTransparency = 1, Visible = false}, panel)
     local stopB = Btn(bar, {Size = UDim2.new(0, 130, 0, 28), Position = UDim2.new(0, 0, 0, 3), BackgroundColor3 = Theme.Info, Text = tr("stopListen"), TextSize = 10})
+    Icon.set(Icon.attach(stopB, 12), "stop", WHITE)
     local pctL = Label(bar, {Size = UDim2.new(0, 48, 0, 28), Position = UDim2.new(1, -48, 0, 3), Text = "100%", Font = Enum.Font.GothamBold, TextSize = 11, TextXAlignment = Enum.TextXAlignment.Right})
     local soloSlider = makeSlider(bar, UDim2.new(0, 140, 0, 3), UDim2.new(1, -196, 0, 28), J, function(v)
         local k = Audio.solo
@@ -1249,6 +1444,7 @@ local function buildSoundLog(J, vp)
         local statL = Label(row, {Size = UDim2.new(1, -176, 0, 12), Position = UDim2.new(0, 10, 0, 44), TextColor3 = Theme.TextDim, TextSize = 10, TextTruncate = Enum.TextTruncate.AtEnd})
         local listenB = Btn(row, {Size = UDim2.new(0, 76, 0, 26), Position = UDim2.new(1, -166, 0.5, -13), TextSize = 10}, 6)
         local exemptB = Btn(row, {Size = UDim2.new(0, 76, 0, 26), Position = UDim2.new(1, -86, 0.5, -13), TextSize = 10}, 6)
+        local listenIc, exemptIc = Icon.attach(listenB, 12), Icon.attach(exemptB, 12)
         J:Add(listenB.Activated:Connect(function()
             if Audio.solo == k then Audio.soloStop()
             elseif Audio.isLive(k) then Audio.soloPlay(k) end
@@ -1268,21 +1464,26 @@ local function buildSoundLog(J, vp)
             local live = g ~= nil
             nameL.Text = g and g.name or e.name or k
             local cat = Audio.catCache[k]
-            pathL.Text = (cat and (CAT_ICON[cat] .. " ") or "") .. (e.path or "") .. "  \u{B7}  \u{23F1} " .. Audio.fmtTime(e.len) .. (e.looped and " \u{1F501}" or "") .. ((g and g.count > 1) and ("  \u{B7}  \u{D7}" .. g.count) or "")
+            pathL.Text = (cat and (CAT_ICON[cat] .. " ") or "") .. (e.path or "") .. "  \u{B7}   " .. Audio.fmtTime(e.len) .. (e.looped and " " or "") .. ((g and g.count > 1) and ("  \u{B7}  \u{D7}" .. g.count) or "")
             local state = exempt and tr("stExempt") or (State.muteMusic and tr("stByButton") or tr("stWillMute"))
             local play = (not live) and tr("stGone") or (g.playing and tr("stPlaying") or tr("stIdle"))
             statL.Text = state .. "  \u{B7}  " .. play
             if Audio.solo == k then
                 listenB.Text, listenB.BackgroundColor3, listenB.TextColor3 = tr("stopShort"), Theme.Gold, DARK
+                Icon.set(listenIc, "stop", DARK)
             elseif live then
                 listenB.Text, listenB.BackgroundColor3, listenB.TextColor3 = tr("listenShort"), Theme.Info, WHITE
+                Icon.set(listenIc, "play", WHITE)
             else
                 listenB.Text, listenB.BackgroundColor3, listenB.TextColor3 = tr("listenShort"), Theme.BG3, Theme.TextDim
+                Icon.set(listenIc, "play", Theme.TextDim)
             end
             if exempt then
-                exemptB.Text, exemptB.BackgroundColor3, exemptB.TextColor3 = "\u{1F50A} " .. tr("exemptOn"), Theme.Success, DARK
+                exemptB.Text, exemptB.BackgroundColor3, exemptB.TextColor3 = tr("exemptOn"), Theme.Success, DARK
+                Icon.set(exemptIc, "speaker", DARK)
             else
-                exemptB.Text, exemptB.BackgroundColor3, exemptB.TextColor3 = "\u{1F507} " .. tr("exemptOff"), Theme.Danger, WHITE
+                exemptB.Text, exemptB.BackgroundColor3, exemptB.TextColor3 = tr("exemptOff"), Theme.Danger, WHITE
+                Icon.set(exemptIc, "mute", WHITE)
             end
             rowStroke.Color = exempt and Theme.Success or Theme.Accent2
         end
@@ -1359,12 +1560,15 @@ local function buildAnimLog(J, vp)
     UILib.glow(UILib.stroke(panel, Theme.Gold, 1.5, 0.4), J, 1.5, Theme.Gold, Theme.Accent2)
     local top = N("Frame", {Size = UDim2.new(1, 0, 0, 44), BackgroundTransparency = 1}, panel)
     makeDraggable(top, panel, J)
-    Label(top, {Size = UDim2.new(1, -80, 0, 32), Position = UDim2.new(0, 14, 0, 8), Text = tr("animTitle"), TextColor3 = Theme.Gold, Font = Enum.Font.GothamBold, TextSize = 15})
-    local closeB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -36, 0, 10), BackgroundColor3 = Theme.Card, Text = "\u{2715}", TextColor3 = Theme.Danger, TextSize = 14}, 13)
+    Icon.set(N("Frame", {Size = UDim2.new(0, 20, 0, 20), Position = UDim2.new(0, 14, 0, 14), BackgroundTransparency = 1}, top), "dancer", Theme.Gold)
+    Label(top, {Size = UDim2.new(1, -110, 0, 32), Position = UDim2.new(0, 40, 0, 8), Text = tr("animTitle"), TextColor3 = Theme.Gold, Font = Enum.Font.GothamBold, TextSize = 15})
+    local closeB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -36, 0, 10), BackgroundColor3 = Theme.Card, Text = "", TextColor3 = Theme.Danger, TextSize = 14}, 13)
     UILib.stroke(closeB, Theme.Danger, 1.5, 0.5)
+    Icon.draw("x", closeB, Theme.DangerHi, 12)
     J:Add(closeB.Activated:Connect(function() panel.Visible = false end))
-    local refreshB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -68, 0, 10), BackgroundColor3 = Theme.Card, Text = "\u{1F504}", TextColor3 = Theme.Accent2, TextSize = 13}, 13)
+    local refreshB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -68, 0, 10), BackgroundColor3 = Theme.Card, Text = "", TextColor3 = Theme.Accent2, TextSize = 13}, 13)
     UILib.stroke(refreshB, Theme.Accent2, 1.5, 0.5)
+    Icon.draw("refresh", refreshB, Theme.Accent2, 14)
     Label(panel, {Size = UDim2.new(1, -28, 0, 30), Position = UDim2.new(0, 14, 0, 44), Text = tr("animHint"), TextColor3 = Theme.TextDim, TextSize = 11, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
 
     local tabsF = N("Frame", {Size = UDim2.new(1, -28, 0, 28), Position = UDim2.new(0, 14, 0, 78), BackgroundTransparency = 1}, panel)
@@ -1384,9 +1588,11 @@ local function buildAnimLog(J, vp)
     local function makeRow(k)
         local row = N("Frame", {Size = UDim2.new(1, 0, 0, 58), BackgroundColor3 = Theme.Card, BorderSizePixel = 0}, list)
         UILib.corner(row, 10)
-        local nameL = Label(row, {Size = UDim2.new(1, -112, 0, 18), Position = UDim2.new(0, 10, 0, 8), Font = Enum.Font.GothamBold, TextTruncate = Enum.TextTruncate.AtEnd})
-        local subL = Label(row, {Size = UDim2.new(1, -112, 0, 26), Position = UDim2.new(0, 10, 0, 28), TextColor3 = Theme.TextDim, TextSize = 10, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
+        local kindIc = N("Frame", {Size = UDim2.new(0, 24, 0, 24), Position = UDim2.new(0, 10, 0.5, -12), BackgroundTransparency = 1}, row)
+        local nameL = Label(row, {Size = UDim2.new(1, -150, 0, 18), Position = UDim2.new(0, 42, 0, 8), Font = Enum.Font.GothamBold, TextTruncate = Enum.TextTruncate.AtEnd})
+        local subL = Label(row, {Size = UDim2.new(1, -150, 0, 26), Position = UDim2.new(0, 42, 0, 28), TextColor3 = Theme.TextDim, TextSize = 10, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
         local btn = Btn(row, {Size = UDim2.new(0, 92, 0, 30), Position = UDim2.new(1, -100, 0.5, -15), TextSize = 10}, 8)
+        local btnIc = Icon.attach(btn, 12)
         J:Add(btn.Activated:Connect(function()
             local e = Dances.log[k]
             if Dances.blocked(k, e and e.kind) then
@@ -1406,9 +1612,11 @@ local function buildAnimLog(J, vp)
             local tag = (kind == "dance" and tr("tagPlayer")) or (kind == "game" and tr("tagGame")) or tr("tagSaved")
             local id = (k:sub(1, 2) == "n:") and "\u{2014}" or ("ID " .. k)
             subL.Text = tag .. "  \u{B7}  " .. id .. ((e and e.who) and ("  \u{B7}  " .. e.who) or "") .. (e and ("  \u{B7}  x" .. e.n) or "")
-            btn.Text = blocked and ("\u{1F6AB} " .. tr("blockedTag")) or ("\u{2713} " .. tr("allowedTag"))
+            btn.Text = blocked and (tr("blockedTag")) or (tr("allowedTag"))
             btn.BackgroundColor3 = blocked and Theme.Danger or Theme.Success
             btn.TextColor3 = blocked and WHITE or DARK
+            Icon.set(btnIc, blocked and "block" or "check", blocked and WHITE or DARK)
+            Icon.set(kindIc, kind == "dance" and "dancer" or (kind == "game" and "pad" or "log"), Theme.Accent)
         end
         return r
     end
@@ -1478,9 +1686,11 @@ local function buildSaves(J, vp, onChanged)
     UILib.glow(UILib.stroke(panel, Theme.Accent, 1.5, 0.4), J)
     local top = N("Frame", {Size = UDim2.new(1, 0, 0, 44), BackgroundTransparency = 1}, panel)
     makeDraggable(top, panel, J)
-    Label(top, {Size = UDim2.new(1, -80, 0, 32), Position = UDim2.new(0, 14, 0, 8), Text = "\u{1F4BE}  " .. tr("savesTitle"), TextColor3 = Theme.Accent2, Font = Enum.Font.GothamBold, TextSize = 15})
-    local closeB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -36, 0, 10), BackgroundColor3 = Theme.Card, Text = "\u{2715}", TextColor3 = Theme.Danger, TextSize = 14}, 13)
+    Icon.set(N("Frame", {Size = UDim2.new(0, 20, 0, 20), Position = UDim2.new(0, 14, 0, 14), BackgroundTransparency = 1}, top), "save", Theme.Accent2)
+    Label(top, {Size = UDim2.new(1, -110, 0, 32), Position = UDim2.new(0, 40, 0, 8), Text = tr("savesTitle"), TextColor3 = Theme.Accent2, Font = Enum.Font.GothamBold, TextSize = 15})
+    local closeB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -36, 0, 10), BackgroundColor3 = Theme.Card, Text = "", TextColor3 = Theme.Danger, TextSize = 14}, 13)
     UILib.stroke(closeB, Theme.Danger, 1.5, 0.5)
+    Icon.draw("x", closeB, Theme.DangerHi, 12)
     J:Add(closeB.Activated:Connect(function() panel.Visible = false end))
 
     local nameF = N("Frame", {Size = UDim2.new(1, -112, 0, 32), Position = UDim2.new(0, 14, 0, 46), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0}, panel)
@@ -1490,7 +1700,8 @@ local function buildSaves(J, vp, onChanged)
         TextColor3 = Theme.Text, PlaceholderColor3 = Theme.TextDim, Font = Enum.Font.GothamMedium, TextSize = 12,
         TextXAlignment = Enum.TextXAlignment.Left, ClearTextOnFocus = false,
     }, nameF)
-    local saveB = Btn(panel, {Size = UDim2.new(0, 84, 0, 32), Position = UDim2.new(1, -98, 0, 46), BackgroundColor3 = Theme.Accent, TextColor3 = DARK, Text = "\u{1F4BE} " .. tr("saveNow"), TextSize = 11}, 8)
+    local saveB = Btn(panel, {Size = UDim2.new(0, 84, 0, 32), Position = UDim2.new(1, -98, 0, 46), BackgroundColor3 = Theme.Accent, TextColor3 = DARK, Text = tr("saveNow"), TextSize = 11}, 8)
+    Icon.set(Icon.attach(saveB, 12), "save", DARK)
     Label(panel, {Size = UDim2.new(1, -28, 0, 30), Position = UDim2.new(0, 14, 0, 84), Text = tr("saveHint"), TextColor3 = Theme.TextDim, TextSize = 10, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
     local status = Label(panel, {Size = UDim2.new(1, -28, 0, 16), Position = UDim2.new(0, 14, 0, 112), Text = "", TextColor3 = Theme.Accent, Font = Enum.Font.GothamBold, TextSize = 11})
 
@@ -1502,6 +1713,8 @@ local function buildSaves(J, vp, onChanged)
     N("UIListLayout", {Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder}, list)
 
     local resetB = Btn(panel, {Size = UDim2.new(1, -28, 0, 38), Position = UDim2.new(0, 14, 1, -52), BackgroundColor3 = Theme.Danger, Text = tr("resetAll"), TextSize = 12}, 10)
+    local resetIc = Icon.attach(resetB, 14)
+    Icon.set(resetIc, "trash", WHITE)
 
     local function flash(text)
         status.Text = text
@@ -1523,12 +1736,15 @@ local function buildSaves(J, vp, onChanged)
             local thisMap = tostring(e.place) == tostring(game.PlaceId)
             UILib.stroke(row, thisMap and Theme.Accent or Theme.TextDim, 1, 0.7)
             Label(row, {Size = UDim2.new(1, -128, 0, 18), Position = UDim2.new(0, 10, 0, 8), Text = tostring(e.name), Font = Enum.Font.GothamBold, TextTruncate = Enum.TextTruncate.AtEnd})
-            local sub = (thisMap and ("\u{1F4CD} " .. tr("thisMap")) or ("\u{1F5FA} " .. tostring(e.placeName or e.place)))
+            local sub = (thisMap and (tr("thisMap")) or (tostring(e.placeName or e.place)))
             local okd, ds = pcall(function() return os.date("%d/%m %H:%M", e.t) end)
             if okd then sub = sub .. "  \u{B7}  " .. ds end
-            Label(row, {Size = UDim2.new(1, -128, 0, 26), Position = UDim2.new(0, 10, 0, 28), Text = sub, TextColor3 = Theme.TextDim, TextSize = 10, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
-            local loadB = Btn(row, {Size = UDim2.new(0, 70, 0, 30), Position = UDim2.new(1, -118, 0.5, -15), BackgroundColor3 = Theme.Accent, TextColor3 = DARK, Text = "\u{1F4C2} " .. tr("loadShort"), TextSize = 10}, 8)
-            local delB = Btn(row, {Size = UDim2.new(0, 36, 0, 30), Position = UDim2.new(1, -42, 0.5, -15), BackgroundColor3 = Theme.Danger, Text = "\u{1F5D1}", TextSize = 13}, 8)
+            Icon.set(N("Frame", {Size = UDim2.new(0, 14, 0, 14), Position = UDim2.new(0, 10, 0, 30), BackgroundTransparency = 1}, row), "pin", thisMap and Theme.Accent or Theme.TextDim)
+            Label(row, {Size = UDim2.new(1, -146, 0, 26), Position = UDim2.new(0, 28, 0, 28), Text = sub, TextColor3 = Theme.TextDim, TextSize = 10, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
+            local loadB = Btn(row, {Size = UDim2.new(0, 70, 0, 30), Position = UDim2.new(1, -118, 0.5, -15), BackgroundColor3 = Theme.Accent, TextColor3 = DARK, Text = tr("loadShort"), TextSize = 10}, 8)
+            Icon.set(Icon.attach(loadB, 12), "folder", DARK)
+            local delB = Btn(row, {Size = UDim2.new(0, 36, 0, 30), Position = UDim2.new(1, -42, 0.5, -15), BackgroundColor3 = Theme.Danger, Text = "", TextSize = 13}, 8)
+            Icon.draw("trash", delB, WHITE, 16)
             J:Add(loadB.Activated:Connect(function()
                 Saves.apply(e)
                 onChanged()
@@ -1556,12 +1772,14 @@ local function buildSaves(J, vp, onChanged)
             resetB.Text = tr("resetConfirm")
             resetB.BackgroundColor3 = Theme.Gold
             resetB.TextColor3 = DARK
+            Icon.set(resetIc, "trash", DARK)
             task.delay(3, function()
                 if armed and resetB.Parent then
                     armed = false
                     resetB.Text = tr("resetAll")
                     resetB.BackgroundColor3 = Theme.Danger
                     resetB.TextColor3 = WHITE
+                    Icon.set(resetIc, "trash", WHITE)
                 end
             end)
             return
@@ -1587,8 +1805,31 @@ function UI.build()
     local vp = viewport()
 
     local G = J:Add(N("ScreenGui", {Name = "BH", ResetOnSpawn = false, IgnoreGuiInset = mobile, DisplayOrder = 5, ZIndexBehavior = Enum.ZIndexBehavior.Sibling}, PG))
-    local baseW = math.min(mobile and 240 or 320, vp.X - 20)
-    local baseH = math.min(mobile and 420 or 560, vp.Y - 40)
+    local TG = J:Add(N("ScreenGui", {Name = "BH_Toast", ResetOnSpawn = false, IgnoreGuiInset = true, DisplayOrder = 90, ZIndexBehavior = Enum.ZIndexBehavior.Sibling}, PG))
+
+    -- small notification pill at the top of the screen
+    local curToast
+    local function toast(text)
+        if curToast then pcall(function() curToast:Destroy() end) end
+        local tw = math.clamp(string.len(text) * 6 + 56, 150, vp.X - 20)
+        local pill = N("Frame", {Size = UDim2.new(0, tw, 0, 36), Position = UDim2.new(0.5, -tw / 2, 0, -50), BackgroundColor3 = Theme.BG2, BorderSizePixel = 0}, TG)
+        UILib.corner(pill, 18) UILib.stroke(pill, Theme.Accent, 1.5, 0.2)
+        N("Frame", {Size = UDim2.new(0, 7, 0, 7), Position = UDim2.new(0, 16, 0.5, -3), BackgroundColor3 = Theme.Accent, BorderSizePixel = 0, Rotation = 45}, pill)
+        Label(pill, {Size = UDim2.new(1, -40, 1, 0), Position = UDim2.new(0, 32, 0, 0), Text = text, TextSize = 12, Font = Enum.Font.GothamBold})
+        curToast = pill
+        TweenService:Create(pill, TweenInfo.new(0.3, Enum.EasingStyle.Back), {Position = UDim2.new(0.5, -tw / 2, 0, 30)}):Play()
+        task.delay(1.8, function()
+            if curToast ~= pill or not pill.Parent then return end
+            local t = TweenService:Create(pill, TweenInfo.new(0.25), {Position = UDim2.new(0.5, -tw / 2, 0, -50)})
+            t:Play()
+            t.Completed:Wait()
+            pill:Destroy()
+            if curToast == pill then curToast = nil end
+        end)
+    end
+
+    local baseW = math.min(mobile and 250 or 330, vp.X - 20)
+    local baseH = math.min(mobile and 430 or 580, vp.Y - 40)
     local rest = UDim2.new(0, 24, 0.5, -baseH / 2)
 
     local M = N("Frame", {Size = UDim2.new(0, baseW, 0, baseH), Position = UI.pos or rest, BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, ClipsDescendants = true, ZIndex = 2}, G)
@@ -1596,102 +1837,125 @@ function UI.build()
     UILib.glow(UILib.stroke(M, Theme.Accent, 1.5, 0.35), J)
     UILib.halo(M, 18, J)
 
-    local header = N("Frame", {Size = UDim2.new(1, 0, 0, 72), BackgroundColor3 = Theme.BG1, BorderSizePixel = 0, ZIndex = 3}, M)
-    UILib.corner(header, 18) UILib.gradient(header, Color3.fromRGB(22, 32, 42), Color3.fromRGB(30, 46, 54), 90)
-    local drag = makeDraggable(header, M, J, function() UI.pos = M.Position end)
+    -- header
+    local header = N("Frame", {Size = UDim2.new(1, 0, 0, 76), BackgroundColor3 = Theme.BG1, BorderSizePixel = 0, ZIndex = 3}, M)
+    UILib.corner(header, 18) UILib.gradient(header, Color3.fromRGB(40, 33, 17), Color3.fromRGB(16, 13, 8), 90)
+    makeDraggable(header, M, J, function() UI.pos = M.Position end)
+    local logo = N("Frame", {Size = UDim2.new(0, 48, 0, 48), Position = UDim2.new(0, 14, 0, 14), BackgroundColor3 = Theme.BG1, BorderSizePixel = 0, ZIndex = 4}, header)
+    UILib.corner(logo, 24) UILib.stroke(logo, Theme.Accent, 1.5, 0.15)
+    Icon.draw("crescent", logo, Theme.Accent, 34, Theme.BG1)
+    Label(header, {Size = UDim2.new(1, -130, 0, 24), Position = UDim2.new(0, 72, 0, 16), Text = tr("title"), Font = Enum.Font.GothamBold, TextSize = 19, TextColor3 = Theme.Accent2, ZIndex = 4})
+    Label(header, {Size = UDim2.new(1, -130, 0, 14), Position = UDim2.new(0, 72, 0, 42), Text = tr("subtitle"), TextColor3 = Theme.TextDim, TextSize = 11, ZIndex = 4})
+    local rule = N("Frame", {Size = UDim2.new(1, -28, 0, 1), Position = UDim2.new(0, 14, 1, -1), BackgroundColor3 = Theme.Accent, BorderSizePixel = 0, ZIndex = 4}, header)
+    N("UIGradient", {Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5, 0.2), NumberSequenceKeypoint.new(1, 1)})}, rule)
 
-    local logo = N("Frame", {Size = UDim2.new(0, 46, 0, 46), Position = UDim2.new(0, 14, 0, 13), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0, ZIndex = 4}, header)
-    UILib.corner(logo, 14) UILib.stroke(logo, Theme.Accent, 1.5, 0.2)
-    Label(logo, {Size = UDim2.new(1, 0, 1, 0), Text = "\u{1F54C}", TextSize = 26, Font = Enum.Font.GothamBold, TextXAlignment = Enum.TextXAlignment.Center, ZIndex = 5})
-    Label(header, {Size = UDim2.new(1, -120, 0, 24), Position = UDim2.new(0, 68, 0, 14), Text = tr("title"), Font = Enum.Font.GothamBold, TextSize = 18, TextColor3 = Theme.Accent2, ZIndex = 4})
-    Label(header, {Size = UDim2.new(1, -120, 0, 14), Position = UDim2.new(0, 68, 0, 40), Text = tr("subtitle"), TextColor3 = Theme.TextDim, TextSize = 11, ZIndex = 4})
-
-    local minBtn = Btn(header, {Size = UDim2.new(0, 28, 0, 28), Position = UDim2.new(1, -74, 0, 22), BackgroundColor3 = Theme.Card, Text = "\u{2212}", TextColor3 = Theme.Accent, TextSize = 20, ZIndex = 4}, 14)
+    local minBtn = Btn(header, {Size = UDim2.new(0, 28, 0, 28), Position = UDim2.new(1, -74, 0, 24), BackgroundColor3 = Theme.Card, Text = "", ZIndex = 4}, 14)
     UILib.stroke(minBtn, Theme.Accent, 1.5, 0.5)
-    local closeBtn = Btn(header, {Size = UDim2.new(0, 28, 0, 28), Position = UDim2.new(1, -40, 0, 22), BackgroundColor3 = Theme.Card, Text = "", ZIndex = 4}, 14)
+    Icon.draw("min", minBtn, Theme.Accent, 14)
+    local closeBtn = Btn(header, {Size = UDim2.new(0, 28, 0, 28), Position = UDim2.new(1, -40, 0, 24), BackgroundColor3 = Theme.Card, Text = "", ZIndex = 4}, 14)
     UILib.stroke(closeBtn, Theme.Danger, 1.5, 0.5)
-    UILib.drawX(closeBtn, Theme.DangerHi, 12, 2)
+    Icon.draw("x", closeBtn, Theme.DangerHi, 12)
 
     local scroll = N("ScrollingFrame", {
-        Size = UDim2.new(1, -16, 1, -80), Position = UDim2.new(0, 8, 0, 72), BackgroundTransparency = 1, BorderSizePixel = 0,
+        Size = UDim2.new(1, -16, 1, -84), Position = UDim2.new(0, 8, 0, 76), BackgroundTransparency = 1, BorderSizePixel = 0,
         ScrollBarThickness = 4, ScrollBarImageColor3 = Theme.Accent, CanvasSize = UDim2.new(),
         AutomaticCanvasSize = Enum.AutomaticSize.Y, ScrollingDirection = Enum.ScrollingDirection.Y, ZIndex = 3,
     }, M)
     local sp = UILib.padding(scroll, 4)
     sp.PaddingTop, sp.PaddingBottom = UDim.new(0, 12), UDim.new(0, 16)
-    N("UIListLayout", {Padding = UDim.new(0, 12), SortOrder = Enum.SortOrder.LayoutOrder}, scroll)
+    N("UIListLayout", {Padding = UDim.new(0, 11), SortOrder = Enum.SortOrder.LayoutOrder}, scroll)
 
-    local function section(text, icon, order)
-        local hf = N("Frame", {Size = UDim2.new(1, 0, 0, 26), BackgroundTransparency = 1, LayoutOrder = order, ZIndex = 4}, scroll)
-        N("Frame", {Size = UDim2.new(1, -140, 0, 1), Position = UDim2.new(0, 130, 0.5, 0), BackgroundColor3 = Theme.Accent, BackgroundTransparency = 0.6, BorderSizePixel = 0, ZIndex = 4}, hf)
-        Label(hf, {Size = UDim2.new(0, 20, 1, 0), Position = UDim2.new(0, 4, 0, 0), Text = icon, TextColor3 = Theme.Accent, Font = Enum.Font.GothamBold, ZIndex = 4})
-        Label(hf, {Size = UDim2.new(0, 100, 1, 0), Position = UDim2.new(0, 26, 0, 0), Text = text, TextColor3 = Theme.Accent, Font = Enum.Font.GothamBold, TextSize = 11, ZIndex = 4})
+    local function section(text, order)
+        local hf = N("Frame", {Size = UDim2.new(1, 0, 0, 24), BackgroundTransparency = 1, LayoutOrder = order, ZIndex = 4}, scroll)
+        N("Frame", {Size = UDim2.new(0, 7, 0, 7), Position = UDim2.new(0, 6, 0.5, -3), BackgroundColor3 = Theme.Accent, BorderSizePixel = 0, Rotation = 45, ZIndex = 5}, hf)
+        Label(hf, {Size = UDim2.new(0, 120, 1, 0), Position = UDim2.new(0, 22, 0, 0), Text = text, TextColor3 = Theme.Accent, Font = Enum.Font.GothamBold, TextSize = 12, ZIndex = 5})
+        local l = N("Frame", {Size = UDim2.new(1, -150, 0, 1), Position = UDim2.new(0, 142, 0.5, 0), BackgroundColor3 = Theme.Accent, BorderSizePixel = 0, ZIndex = 4}, hf)
+        N("UIGradient", {Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.3), NumberSequenceKeypoint.new(1, 1)})}, l)
+    end
+
+    local function iconPlate(parent, icon, on)
+        local ib = N("Frame", {Size = UDim2.new(0, 36, 0, 36), Position = UDim2.new(0, 12, 0.5, -18), BackgroundColor3 = on and Theme.OnBG or Theme.BG3, BorderSizePixel = 0, ZIndex = 5}, parent)
+        UILib.corner(ib, 10)
+        local ic = Icon.draw(icon, ib, on and Theme.Accent or Theme.TextDim, 20)
+        return ib, ic
     end
 
     local function toggle(text, icon, order, get, set)
         local isOn = get()
-        local card = N("Frame", {Size = UDim2.new(1, 0, 0, 56), BackgroundColor3 = Theme.Card, BorderSizePixel = 0, LayoutOrder = order, ZIndex = 4}, scroll)
+        local card = N("Frame", {Size = UDim2.new(1, 0, 0, 58), BackgroundColor3 = Theme.Card, BorderSizePixel = 0, LayoutOrder = order, ZIndex = 4}, scroll)
         UILib.corner(card, 14)
-        local cs = UILib.stroke(card, isOn and Theme.Accent or Theme.TextDim, 1.2, 0.5)
-        local ib = N("Frame", {Size = UDim2.new(0, 36, 0, 36), Position = UDim2.new(0, 12, 0.5, -18), BackgroundColor3 = isOn and Theme.OnBG or Theme.BG3, BorderSizePixel = 0, ZIndex = 5}, card)
-        UILib.corner(ib, 10)
-        Label(ib, {Size = UDim2.new(1, 0, 1, 0), Text = icon, TextSize = 20, Font = Enum.Font.GothamBold, TextXAlignment = Enum.TextXAlignment.Center, ZIndex = 6})
+        local cs = UILib.stroke(card, isOn and Theme.Accent or Theme.TextDim, 1.2, isOn and 0.35 or 0.65)
+        local ib = iconPlate(card, icon, isOn)
         Label(card, {Size = UDim2.new(1, -130, 0, 16), Position = UDim2.new(0, 58, 0, 12), Text = text, Font = Enum.Font.GothamBold, TextSize = 13, ZIndex = 5, TextTruncate = Enum.TextTruncate.AtEnd})
-        local sl = Label(card, {Size = UDim2.new(1, -130, 0, 14), Position = UDim2.new(0, 58, 0, 30), Text = isOn and tr("on") or tr("off"), TextColor3 = isOn and Theme.Accent or Theme.TextDim, TextSize = 11, ZIndex = 5})
+        local sl = Label(card, {Size = UDim2.new(1, -130, 0, 14), Position = UDim2.new(0, 58, 0, 31), Text = isOn and tr("on") or tr("off"), TextColor3 = isOn and Theme.Accent or Theme.TextDim, TextSize = 11, ZIndex = 5})
         local tg = N("Frame", {Size = UDim2.new(0, 42, 0, 24), Position = UDim2.new(1, -54, 0.5, -12), BackgroundColor3 = isOn and Theme.Accent or Theme.Off, BorderSizePixel = 0, ZIndex = 5}, card)
         UILib.corner(tg, 12)
-        local kn = N("Frame", {Size = UDim2.new(0, 18, 0, 18), Position = isOn and UDim2.new(1, -21, 0, 3) or UDim2.new(0, 3, 0, 3), BackgroundColor3 = WHITE, BorderSizePixel = 0, ZIndex = 6}, tg)
+        local kn = N("Frame", {Size = UDim2.new(0, 18, 0, 18), Position = isOn and UDim2.new(1, -21, 0, 3) or UDim2.new(0, 3, 0, 3), BackgroundColor3 = isOn and DARK or WHITE, BorderSizePixel = 0, ZIndex = 6}, tg)
         UILib.corner(kn, 9)
         local ca = N("TextButton", {Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Text = "", ZIndex = 7}, card)
         J:Add(ca.Activated:Connect(function()
             isOn = not isOn
             local ti = TweenInfo.new(0.2)
             TweenService:Create(tg, ti, {BackgroundColor3 = isOn and Theme.Accent or Theme.Off}):Play()
-            TweenService:Create(kn, ti, {Position = isOn and UDim2.new(1, -21, 0, 3) or UDim2.new(0, 3, 0, 3)}):Play()
+            TweenService:Create(kn, ti, {Position = isOn and UDim2.new(1, -21, 0, 3) or UDim2.new(0, 3, 0, 3), BackgroundColor3 = isOn and DARK or WHITE}):Play()
             TweenService:Create(ib, ti, {BackgroundColor3 = isOn and Theme.OnBG or Theme.BG3}):Play()
-            TweenService:Create(cs, ti, {Color = isOn and Theme.Accent or Theme.TextDim}):Play()
+            TweenService:Create(cs, ti, {Color = isOn and Theme.Accent or Theme.TextDim, Transparency = isOn and 0.35 or 0.65}):Play()
+            for _, d in ipairs(ib:GetDescendants()) do
+                if d:IsA("Frame") then
+                    if d.BackgroundTransparency < 1 then d.BackgroundColor3 = isOn and Theme.Accent or Theme.TextDim end
+                    local us = d:FindFirstChildOfClass("UIStroke")
+                    if us then us.Color = isOn and Theme.Accent or Theme.TextDim end
+                end
+            end
             sl.Text = isOn and tr("on") or tr("off")
             sl.TextColor3 = isOn and Theme.Accent or Theme.TextDim
             set(isOn)
+            toast(text .. "  |  " .. (isOn and tr("on") or tr("off")))
         end))
     end
 
-    local function actionCard(text, order)
-        local b = Btn(scroll, {Size = UDim2.new(1, 0, 0, 44), BackgroundColor3 = Theme.Card, Text = text, TextColor3 = Theme.Text, TextSize = 13, LayoutOrder = order, ZIndex = 4}, 14)
-        UILib.stroke(b, Theme.Accent, 1.2, 0.6)
+    local function actionCard(text, icon, order)
+        local b = Btn(scroll, {Size = UDim2.new(1, 0, 0, 48), BackgroundColor3 = Theme.Card, Text = "", LayoutOrder = order, ZIndex = 4}, 14)
+        UILib.stroke(b, Theme.Accent, 1.2, 0.65)
         UILib.hover(b, Theme.Card, Theme.CardHi, J)
-        return b
+        local ib = N("Frame", {Size = UDim2.new(0, 34, 0, 34), Position = UDim2.new(0, 12, 0.5, -17), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0, ZIndex = 5, Active = false}, b)
+        UILib.corner(ib, 10)
+        Icon.draw(icon, ib, Theme.Accent, 18)
+        local lbl = Label(b, {Size = UDim2.new(1, -90, 1, 0), Position = UDim2.new(0, 58, 0, 0), Text = text, Font = Enum.Font.GothamBold, TextSize = 13, ZIndex = 5})
+        Label(b, {Size = UDim2.new(0, 20, 1, 0), Position = UDim2.new(1, -28, 0, 0), Text = ">", TextColor3 = Theme.Accent, Font = Enum.Font.GothamBold, TextSize = 16, TextXAlignment = Enum.TextXAlignment.Center, ZIndex = 5})
+        return b, lbl
     end
 
-    -- Audio
-    section(tr("sectionAudio"), "\u{266A}", 1)
-    toggle(tr("muteMusic"), "\u{1F3B5}", 2, function() return State.muteMusic end, function(s)
+    -- audio
+    section(tr("sectionAudio"), 1)
+    toggle(tr("muteMusic"), "speaker", 2, function() return State.muteMusic end, function(s)
         State.muteMusic = s
         Audio.setGlobalMute(s)
     end)
-    local logBtn = actionCard(tr("soundLog"), 3)
+    local logBtn = actionCard(tr("soundLogTitle"), "eq", 3)
 
-    -- Visual
-    section(tr("sectionVisual"), "\u{25C8}", 10)
-    toggle(tr("noobSkin"), "\u{1F455}", 11, function() return State.noob end, function(s)
+    -- visual
+    section(tr("sectionVisual"), 10)
+    toggle(tr("noobSkin"), "shirt", 11, function() return State.noob end, function(s)
         State.noob = s
         Targets.refreshAll()
     end)
 
-    -- Tools
-    section(tr("sectionTools"), "\u{25C6}", 20)
-    toggle(tr("stopDance"), "\u{1F483}", 21, function() return State.dances end, function(s) State.dances = s end)
-    toggle(tr("broadDance"), "\u{1F3AF}", 22, function() return State.broadDances end, function(s) State.broadDances = s end)
-    local suggestBtn = actionCard("\u{1F3AF}  " .. tr("suggest"), 23)
-    local animBtn = actionCard(tr("animLog"), 24)
+    -- tools
+    section(tr("sectionTools"), 20)
+    toggle(tr("stopDance"), "dancer", 21, function() return State.dances end, function(s) State.dances = s end)
+    toggle(tr("broadDance"), "target", 22, function() return State.broadDances end, function(s) State.broadDances = s end)
+    local suggestBtn, suggestLbl = actionCard(tr("suggest"), "user", 23)
+    local animBtn = actionCard(tr("animTitle"), "log", 24)
 
-    -- Players
-    section(tr("sectionPlayers"), "\u{25C6}", 30)
+    -- players
+    section(tr("sectionPlayers"), 30)
     local searchBox = N("Frame", {Size = UDim2.new(1, 0, 0, 40), BackgroundColor3 = Theme.Card, BorderSizePixel = 0, LayoutOrder = 31, ZIndex = 4}, scroll)
-    UILib.corner(searchBox, 12)
-    Label(searchBox, {Size = UDim2.new(0, 32, 1, 0), Position = UDim2.new(0, 6, 0, 0), Text = "\u{1F50D}", TextSize = 14, TextXAlignment = Enum.TextXAlignment.Center, ZIndex = 5})
+    UILib.corner(searchBox, 12) UILib.stroke(searchBox, Theme.Accent, 1, 0.75)
+    local sIcon = N("Frame", {Size = UDim2.new(0, 28, 0, 28), Position = UDim2.new(0, 8, 0.5, -14), BackgroundTransparency = 1, ZIndex = 5}, searchBox)
+    Icon.draw("search", sIcon, Theme.TextDim, 16)
     local searchInput = N("TextBox", {
-        Size = UDim2.new(1, -40, 1, 0), Position = UDim2.new(0, 34, 0, 0), BackgroundTransparency = 1, Text = "", PlaceholderText = tr("searchPH"),
+        Size = UDim2.new(1, -46, 1, 0), Position = UDim2.new(0, 38, 0, 0), BackgroundTransparency = 1, Text = "", PlaceholderText = tr("searchPH"),
         TextColor3 = Theme.Text, PlaceholderColor3 = Theme.TextDim, Font = Enum.Font.GothamMedium, TextSize = 12,
         TextXAlignment = Enum.TextXAlignment.Left, ClearTextOnFocus = false, ZIndex = 5,
     }, searchBox)
@@ -1701,20 +1965,23 @@ function UI.build()
     local plScroll = N("ScrollingFrame", {Size = UDim2.new(1, -8, 1, -8), Position = UDim2.new(0, 4, 0, 4), BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 3, ScrollBarImageColor3 = Theme.Accent, CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y, ZIndex = 5}, plFrame)
     N("UIListLayout", {Padding = UDim.new(0, 4)}, plScroll)
 
-    -- Lists
-    section(tr("sectionLists"), "\u{25C6}", 40)
-    local function listBox(order, height, title, titleCol, strokeCol, addCol, onAdd)
+    -- lists
+    section(tr("sectionLists"), 40)
+    local function listBox(order, height, title, icon, col, onAdd)
         local f = N("Frame", {Size = UDim2.new(1, 0, 0, height), BackgroundColor3 = Theme.Card, BorderSizePixel = 0, LayoutOrder = order, ZIndex = 4}, scroll)
-        UILib.corner(f, 12) UILib.stroke(f, strokeCol, 1, 0.5)
-        Label(f, {Size = UDim2.new(1, -16, 0, 24), Position = UDim2.new(0, 12, 0, 8), Text = title, TextColor3 = titleCol, Font = Enum.Font.GothamBold, ZIndex = 5})
+        UILib.corner(f, 12) UILib.stroke(f, col, 1, 0.55)
+        local hi = N("Frame", {Size = UDim2.new(0, 20, 0, 20), Position = UDim2.new(0, 12, 0, 10), BackgroundTransparency = 1, ZIndex = 5}, f)
+        Icon.draw(icon, hi, col, 16)
+        Label(f, {Size = UDim2.new(1, -50, 0, 22), Position = UDim2.new(0, 38, 0, 9), Text = title, TextColor3 = col, Font = Enum.Font.GothamBold, ZIndex = 5})
         local input = N("TextBox", {
-            Size = UDim2.new(1, -66, 0, 26), Position = UDim2.new(0, 12, 0, 36), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0, Text = "",
+            Size = UDim2.new(1, -66, 0, 26), Position = UDim2.new(0, 12, 0, 38), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0, Text = "",
             PlaceholderText = tr("searchPH"), TextColor3 = Theme.Text, PlaceholderColor3 = Theme.TextDim, Font = Enum.Font.GothamMedium,
             TextSize = 11, TextXAlignment = Enum.TextXAlignment.Left, ClearTextOnFocus = false, ZIndex = 5,
         }, f)
         UILib.corner(input, 8)
-        local add = Btn(f, {Size = UDim2.new(0, 44, 0, 26), Position = UDim2.new(1, -56, 0, 36), BackgroundColor3 = addCol, Text = "+", TextSize = 16, TextColor3 = (addCol == Theme.Danger) and WHITE or DARK, ZIndex = 5})
-        local list = N("ScrollingFrame", {Size = UDim2.new(1, -24, 1, -72), Position = UDim2.new(0, 12, 0, 66), BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 3, ScrollBarImageColor3 = strokeCol, CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y, ZIndex = 5}, f)
+        N("UIPadding", {PaddingLeft = UDim.new(0, 8)}, input)
+        local add = Btn(f, {Size = UDim2.new(0, 44, 0, 26), Position = UDim2.new(1, -56, 0, 38), BackgroundColor3 = col, Text = "+", TextSize = 16, TextColor3 = (col == Theme.Danger) and WHITE or DARK, ZIndex = 5})
+        local list = N("ScrollingFrame", {Size = UDim2.new(1, -24, 1, -76), Position = UDim2.new(0, 12, 0, 70), BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 3, ScrollBarImageColor3 = col, CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y, ZIndex = 5}, f)
         N("UIListLayout", {Padding = UDim.new(0, 3)}, list)
         local function submit()
             local n = resolveName(input.Text)
@@ -1726,36 +1993,35 @@ function UI.build()
         J:Add(input.FocusLost:Connect(function(enter) if enter then submit() end end))
         return list
     end
-    local wlL = listBox(41, 130, "\u{2713}  " .. tr("whitelist"), Theme.Accent, Theme.Accent, Theme.Accent, function(n) listSet(n, "white") end)
-    local blL = listBox(42, 160, tr("blocked"), Theme.Danger, Theme.Danger, Theme.Danger, function(n) listSet(n, "black") end)
+    local wlL = listBox(41, 134, tr("whitelist"), "check", Theme.Accent, function(n) listSet(n, "white") end)
+    local blL = listBox(42, 164, tr("blocked"), "x", Theme.Danger, function(n) listSet(n, "black") end)
 
-    Label(scroll, {Size = UDim2.new(1, 0, 0, 18), Text = tr("footer") .. "  \u{B7}  v" .. VERSION .. "  \u{B7}  " .. CREATOR_NAME, TextColor3 = Theme.TextDim, TextSize = 10, TextXAlignment = Enum.TextXAlignment.Center, LayoutOrder = 100, ZIndex = 4})
+    Label(scroll, {Size = UDim2.new(1, 0, 0, 18), Text = tr("footer") .. "   |   v" .. VERSION .. "   |   " .. CREATOR_NAME, TextColor3 = Theme.TextDim, TextSize = 10, TextXAlignment = Enum.TextXAlignment.Center, LayoutOrder = 100, ZIndex = 4})
 
-    local saveBtn = Btn(scroll, {Size = UDim2.new(1, 0, 0, 48), BackgroundColor3 = Theme.Accent, Text = tr("saveBtn"), TextColor3 = DARK, TextSize = 14, LayoutOrder = 110, ZIndex = 4}, 14)
-    UILib.gradient(saveBtn, Theme.Accent, Theme.Accent2, 0)
+    local saveBtn = Btn(scroll, {Size = UDim2.new(1, 0, 0, 50), BackgroundColor3 = Theme.Accent, Text = "", LayoutOrder = 110, ZIndex = 4}, 14)
+    UILib.gradient(saveBtn, Theme.Accent2, Theme.Accent, 90)
+    local sbIcon = N("Frame", {Size = UDim2.new(0, 24, 0, 24), Position = UDim2.new(0.5, -62, 0.5, -12), BackgroundTransparency = 1, ZIndex = 5}, saveBtn)
+    Icon.draw("save", sbIcon, DARK, 20)
+    Label(saveBtn, {Size = UDim2.new(0, 100, 1, 0), Position = UDim2.new(0.5, -30, 0, 0), Text = tr("saveBtn"), TextColor3 = DARK, Font = Enum.Font.GothamBold, TextSize = 15, ZIndex = 5})
 
-    -- Rows
+    -- player rows
     local function mkRow(parent, info, actions)
-        local row = N("Frame", {Size = UDim2.new(1, -8, 0, 42), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0, ZIndex = 6}, parent)
+        local row = N("Frame", {Size = UDim2.new(1, -8, 0, 42), BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, ZIndex = 6}, parent)
         UILib.corner(row, 10)
         local av = N("ImageLabel", {Size = UDim2.new(0, 32, 0, 32), Position = UDim2.new(0, 6, 0.5, -16), BackgroundColor3 = Theme.Card, BorderSizePixel = 0, ScaleType = Enum.ScaleType.Crop, ZIndex = 7}, row)
-        UILib.corner(av, 16) UILib.stroke(av, Theme.Accent, 1, 0.4)
+        UILib.corner(av, 16) UILib.stroke(av, Theme.Accent, 1, 0.5)
         local function setAv(id)
             if av.Parent then av.Image = "rbxthumb://type=AvatarHeadShot&id=" .. id .. "&w=150&h=150" end
         end
         if info.UserId then setAv(info.UserId) else userIdAsync(info.Name, setAv) end
         local dn = (info.DisplayName and info.DisplayName ~= "") and info.DisplayName or info.Name
-        if lower(info.Name) == lower(CREATOR_NAME) then dn = "\u{1F451} " .. dn end
-        Label(row, {Size = UDim2.new(1, -46 - 34 * #actions - 8, 0, 14), Position = UDim2.new(0, 46, 0, 6), Text = dn, Font = Enum.Font.GothamBold, ZIndex = 7, TextTruncate = Enum.TextTruncate.AtEnd})
-        Label(row, {Size = UDim2.new(1, -46 - 34 * #actions - 8, 0, 12), Position = UDim2.new(0, 46, 0, 20), Text = "@" .. info.Name, TextColor3 = Theme.TextDim, TextSize = 10, ZIndex = 7, TextTruncate = Enum.TextTruncate.AtEnd})
+        local isDev = lower(info.Name) == lower(CREATOR_NAME)
+        local w = -46 - 34 * #actions - 8
+        Label(row, {Size = UDim2.new(1, w, 0, 14), Position = UDim2.new(0, 46, 0, 6), Text = dn, Font = Enum.Font.GothamBold, ZIndex = 7, TextColor3 = isDev and Theme.Gold or Theme.Text, TextTruncate = Enum.TextTruncate.AtEnd})
+        Label(row, {Size = UDim2.new(1, w, 0, 12), Position = UDim2.new(0, 46, 0, 21), Text = (isDev and "DEV   " or "") .. "@" .. info.Name, TextColor3 = isDev and Theme.Accent or Theme.TextDim, TextSize = 10, ZIndex = 7, TextTruncate = Enum.TextTruncate.AtEnd})
         for i, a in ipairs(actions) do
             local ab = Btn(row, {Size = UDim2.new(0, 30, 0, 30), Position = UDim2.new(1, -38 - 34 * (i - 1), 0.5, -15), BackgroundColor3 = a.color, Text = "", ZIndex = 7}, 15)
-            UILib.stroke(ab, WHITE, 1.5, 0.5)
-            if a.kind == "x" then
-                UILib.drawX(ab, WHITE, 12, 2)
-            else
-                Label(ab, {Size = UDim2.new(1, 0, 1, 0), Text = a.kind == "check" and "\u{2713}" or "\u{21A9}", TextColor3 = DARK, Font = Enum.Font.GothamBlack, TextSize = a.kind == "check" and 18 or 16, TextXAlignment = Enum.TextXAlignment.Center, ZIndex = 8})
-            end
+            Icon.draw(a.kind, ab, a.ic or DARK, 16)
             J:Add(ab.Activated:Connect(a.fn))
         end
     end
@@ -1781,7 +2047,7 @@ function UI.build()
                     count = count + 1
                     mkRow(plScroll, p, {
                         {kind = "check", color = Theme.Accent, fn = function() listSet(p.Name, "white") end},
-                        {kind = "x", color = Theme.Danger, fn = function() listSet(p.Name, "black") end},
+                        {kind = "x", color = Theme.Danger, ic = WHITE, fn = function() listSet(p.Name, "black") end},
                     })
                 end
             end
@@ -1796,7 +2062,7 @@ function UI.build()
         table.sort(names)
         for _, n in ipairs(names) do
             local info = infoOf(n)
-            mkRow(wlL, info, {{kind = "x", color = Theme.Danger, fn = function() listSet(info.Name, nil) end}})
+            mkRow(wlL, info, {{kind = "x", color = Theme.Danger, ic = WHITE, fn = function() listSet(info.Name, nil) end}})
         end
         if #names == 0 then emptyLabel(wlL, tr("empty"), 40) end
     end
@@ -1821,31 +2087,32 @@ function UI.build()
     UI.refresh()
     J:Add(Players.PlayerRemoving:Connect(function() task.delay(0.5, UI.refresh) end))
 
-    -- Suggest panel
+    -- suggest panel
     local suggestActive, suggestPanel, currentTarget = false, nil, nil
     J:Add(function() suggestActive = false end)
     J:Add(suggestBtn.Activated:Connect(function()
         suggestActive = not suggestActive
         if not suggestActive then
             suggestBtn.BackgroundColor3 = Theme.Card
-            suggestBtn.Text = "\u{1F3AF}  " .. tr("suggest")
+            suggestLbl.Text = tr("suggest")
             if suggestPanel then suggestPanel:Destroy() suggestPanel = nil end
             currentTarget = nil
             return
         end
         suggestBtn.BackgroundColor3 = Theme.OnBG
-        suggestBtn.Text = "\u{1F3AF}  " .. tr("suggest") .. "  \u{25CF}"
-        local sw = math.min(200, vp.X - 20)
-        suggestPanel = N("Frame", {Size = UDim2.new(0, sw, 0, 180), Position = UDim2.new(1, -sw - 20, 0.3, 0), BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, Active = true, ZIndex = 20}, G)
-        UILib.corner(suggestPanel, 16) UILib.gradient(suggestPanel, Theme.BG1, Theme.BG3, 135) UILib.stroke(suggestPanel, Theme.Accent, 1.5, 0.3)
-        local spH = N("Frame", {Size = UDim2.new(1, 0, 0, 32), BackgroundColor3 = Theme.BG1, BorderSizePixel = 0, ZIndex = 21}, suggestPanel)
+        suggestLbl.Text = tr("suggest") .. "   (ON)"
+        local sw = math.min(210, vp.X - 20)
+        suggestPanel = N("Frame", {Size = UDim2.new(0, sw, 0, 184), Position = UDim2.new(1, -sw - 20, 0.3, 0), BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, Active = true, ZIndex = 20}, G)
+        UILib.corner(suggestPanel, 16) UILib.gradient(suggestPanel, Theme.BG1, Theme.BG3, 135)
+        UILib.glow(UILib.stroke(suggestPanel, Theme.Accent, 1.5, 0.3), J)
+        local spH = N("Frame", {Size = UDim2.new(1, 0, 0, 34), BackgroundColor3 = Theme.BG1, BorderSizePixel = 0, ZIndex = 21}, suggestPanel)
         UILib.corner(spH, 16)
-        Label(spH, {Size = UDim2.new(1, -16, 1, 0), Position = UDim2.new(0, 12, 0, 0), Text = "\u{1F3AF}  " .. tr("suggest"), TextColor3 = Theme.Accent2, Font = Enum.Font.GothamBold, ZIndex = 22})
+        Label(spH, {Size = UDim2.new(1, -16, 1, 0), Position = UDim2.new(0, 14, 0, 0), Text = tr("suggest"), TextColor3 = Theme.Accent2, Font = Enum.Font.GothamBold, ZIndex = 22})
         makeDraggable(spH, suggestPanel, J)
-        local av = N("ImageLabel", {Size = UDim2.new(0, 56, 0, 56), Position = UDim2.new(0, 12, 0, 44), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0, ScaleType = Enum.ScaleType.Crop, ZIndex = 22}, suggestPanel)
+        local av = N("ImageLabel", {Size = UDim2.new(0, 56, 0, 56), Position = UDim2.new(0, 12, 0, 46), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0, ScaleType = Enum.ScaleType.Crop, ZIndex = 22}, suggestPanel)
         UILib.corner(av, 28) UILib.stroke(av, Theme.Accent, 1.5, 0.3)
-        local lbl = Label(suggestPanel, {Size = UDim2.new(1, -84, 0, 56), Position = UDim2.new(0, 76, 0, 44), Text = tr("none"), Font = Enum.Font.GothamBold, TextSize = 13, TextWrapped = true, ZIndex = 22})
-        local sW = Btn(suggestPanel, {Size = UDim2.new(0.5, -18, 0, 34), Position = UDim2.new(0, 12, 1, -46), BackgroundColor3 = Theme.Accent, TextColor3 = DARK, Text = "\u{2713} " .. tr("wl"), TextSize = 12, ZIndex = 22}, 10)
+        local lbl = Label(suggestPanel, {Size = UDim2.new(1, -84, 0, 56), Position = UDim2.new(0, 76, 0, 46), Text = tr("none"), Font = Enum.Font.GothamBold, TextSize = 13, TextWrapped = true, ZIndex = 22})
+        local sW = Btn(suggestPanel, {Size = UDim2.new(0.5, -18, 0, 34), Position = UDim2.new(0, 12, 1, -46), BackgroundColor3 = Theme.Accent, TextColor3 = DARK, Text = tr("wl"), TextSize = 12, ZIndex = 22}, 10)
         local sB = Btn(suggestPanel, {Size = UDim2.new(0.5, -18, 0, 34), Position = UDim2.new(1, -12, 1, -46), AnchorPoint = Vector2.new(1, 0), BackgroundColor3 = Theme.Danger, Text = tr("block"), TextSize = 12, ZIndex = 22}, 10)
         sW.Activated:Connect(function() if currentTarget then listSet(currentTarget.Name, "white") end end)
         sB.Activated:Connect(function() if currentTarget then listSet(currentTarget.Name, "black") end end)
@@ -1888,7 +2155,7 @@ function UI.build()
         end)
     end))
 
-    -- Sub panels
+    -- sub panels
     local slPanel, slRefresh = buildSoundLog(J, vp)
     J:Add(logBtn.Activated:Connect(function()
         slPanel.Visible = not slPanel.Visible
@@ -1912,9 +2179,10 @@ function UI.build()
         if svPanel.Visible then pcall(svRefresh) end
     end))
 
-    -- Minimized icon (     )
-    local mini = Btn(G, {Size = UDim2.new(0, 60, 0, 60), Position = M.Position, BackgroundColor3 = Theme.BG2, Text = "\u{1F54C}", TextSize = 28, Visible = false, ZIndex = 4}, 30)
+    -- minimized icon (halo and open panels follow the window)
+    local mini = Btn(G, {Size = UDim2.new(0, 60, 0, 60), Position = M.Position, BackgroundColor3 = Theme.BG2, Text = "", Visible = false, ZIndex = 4}, 30)
     UILib.glow(UILib.stroke(mini, Theme.Accent, 2, 0.2), J, 2)
+    Icon.draw("crescent", mini, Theme.Accent, 38, Theme.BG2)
     UILib.halo(mini, 30, J)
     local miniDrag = makeDraggable(mini, mini, J)
     local stash = {}
@@ -1950,7 +2218,7 @@ function UI.build()
 
     if not UI.pos then
         M.Position = UDim2.new(0, -baseW - 50, 0.5, -baseH / 2)
-        TweenService:Create(M, TweenInfo.new(0.5, Enum.EasingStyle.Back), {Position = rest}):Play()
+        TweenService:Create(M, TweenInfo.new(0.55, Enum.EasingStyle.Back), {Position = rest}):Play()
         UI.pos = rest
     end
 end
@@ -1985,6 +2253,7 @@ loop(1, Targets.refreshAll)
 
 showLangScreen(function(lang)
     State.lang = lang
-    task.wait(0.1)
-    if State.running then UI.build() end
+    showSplash(function()
+        if State.running then UI.build() end
+    end)
 end)
