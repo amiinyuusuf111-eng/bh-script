@@ -491,8 +491,12 @@ local PART_COLORS = {
 }
 local SKIN_FX = {ParticleEmitter = true, Trail = true, Beam = true, Fire = true, Smoke = true, Sparkles = true}
 local FACE_TEX = "rbxasset://textures/face.png"
+-- R15: all body parts are hidden and replaced by classic noob blocks
+local R15_PARTS = {}
+for _, n in ipairs({"UpperTorso", "LowerTorso", "LeftUpperArm", "LeftLowerArm", "LeftHand", "RightUpperArm", "RightLowerArm", "RightHand",
+    "LeftUpperLeg", "LeftLowerLeg", "LeftFoot", "RightUpperLeg", "RightLowerLeg", "RightFoot"}) do R15_PARTS[n] = true end
 
-local function isMine(i) return i.Name == "BH_head" or i.Name == "BH_face" end
+local function isMine(i) return i.Name:sub(1, 3) == "BH_" end
 local function inTool(i) return i:FindFirstAncestorOfClass("Tool") ~= nil end
 
 local function setProp(b, inst, prop, value)
@@ -519,6 +523,7 @@ local function dirty(d, c, head)
     if d:IsA("BasePart") then
         if d == head then return d.Transparency < 1 end
         if d.Name == "HumanoidRootPart" then return false end
+        if R15_PARTS[d.Name] and d.Parent == c then return d.Transparency < 1 end
         local col = PART_COLORS[d.Name]
         if col and d.Parent == c then
             if not close(d.Color, col) or d.Material ~= Enum.Material.Plastic then return true end
@@ -532,10 +537,22 @@ end
 function Skin.needs(c)
     local head = c:FindFirstChild("Head")
     if head and not c:FindFirstChild("BH_head") then return true end
+    if c:FindFirstChild("UpperTorso") and not c:FindFirstChild("BH_torso") then return true end
     for _, d in ipairs(c:GetDescendants()) do
         if dirty(d, c, head) then return true end
     end
     return false
+end
+
+local function mkBlock(c, name, size, color, anchor, offset)
+    local p = c:FindFirstChild(anchor)
+    if not p or c:FindFirstChild(name) then return end
+    local nb = N("Part", {
+        Name = name, Size = size, Color = color, Material = Enum.Material.Plastic,
+        CanCollide = false, CanQuery = false, CanTouch = false, Massless = true,
+        TopSurface = Enum.SurfaceType.Smooth, BottomSurface = Enum.SurfaceType.Smooth,
+    }, c)
+    N("Weld", {Part0 = p, Part1 = nb, C0 = CFrame.new(offset)}, nb)
 end
 
 function Skin.apply(c)
@@ -560,7 +577,9 @@ function Skin.apply(c)
                     setProp(b, d, "Transparency", 1)
                 elseif d.Name ~= "HumanoidRootPart" then
                     local col = PART_COLORS[d.Name]
-                    if col and d.Parent == c then
+                    if R15_PARTS[d.Name] and d.Parent == c then
+                        setProp(b, d, "Transparency", 1)
+                    elseif col and d.Parent == c then
                         setProp(b, d, "Color", col)
                         setProp(b, d, "Material", Enum.Material.Plastic)
                         if d:IsA("MeshPart") then setProp(b, d, "TextureID", "") end
@@ -581,6 +600,13 @@ function Skin.apply(c)
         N("Decal", {Name = "BH_face", Texture = FACE_TEX, Face = Enum.NormalId.Front}, nh)
         N("Weld", {Part0 = head, Part1 = nh}, nh)
     end
+    if c:FindFirstChild("UpperTorso") then
+        mkBlock(c, "BH_torso", Vector3.new(2, 2, 1), NC.T, "UpperTorso", Vector3.new(0, -0.2, 0))
+        mkBlock(c, "BH_larm", Vector3.new(1, 2, 1), NC.Skin, "LeftUpperArm", Vector3.new(0, -0.4, 0))
+        mkBlock(c, "BH_rarm", Vector3.new(1, 2, 1), NC.Skin, "RightUpperArm", Vector3.new(0, -0.4, 0))
+        mkBlock(c, "BH_lleg", Vector3.new(1, 2.3, 1), NC.Lg, "LeftUpperLeg", Vector3.new(0, -0.55, 0))
+        mkBlock(c, "BH_rleg", Vector3.new(1, 2.3, 1), NC.Lg, "RightUpperLeg", Vector3.new(0, -0.55, 0))
+    end
 end
 
 function Skin.restore(c)
@@ -591,8 +617,9 @@ function Skin.restore(c)
         for prop, v in pairs(props) do pcall(function() inst[prop] = v end) end
     end
     for _, r in ipairs(b.removed) do pcall(function() r[1].Parent = r[2] end) end
-    local h = c:FindFirstChild("BH_head")
-    if h then pcall(function() h:Destroy() end) end
+    for _, x in ipairs(c:GetChildren()) do
+        if isMine(x) then pcall(function() x:Destroy() end) end
+    end
 end
 
 ---------------------------------------------------------------- Hide
