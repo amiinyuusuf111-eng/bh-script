@@ -1,7 +1,12 @@
 --[[
-    Be Halal | بي حلال
-    v3.1 - client side
+    Be Halal |  
+    v3.6 - client side
     by EZ_NOOB11220
+
+    :
+      Janitor  Utils  Theme  Translations  Audio  Skin  Hide
+      Dances  Targets  Lists  Saves  UI helpers  Language screen
+      Sound log  Dance log  Saves panel  Main UI  Lifecycle  Boot
 ]]
 
 local Players      = game:GetService("Players")
@@ -12,17 +17,21 @@ local Lighting     = game:GetService("Lighting")
 local TweenService = game:GetService("TweenService")
 local HttpService  = game:GetService("HttpService")
 local Marketplace  = game:GetService("MarketplaceService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local CoreGui
+pcall(function() CoreGui = game:GetService("CoreGui") end)
 
 local LP = Players.LocalPlayer
 local PG = LP:WaitForChild("PlayerGui")
 local CREATOR_NAME = "EZ_NOOB11220"
-local VERSION = "3.1"
+local VERSION = "3.6"
 
 local ENV = (getgenv and getgenv()) or _G
 if ENV.__BeHalal and type(ENV.__BeHalal.destroy) == "function" then
     pcall(ENV.__BeHalal.destroy)
 end
-for _, n in ipairs({"BH", "BH_SoundsMgr", "BH_SoundLog", "BH_AnimLog", "BHLang"}) do
+for _, n in ipairs({"BH", "BH_SoundsMgr", "BH_SoundLog", "BH_AnimLog", "BH_Saves", "BHLang"}) do
     local old = PG:FindFirstChild(n)
     if old then old:Destroy() end
 end
@@ -76,7 +85,7 @@ end
 local State = {
     running = true, lang = "ar",
     muteMusic = false, noob = false, dances = true, broadDances = false,
-    W = {}, B = {}, animAllow = {},
+    W = {}, B = {}, animAllow = {}, animBlock = {},
 }
 
 local function loop(interval, fn)
@@ -120,113 +129,82 @@ local Theme = {
 
 local T = {
     ar = {
-        title="بي حلال", subtitle="أدوات إسلامية للسيرفر",
-        sectionAudio="الصوت", sectionVisual="المظهر", sectionTools="الأدوات",
-        sectionPlayers="اللاعبون", sectionLists="القوائم",
-        muteMusic="كتم الموسيقى", noobSkin="سكنات نوب", stopDance="إيقاف الرقصات", broadDance="كشف شامل للرقصات",
-        saveSettings="حفظ إعدادات الأصوات",
-        suggest="اقتراح لاعب", whitelist="المسموحون", blocked="المحجوبون",
-        searchPH="ابحث عن لاعب...", on="مفعّل", off="معطّل", noPlayers="لا يوجد لاعبون",
-        wl="سماح", block="حجب", empty="فارغ", footer="بي حلال",
-        openMusic="🎵  مدير الأصوات", musicTitle="مدير الأصوات",
-        tabPlaying="▶ الشغالة", tabMuted="🔒 المكتومة",
-        allMute="🔇 كتم الكل", allUnmute="🔊 فك الكل", muteCurrent="🔇 اكتم الصوت",
-        stopListen="⏹ إيقاف الاستماع",
-        unmuteBtn="🔊 فك", listenShort="🎧 استمع", mute="كتم",
-        none="—", namePh="اكتب الاسم ثم Enter...",
-        animLog="📜  سجل الحركات", animTitle="سجل الحركات", allowedTag="مسموحة", blockedTag="محجوبة",
-        animHint="كل حركة انمنعت تظهر هنا. إذا كانت من الماب اضغط عليها لتصير مسموحة.", emptyAnim="ما انمنعت أي حركة بعد",
-        soundLog="🎧  سجل الأصوات", soundLogTitle="سجل الأصوات", clearLog="🗑 مسح", stopShort="⏹ إيقاف", emptyLog="ما اشتغل أي صوت بعد",
-        soundHint="الأصوات اللي يكتمها زر كتم الموسيقى. 🎧 تسمعه لحاله، و🔊 تستثنيه من الكتم.",
-        stPlaying="▶ شغال", stIdle="⏸ متوقف", stGone="✖ اختفى من الماب",
-        catAll="الكل", catMusic="موسيقى", catAmbient="أجواء", catSfx="مؤثرات", catUi="واجهة", catOther="أخرى",
-        tabAll="📚 الكل", searchSound="🔍 ابحث بالاسم أو المسار أو الـ ID...", logSearch="🔍 ابحث في السجل...",
-        sortName="ترتيب: الاسم", sortLen="ترتيب: المدة", emptyFilter="ما فيه أصوات بهذا الفلتر",
-        btnOn="زر كتم الموسيقى: مفعّل", btnOff="زر كتم الموسيقى: معطّل",
-        exemptOn="مستثنى", exemptOff="يُكتم", stExempt="🔊 مستثنى من الكتم", stByButton="🔇 مكتوم بالزر", stWillMute="⏳ يُكتم لما تفعّل الزر",
+        title="\u{628}\u{64A} \u{62D}\u{644}\u{627}\u{644}", subtitle="\u{623}\u{62F}\u{648}\u{627}\u{62A} \u{625}\u{633}\u{644}\u{627}\u{645}\u{64A}\u{629} \u{644}\u{644}\u{633}\u{64A}\u{631}\u{641}\u{631}",
+        sectionAudio="\u{627}\u{644}\u{635}\u{648}\u{62A}", sectionVisual="\u{627}\u{644}\u{645}\u{638}\u{647}\u{631}", sectionTools="\u{627}\u{644}\u{623}\u{62F}\u{648}\u{627}\u{62A}",
+        sectionPlayers="\u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{648}\u{646}", sectionLists="\u{627}\u{644}\u{642}\u{648}\u{627}\u{626}\u{645}",
+        muteMusic="\u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}", noobSkin="\u{633}\u{643}\u{646}\u{627}\u{62A} \u{646}\u{648}\u{628}", stopDance="\u{625}\u{64A}\u{642}\u{627}\u{641} \u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A}", broadDance="\u{643}\u{634}\u{641} \u{634}\u{627}\u{645}\u{644} \u{644}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A}",
+        suggest="\u{627}\u{642}\u{62A}\u{631}\u{627}\u{62D} \u{644}\u{627}\u{639}\u{628}", whitelist="\u{627}\u{644}\u{645}\u{633}\u{645}\u{648}\u{62D}\u{648}\u{646}", blocked="\u{627}\u{644}\u{645}\u{62D}\u{62C}\u{648}\u{628}\u{648}\u{646}",
+        searchPH="\u{627}\u{628}\u{62D}\u{62B} \u{639}\u{646} \u{644}\u{627}\u{639}\u{628}...", on="\u{645}\u{641}\u{639}\u{651}\u{644}", off="\u{645}\u{639}\u{637}\u{651}\u{644}", noPlayers="\u{644}\u{627} \u{64A}\u{648}\u{62C}\u{62F} \u{644}\u{627}\u{639}\u{628}\u{648}\u{646}",
+        wl="\u{633}\u{645}\u{627}\u{62D}", block="\u{62D}\u{62C}\u{628}", empty="\u{641}\u{627}\u{631}\u{63A}", footer="\u{628}\u{64A} \u{62D}\u{644}\u{627}\u{644}", none="\u{2014}",
+        soundLog="\u{1F3A7}  \u{633}\u{62C}\u{644} \u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A}", soundLogTitle="\u{633}\u{62C}\u{644} \u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A}", clearLog="\u{1F5D1} \u{645}\u{633}\u{62D}", stopShort="\u{23F9} \u{625}\u{64A}\u{642}\u{627}\u{641}", stopListen="\u{23F9} \u{625}\u{64A}\u{642}\u{627}\u{641} \u{627}\u{644}\u{627}\u{633}\u{62A}\u{645}\u{627}\u{639}",
+        emptyLog="\u{645}\u{627} \u{627}\u{634}\u{62A}\u{63A}\u{644} \u{623}\u{64A} \u{635}\u{648}\u{62A} \u{628}\u{639}\u{62F}", logSearch="\u{1F50D} \u{627}\u{628}\u{62D}\u{62B} \u{641}\u{64A} \u{627}\u{644}\u{633}\u{62C}\u{644}...",
+        soundHint="\u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{64A} \u{64A}\u{643}\u{62A}\u{645}\u{647}\u{627} \u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}. \u{1F3A7} \u{62A}\u{633}\u{645}\u{639}\u{647} \u{644}\u{62D}\u{627}\u{644}\u{647}\u{60C} \u{648}\u{1F50A} \u{62A}\u{633}\u{62A}\u{62B}\u{646}\u{64A}\u{647} \u{645}\u{646} \u{627}\u{644}\u{643}\u{62A}\u{645}.",
+        stPlaying="\u{25B6} \u{634}\u{63A}\u{627}\u{644}", stIdle="\u{23F8} \u{645}\u{62A}\u{648}\u{642}\u{641}", stGone="\u{2716} \u{627}\u{62E}\u{62A}\u{641}\u{649} \u{645}\u{646} \u{627}\u{644}\u{645}\u{627}\u{628}",
+        btnOn="\u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}: \u{645}\u{641}\u{639}\u{651}\u{644}", btnOff="\u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}: \u{645}\u{639}\u{637}\u{651}\u{644}",
+        exemptOn="\u{645}\u{633}\u{62A}\u{62B}\u{646}\u{649}", exemptOff="\u{64A}\u{64F}\u{643}\u{62A}\u{645}", stExempt="\u{1F50A} \u{645}\u{633}\u{62A}\u{62B}\u{646}\u{649} \u{645}\u{646} \u{627}\u{644}\u{643}\u{62A}\u{645}", stByButton="\u{1F507} \u{645}\u{643}\u{62A}\u{648}\u{645} \u{628}\u{627}\u{644}\u{632}\u{631}", stWillMute="\u{23F3} \u{64A}\u{64F}\u{643}\u{62A}\u{645} \u{644}\u{645}\u{627} \u{62A}\u{641}\u{639}\u{651}\u{644} \u{627}\u{644}\u{632}\u{631}",
+        listenShort="\u{1F3A7} \u{627}\u{633}\u{62A}\u{645}\u{639}",
+        animLog="\u{1F4DC}  \u{633}\u{62C}\u{644} \u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A}", animTitle="\u{633}\u{62C}\u{644} \u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A}", allowedTag="\u{645}\u{633}\u{645}\u{648}\u{62D}\u{629}", blockedTag="\u{645}\u{62D}\u{62C}\u{648}\u{628}\u{629}",
+        animHint="\u{631}\u{642}\u{635}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646} \u{648}\u{62D}\u{631}\u{643}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629} \u{62A}\u{638}\u{647}\u{631} \u{647}\u{646}\u{627}. \u{627}\u{636}\u{63A}\u{637} \u{639}\u{644}\u{649} \u{627}\u{644}\u{632}\u{631} \u{639}\u{634}\u{627}\u{646} \u{62A}\u{62D}\u{62C}\u{628} \u{623}\u{648} \u{62A}\u{633}\u{645}\u{62D}.",
+        emptyAnim="\u{645}\u{627} \u{627}\u{646}\u{631}\u{635}\u{62F}\u{62A} \u{623}\u{64A} \u{62D}\u{631}\u{643}\u{629} \u{628}\u{639}\u{62F}", animAll="\u{627}\u{644}\u{643}\u{644}", animPlayers="\u{631}\u{642}\u{635}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646}", animGame="\u{645}\u{646} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629}",
+        tagPlayer="\u{1F483} \u{631}\u{642}\u{635}\u{629} \u{644}\u{627}\u{639}\u{628}", tagGame="\u{1F3AE} \u{645}\u{646} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629}", tagSaved="\u{1F4CC} \u{645}\u{62D}\u{641}\u{648}\u{638}\u{629}",
+        saveBtn="\u{1F4BE}  \u{62D}\u{641}\u{638}", savesTitle="\u{627}\u{644}\u{62D}\u{641}\u{638}", saveNamePh="\u{627}\u{633}\u{645} \u{627}\u{644}\u{62D}\u{641}\u{638}...", saveNow="\u{62D}\u{641}\u{638}", loadShort="\u{62A}\u{62D}\u{645}\u{64A}\u{644}",
+        saveHint="\u{64A}\u{62D}\u{641}\u{638} \u{643}\u{644} \u{625}\u{639}\u{62F}\u{627}\u{62F}\u{627}\u{62A}\u{643} \u{627}\u{644}\u{62D}\u{627}\u{644}\u{64A}\u{629} (\u{627}\u{644}\u{623}\u{632}\u{631}\u{627}\u{631} \u{648}\u{627}\u{644}\u{642}\u{648}\u{627}\u{626}\u{645} \u{648}\u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A}) \u{628}\u{627}\u{644}\u{627}\u{633}\u{645} \u{627}\u{644}\u{644}\u{64A} \u{62A}\u{62E}\u{62A}\u{627}\u{631}\u{647}.",
+        emptySaves="\u{645}\u{627} \u{641}\u{64A}\u{647} \u{62D}\u{641}\u{638} \u{628}\u{639}\u{62F}", saved="\u{2713} \u{62A}\u{645} \u{627}\u{644}\u{62D}\u{641}\u{638}", thisMap="\u{647}\u{630}\u{627} \u{627}\u{644}\u{645}\u{627}\u{628}",
+        resetAll="\u{1F5D1}  \u{645}\u{633}\u{62D} \u{643}\u{644} \u{627}\u{644}\u{628}\u{64A}\u{627}\u{646}\u{627}\u{62A}", resetConfirm="\u{26A0} \u{627}\u{636}\u{63A}\u{637} \u{645}\u{631}\u{629} \u{62B}\u{627}\u{646}\u{64A}\u{629} \u{644}\u{644}\u{62A}\u{623}\u{643}\u{64A}\u{62F}",
     },
     en = {
         title="Be Halal", subtitle="Islamic server tools",
         sectionAudio="Audio", sectionVisual="Visual", sectionTools="Tools",
         sectionPlayers="Players", sectionLists="Lists",
         muteMusic="Mute Music", noobSkin="Noob Skins", stopDance="Stop Dances", broadDance="Broad Dance Detection",
-        saveSettings="Save Sound Settings",
         suggest="Suggest Player", whitelist="Whitelisted", blocked="Blocked",
         searchPH="Search for player...", on="Active", off="Disabled", noPlayers="No players found",
-        wl="Allow", block="Block", empty="Empty", footer="Be Halal",
-        openMusic="🎵  Sound Manager", musicTitle="Sound Manager",
-        tabPlaying="▶ Playing", tabMuted="🔒 Muted",
-        allMute="🔇 Mute All", allUnmute="🔊 Unmute All", muteCurrent="🔇 Mute Sound",
-        stopListen="⏹ Stop Listening",
-        unmuteBtn="🔊 Unmute", listenShort="🎧 Listen", mute="Mute",
-        none="—", namePh="Type name then Enter...",
-        animLog="📜  Animation Log", animTitle="Animation Log", allowedTag="Allowed", blockedTag="Blocked",
-        animHint="Every stopped animation shows here. If it belongs to the map, tap it to mark it Allowed.", emptyAnim="Nothing blocked yet",
-        soundLog="🎧  Sound Log", soundLogTitle="Sound Log", clearLog="🗑 Clear", stopShort="⏹ Stop", emptyLog="No sound played yet",
-        soundHint="Sounds caught by the Mute Music button. 🎧 listens to it alone, 🔊 exempts it from muting.",
-        stPlaying="▶ Playing", stIdle="⏸ Idle", stGone="✖ Gone from map",
-        catAll="All", catMusic="Music", catAmbient="Ambient", catSfx="Effects", catUi="UI", catOther="Other",
-        tabAll="📚 All", searchSound="🔍 Search name, path or ID...", logSearch="🔍 Search the log...",
-        sortName="Sort: Name", sortLen="Sort: Length", emptyFilter="No sounds match this filter",
+        wl="Allow", block="Block", empty="Empty", footer="Be Halal", none="\u{2014}",
+        soundLog="\u{1F3A7}  Sound Log", soundLogTitle="Sound Log", clearLog="\u{1F5D1} Clear", stopShort="\u{23F9} Stop", stopListen="\u{23F9} Stop Listening",
+        emptyLog="No sound played yet", logSearch="\u{1F50D} Search the log...",
+        soundHint="Sounds caught by the Mute Music button. \u{1F3A7} listens to it alone, \u{1F50A} exempts it from muting.",
+        stPlaying="\u{25B6} Playing", stIdle="\u{23F8} Idle", stGone="\u{2716} Gone from map",
         btnOn="Mute Music button: ON", btnOff="Mute Music button: OFF",
-        exemptOn="Exempt", exemptOff="Muted", stExempt="🔊 Exempt from muting", stByButton="🔇 Muted by button", stWillMute="⏳ Will mute when button is on",
+        exemptOn="Exempt", exemptOff="Muted", stExempt="\u{1F50A} Exempt from muting", stByButton="\u{1F507} Muted by button", stWillMute="\u{23F3} Will mute when button is on",
+        listenShort="\u{1F3A7} Listen",
+        animLog="\u{1F4DC}  Dance Log", animTitle="Dance Log", allowedTag="Allowed", blockedTag="Blocked",
+        animHint="Player dances and game animations show here. Tap the button to block or allow.",
+        emptyAnim="No animation detected yet", animAll="All", animPlayers="Player dances", animGame="From game",
+        tagPlayer="\u{1F483} Player dance", tagGame="\u{1F3AE} From game", tagSaved="\u{1F4CC} Saved",
+        saveBtn="\u{1F4BE}  Save", savesTitle="Saves", saveNamePh="Save name...", saveNow="Save", loadShort="Load",
+        saveHint="Saves all your current settings (toggles, lists and sounds) under the name you choose.",
+        emptySaves="Nothing saved yet", saved="\u{2713} Saved", thisMap="This map",
+        resetAll="\u{1F5D1}  Clear all data", resetConfirm="\u{26A0} Tap again to confirm",
     },
 }
 local function tr(k) return (T[State.lang] or T.en)[k] or T.en[k] or k end
 
----------------------------------------------------------------- Config
-local Config = {file = "BeHalal_Config.json", data = {}, queued = false}
+---------------------------------------------------------------- State
 local Audio
-
-function Config.collect()
-    local w, b, aa = {}, {}, {}
-    local me = lower(LP.Name)
-    for k in pairs(State.W) do if k ~= me then table.insert(w, k) end end
-    for k in pairs(State.B) do if k ~= me then table.insert(b, k) end end
-    for k in pairs(State.animAllow) do table.insert(aa, k) end
-    return {
-        muteMusic = State.muteMusic, noob = State.noob,
-        dances = State.dances, broadDances = State.broadDances,
-        autosave = Audio and Audio.autosave or false, W = w, B = b, animAllow = aa,
-    }
-end
-function Config.saveNow() writeJSON(Config.file, Config.collect()) end
-function Config.save()
-    if not canFS or Config.queued then return end
-    Config.queued = true
-    task.delay(1, function()
-        Config.queued = false
-        Config.saveNow()
-    end)
-end
-function Config.apply()
-    local d = readJSON(Config.file) or {}
-    Config.data = d
-    if type(d.animAllow) == "table" then for _, k in ipairs(d.animAllow) do State.animAllow[tostring(k)] = true end end
-    for _, k in ipairs({"muteMusic", "noob", "dances", "broadDances"}) do
-        if type(d[k]) == "boolean" then State[k] = d[k] end
-    end
-    if type(d.W) == "table" then for _, n in ipairs(d.W) do State.W[lower(n)] = true end end
-    if type(d.B) == "table" then for _, n in ipairs(d.B) do State.B[lower(n)] = true end end
-end
 
 ---------------------------------------------------------------- Audio
 Audio = {
-    place = tostring(game.PlaceId), file = "BeHalal_Sounds.json",
-    settings = {},
+    settings = {},                                   -- [key] = {m, f, n, c, x}
     rec = setmetatable({}, {__mode = "k"}),
     hooks = {},
-    globalMute = false, solo = nil, autosave = false, dirty = false,
+    globalMute = false, solo = nil, _tick = 0,
 }
 local KW = {"music","bgm","song","theme","soundtrack","radio","lofi","playlist","muzik","ambience"}
+local keyCache = setmetatable({}, {__mode = "k"})
 
 function Audio.keyOf(s)
     local id = s.SoundId
+    local c = keyCache[s]
+    if c and c[1] == id then return c[2] end
+    local key
     if id and id ~= "" then
         local num = id:match("rbxassetid://(%d+)") or id:match("[?&]id=(%d+)")
-        return "id:" .. (num or id)
+        key = "id:" .. (num or id)
+    else
+        key = "path:" .. s:GetFullName()
     end
-    return "path:" .. s:GetFullName()
+    keyCache[s] = {id, key}
+    return key
 end
 function Audio.soundName(s)
     if lower(s.Name) == "sound" and s.Parent then return s.Parent.Name .. " / " .. s.Name end
@@ -242,7 +220,22 @@ function Audio.nameHit(s)
     for _, w in ipairs(KW) do if n:find(w, 1, true) then return true end end
     return false
 end
-function Audio.looksMusic(s) return (s.TimeLength or 0) > 10 or Audio.nameHit(s) end
+--   ( ...)  
+function Audio.isCharSound(s)
+    local p = s.Parent
+    for _ = 1, 6 do
+        if not p or p == Workspace or p == game then return false end
+        if p:FindFirstChildOfClass("Humanoid") then return true end
+        p = p.Parent
+    end
+    return false
+end
+function Audio.looksMusic(s)
+    if Audio.isCharSound(s) then return false end
+    if s.Looped then return true end
+    if (s.TimeLength or 0) > 10 then return true end
+    return Audio.nameHit(s)
+end
 function Audio.fmtTime(len)
     len = len or 0
     return string.format("%d:%02d", math.floor(len / 60), math.floor(len % 60))
@@ -287,12 +280,14 @@ function Audio.enforceAll()
 end
 function Audio.hook(s)
     if Audio.hooks[s] then return end
+    if CoreGui and s:IsDescendantOf(CoreGui) then return end
     local j = Janitor.new()
     Audio.hooks[s] = j
     local function f() Audio.enforce(s) end
     j:Add(s:GetPropertyChangedSignal("Volume"):Connect(f))
     j:Add(s:GetPropertyChangedSignal("SoundId"):Connect(f))
     j:Add(s:GetPropertyChangedSignal("TimeLength"):Connect(f))
+    j:Add(s:GetPropertyChangedSignal("Looped"):Connect(f))
     j:Add(s.Played:Connect(function() f() Audio.note(s) end))
     f()
 end
@@ -306,10 +301,6 @@ function Audio.sweep()
             Audio.enforce(s)
             if s.IsPlaying then Audio.note(s) end
         end
-    end
-    if Audio.dirty and Audio.autosave then
-        Audio.dirty = false
-        Audio.save()
     end
 end
 
@@ -398,7 +389,6 @@ function Audio.commit(key)
     local st = Audio.settings[key]
     if st and not st.m and not st.c and not st.x and math.abs(st.f - 1) < 0.001 then Audio.settings[key] = nil end
     Audio._gc = nil
-    if Audio.autosave then Audio.dirty = true end
     for s in pairs(Audio.hooks) do
         if s.Parent and Audio.keyOf(s) == key then Audio.enforce(s) end
     end
@@ -420,65 +410,59 @@ function Audio.soloStop()
     Audio.solo = nil
     Audio.enforceAll()
 end
-function Audio.muteCurrentSolo()
-    local key = Audio.solo
-    if not key then return end
-    Audio.entry(key).m = true
-    Audio.solo = nil
-    Audio.commit(key)
-    Audio.enforceAll()
-end
 
-function Audio.save()
-    if not canFS then return end
-    local data = readJSON(Audio.file) or {}
+-- /  (  )
+function Audio.snapshot()
     local out = {}
     for k, st in pairs(Audio.settings) do
         out[k] = {m = st.m, f = st.f, n = st.n, c = st.c, x = st.x}
     end
-    data[Audio.place] = out
-    writeJSON(Audio.file, data)
+    return out
 end
-function Audio.clearSaved()
-    if not canFS then return end
-    local data = readJSON(Audio.file) or {}
-    data[Audio.place] = nil
-    writeJSON(Audio.file, data)
-end
-function Audio.loadSaved()
-    local data = readJSON(Audio.file)
-    local mine = data and data[Audio.place]
-    if type(mine) ~= "table" then return end
-    for k, v in pairs(mine) do
-        if type(v) == "table" then
-            Audio.settings[k] = {
-                m = v.m == true, f = tonumber(v.f) or 1, n = tostring(v.n or k), x = (v.x == true) or nil,
-                c = (type(v.c) == "string" and v.c ~= "") and v.c or nil,
-            }
+function Audio.restore(t)
+    Audio.settings = {}
+    if type(t) == "table" then
+        for k, v in pairs(t) do
+            if type(v) == "table" then
+                Audio.settings[k] = {
+                    m = v.m == true, f = tonumber(v.f) or 1, n = tostring(v.n or k),
+                    x = (v.x == true) or nil,
+                    c = (type(v.c) == "string" and v.c ~= "") and v.c or nil,
+                }
+            end
         end
     end
+    Audio.solo = nil
+    Audio._gc = nil
+    Audio.enforceAll()
 end
-function Audio.setAutosave(on)
-    Audio.autosave = on
-    if on then Audio.dirty = true else Audio.clearSaved() end
-    Config.save()
-end
+
 function Audio.setGlobalMute(on)
     Audio.globalMute = on
     Audio.enforceAll()
 end
 function Audio.init()
-    Audio.autosave = Config.data.autosave == true
     Audio.globalMute = State.muteMusic
-    if Audio.autosave then Audio.loadSaved() end
-    for _, c in ipairs({Workspace, SoundService, PG, Lighting}) do
-        for _, d in ipairs(c:GetDescendants()) do
+    Root:Add(game.DescendantAdded:Connect(function(d)
+        if d:IsA("Sound") then Audio.hook(d) end
+    end))
+    task.spawn(function()
+        local n = 0
+        for _, d in ipairs(game:GetDescendants()) do
+            if not State.running then return end
             if d:IsA("Sound") then Audio.hook(d) end
+            n = n + 1
+            if n % 1500 == 0 then task.wait() end
         end
-        Root:Add(c.DescendantAdded:Connect(function(d)
-            if d:IsA("Sound") then Audio.hook(d) end
-        end))
-    end
+    end)
+    --    0.25      
+    Root:Add(RunService.Heartbeat:Connect(function()
+        if not (Audio.globalMute or Audio.solo) then return end
+        local now = os.clock()
+        if now - Audio._tick < 0.25 then return end
+        Audio._tick = now
+        Audio.enforceAll()
+    end))
     loop(1, Audio.sweep)
 end
 function Audio.shutdown()
@@ -490,55 +474,66 @@ function Audio.shutdown()
         end
     end
     Audio.rec = setmetatable({}, {__mode = "k"})
-    if Audio.autosave then Audio.save() end
     for _, j in pairs(Audio.hooks) do j:Clean() end
     Audio.hooks = {}
 end
 
 ---------------------------------------------------------------- Skin
+--  :              
 local Skin = {}
 local backups = {}
 local NC = {Skin = Color3.fromRGB(245,205,48), T = Color3.fromRGB(13,105,172), Lg = Color3.fromRGB(40,127,71)}
 local PART_COLORS = {
-    Head=NC.Skin, LeftArm=NC.Skin, RightArm=NC.Skin, Torso=NC.T, LeftLeg=NC.Lg, RightLeg=NC.Lg,
+    LeftArm=NC.Skin, RightArm=NC.Skin, Torso=NC.T, LeftLeg=NC.Lg, RightLeg=NC.Lg,
     UpperTorso=NC.T, LowerTorso=NC.T, LeftUpperArm=NC.Skin, LeftLowerArm=NC.Skin, LeftHand=NC.Skin,
     RightUpperArm=NC.Skin, RightLowerArm=NC.Skin, RightHand=NC.Skin, LeftUpperLeg=NC.Lg, LeftLowerLeg=NC.Lg,
     LeftFoot=NC.Lg, RightUpperLeg=NC.Lg, RightLowerLeg=NC.Lg, RightFoot=NC.Lg,
 }
+local SKIN_FX = {ParticleEmitter = true, Trail = true, Beam = true, Fire = true, Smoke = true, Sparkles = true}
 local FACE_TEX = "rbxasset://textures/face.png"
 
+local function isMine(i) return i.Name == "BH_head" or i.Name == "BH_face" end
+local function inTool(i) return i:FindFirstAncestorOfClass("Tool") ~= nil end
+
 local function setProp(b, inst, prop, value)
+    local ok, cur = pcall(function() return inst[prop] end)
+    if not ok then return end
     local rec = b.props[inst]
     if not rec then rec = {} b.props[inst] = rec end
-    if rec[prop] == nil then rec[prop] = inst[prop] end
-    if inst[prop] ~= value then inst[prop] = value end
+    if rec[prop] == nil then rec[prop] = cur end
+    if cur ~= value then pcall(function() inst[prop] = value end) end
 end
 
 function Skin.has(c) return backups[c] ~= nil end
 function Skin.forget(c) backups[c] = nil end
 
+--     
+local function dirty(d, c, head)
+    if isMine(d) then return false end
+    if d:IsA("Shirt") then return d.ShirtTemplate ~= "" end
+    if d:IsA("Pants") then return d.PantsTemplate ~= "" end
+    if d:IsA("ShirtGraphic") then return d.Graphic ~= "" end
+    if d:IsA("CharacterMesh") or d:IsA("SurfaceAppearance") then return true end
+    if SKIN_FX[d.ClassName] then return d.Enabled and not inTool(d) end
+    if d:IsA("Decal") then return d.Parent == head and d.Transparency < 1 end
+    if d:IsA("BasePart") then
+        if d == head then return d.Transparency < 1 end
+        if d.Name == "HumanoidRootPart" then return false end
+        local col = PART_COLORS[d.Name]
+        if col and d.Parent == c then
+            if not close(d.Color, col) or d.Material ~= Enum.Material.Plastic then return true end
+            return d:IsA("MeshPart") and d.TextureID ~= ""
+        end
+        return d.Transparency < 1 and not inTool(d)
+    end
+    return false
+end
+
 function Skin.needs(c)
     local head = c:FindFirstChild("Head")
-    if head then
-        local f = head:FindFirstChild("BH_face")
-        if not f then return true end
-        for _, x in ipairs(head:GetChildren()) do
-            if x:IsA("Decal") and x ~= f and x.Transparency < 1 then return true end
-        end
-    end
-    for _, i in ipairs(c:GetChildren()) do
-        if i:IsA("Shirt") then if i.ShirtTemplate ~= "" then return true end
-        elseif i:IsA("Pants") then if i.PantsTemplate ~= "" then return true end
-        elseif i:IsA("ShirtGraphic") then if i.Graphic ~= "" then return true end
-        elseif i:IsA("CharacterMesh") then return true
-        elseif i:IsA("Accoutrement") then
-            local h = i:FindFirstChild("Handle")
-            if h and h:IsA("BasePart") and h.Transparency < 1 then return true end
-        end
-    end
-    for name, col in pairs(PART_COLORS) do
-        local part = c:FindFirstChild(name)
-        if part and part:IsA("BasePart") and not close(part.Color, col) then return true end
+    if head and not c:FindFirstChild("BH_head") then return true end
+    for _, d in ipairs(c:GetDescendants()) do
+        if dirty(d, c, head) then return true end
     end
     return false
 end
@@ -546,31 +541,45 @@ end
 function Skin.apply(c)
     if not c or not c.Parent or not c:FindFirstChildOfClass("Humanoid") then return end
     local b = backups[c]
-    if not b then b = {props = {}, meshes = {}} backups[c] = b end
-    for _, i in ipairs(c:GetChildren()) do
-        if i:IsA("Shirt") then setProp(b, i, "ShirtTemplate", "")
-        elseif i:IsA("Pants") then setProp(b, i, "PantsTemplate", "")
-        elseif i:IsA("ShirtGraphic") then setProp(b, i, "Graphic", "")
-        elseif i:IsA("Accoutrement") then
-            local h = i:FindFirstChild("Handle")
-            if h and h:IsA("BasePart") then setProp(b, h, "Transparency", 1) end
-        elseif i:IsA("CharacterMesh") then
-            table.insert(b.meshes, i)
-            i.Parent = nil
-        end
-    end
+    if not b then b = {props = {}, removed = {}} backups[c] = b end
     local head = c:FindFirstChild("Head")
-    if head then
-        for _, x in ipairs(head:GetChildren()) do
-            if x:IsA("Decal") and x.Name ~= "BH_face" then setProp(b, x, "Transparency", 1) end
-        end
-        if not head:FindFirstChild("BH_face") then
-            b.face = N("Decal", {Name = "BH_face", Texture = FACE_TEX, Face = Enum.NormalId.Front}, head)
+    for _, d in ipairs(c:GetDescendants()) do
+        if not isMine(d) then
+            if d:IsA("Shirt") then setProp(b, d, "ShirtTemplate", "")
+            elseif d:IsA("Pants") then setProp(b, d, "PantsTemplate", "")
+            elseif d:IsA("ShirtGraphic") then setProp(b, d, "Graphic", "")
+            elseif d:IsA("CharacterMesh") or d:IsA("SurfaceAppearance") then
+                table.insert(b.removed, {d, d.Parent})
+                d.Parent = nil
+            elseif SKIN_FX[d.ClassName] then
+                if not inTool(d) then setProp(b, d, "Enabled", false) end
+            elseif d:IsA("Decal") then
+                if d.Parent == head then setProp(b, d, "Transparency", 1) end
+            elseif d:IsA("BasePart") then
+                if d == head then
+                    setProp(b, d, "Transparency", 1)
+                elseif d.Name ~= "HumanoidRootPart" then
+                    local col = PART_COLORS[d.Name]
+                    if col and d.Parent == c then
+                        setProp(b, d, "Color", col)
+                        setProp(b, d, "Material", Enum.Material.Plastic)
+                        if d:IsA("MeshPart") then setProp(b, d, "TextureID", "") end
+                    elseif not inTool(d) then
+                        setProp(b, d, "Transparency", 1)
+                    end
+                end
+            end
         end
     end
-    for name, col in pairs(PART_COLORS) do
-        local part = c:FindFirstChild(name)
-        if part and part:IsA("BasePart") then setProp(b, part, "Color", col) end
+    if head and not c:FindFirstChild("BH_head") then
+        local nh = N("Part", {
+            Name = "BH_head", Size = Vector3.new(2, 1, 1), Color = NC.Skin, Material = Enum.Material.Plastic,
+            CanCollide = false, CanQuery = false, CanTouch = false, Massless = true,
+            TopSurface = Enum.SurfaceType.Smooth, BottomSurface = Enum.SurfaceType.Smooth,
+        }, c)
+        N("SpecialMesh", {MeshType = Enum.MeshType.Head, Scale = Vector3.new(1.25, 1.25, 1.25)}, nh)
+        N("Decal", {Name = "BH_face", Texture = FACE_TEX, Face = Enum.NormalId.Front}, nh)
+        N("Weld", {Part0 = head, Part1 = nh}, nh)
     end
 end
 
@@ -578,11 +587,12 @@ function Skin.restore(c)
     local b = backups[c]
     if not b then return end
     backups[c] = nil
-    if b.face then pcall(function() b.face:Destroy() end) end
     for inst, props in pairs(b.props) do
         for prop, v in pairs(props) do pcall(function() inst[prop] = v end) end
     end
-    for _, m in ipairs(b.meshes) do pcall(function() m.Parent = c end) end
+    for _, r in ipairs(b.removed) do pcall(function() r[1].Parent = r[2] end) end
+    local h = c:FindFirstChild("BH_head")
+    if h then pcall(function() h:Destroy() end) end
 end
 
 ---------------------------------------------------------------- Hide
@@ -638,7 +648,8 @@ for _, n in ipairs({"Action", "Action2", "Action3", "Action4"}) do
     if ok and v then ACTION_PRI[v] = true end
 end
 local emoteCache, emoteFail = {}, {}
-Dances.log = {}
+local seenTracks = setmetatable({}, {__mode = "k"})
+Dances.log = {}   -- [key] = {key, name, kind = "dance"|"game", who, n, t}
 
 function Dances.isEmoteAsset(num)
     local c = emoteCache[num]
@@ -670,7 +681,35 @@ function Dances.keyOf(track)
     return "n:" .. lower(track.Name or "?")
 end
 
-function Dances.record(track)
+--  : "dance" =   (/ )  "game" =     nil =  
+function Dances.detect(track, char)
+    local a = track.Animation
+    local num = a and tostring(a.AnimationId or ""):match("%d+")
+    if num then
+        if DANCE_IDS[num] then return "dance" end
+        if Dances.isEmoteAsset(num) then return "dance" end
+    end
+    if a and a.Parent and a:FindFirstAncestorOfClass("Tool") then return nil end
+    local own = a and a.Parent and char and a:IsDescendantOf(char)
+    local names = {lower(track.Name or ""), a and lower(a.Name or "") or "", (a and a.Parent) and lower(a.Parent.Name) or ""}
+    if own or not a then
+        for _, n in ipairs(names) do
+            if n:find("dance") or n:find("emote") then return "dance" end
+        end
+    end
+    if own then return nil end
+    if ACTION_PRI[track.Priority] then return "game" end
+    return nil
+end
+
+function Dances.blocked(k, kind)
+    if State.animAllow[k] then return false end
+    if State.animBlock[k] then return true end
+    if kind == "dance" then return true end
+    return kind == "game" and State.broadDances
+end
+
+function Dances.record(track, kind, p)
     local k = Dances.keyOf(track)
     local a = track.Animation
     local e = Dances.log[k]
@@ -680,51 +719,39 @@ function Dances.record(track)
             count = count + 1
             if ee.t < oldestT then oldestK, oldestT = kk, ee.t end
         end
-        if count >= 30 and oldestK then Dances.log[oldestK] = nil end
+        if count >= 40 and oldestK then Dances.log[oldestK] = nil end
         e = {key = k, name = (a and a.Name ~= "" and a.Name) or track.Name or "?", n = 0, t = 0}
         Dances.log[k] = e
     end
-    e.n = e.n + 1
+    if not seenTracks[track] then
+        seenTracks[track] = true
+        e.n = e.n + 1
+    end
+    if kind == "dance" or not e.kind then e.kind = kind end
+    e.who = (p.DisplayName ~= "" and p.DisplayName) or p.Name
     e.t = os.clock()
-end
-
-function Dances.isDance(track, char)
-    if not track then return false end
-    if State.animAllow[Dances.keyOf(track)] then return false end
-    local a = track.Animation
-    local num = a and tostring(a.AnimationId or ""):match("%d+")
-    if num then
-        if DANCE_IDS[num] then return true end
-        if Dances.isEmoteAsset(num) then return true end
-    end
-    local inTool = a and a.Parent and a:FindFirstAncestorOfClass("Tool") ~= nil
-    local own = a and a.Parent and char and a:IsDescendantOf(char) and not inTool
-    if own then
-        local names = {lower(track.Name or ""), lower(a.Name or ""), lower(a.Parent.Name)}
-        for _, n in ipairs(names) do
-            if n:find("dance") or n:find("emote") then return true end
-        end
-    end
-    if State.broadDances and ACTION_PRI[track.Priority] and not inTool then
-        return true
-    end
-    return false
 end
 
 function Dances.shouldStop(p) return p ~= LP and not isWhite(p) end
 function Dances.stop(t)
-    Dances.record(t)
     pcall(function() t:AdjustWeight(0, 0) end)
     pcall(function() t:AdjustSpeed(0) end)
     pcall(function() t:Stop(0) end)
 end
-function Dances.sweepChar(c)
+function Dances.handle(track, char, p)
+    local kind = Dances.detect(track, char)
+    local k = Dances.keyOf(track)
+    if kind then Dances.record(track, kind, p) end
+    if (kind or State.animBlock[k]) and Dances.blocked(k, kind)
+        and State.dances and Dances.shouldStop(p) then
+        Dances.stop(track)
+    end
+end
+function Dances.scan(c, p)
     local h = c:FindFirstChildOfClass("Humanoid")
     local a = h and h:FindFirstChildOfClass("Animator")
     if not a then return end
-    for _, t in ipairs(a:GetPlayingAnimationTracks()) do
-        if Dances.isDance(t, c) then Dances.stop(t) end
-    end
+    for _, t in ipairs(a:GetPlayingAnimationTracks()) do Dances.handle(t, c, p) end
 end
 function Dances.hookChar(c, p, j)
     task.spawn(function()
@@ -733,9 +760,7 @@ function Dances.hookChar(c, p, j)
         local a = h:FindFirstChildOfClass("Animator") or h:WaitForChild("Animator", 5)
         if not a then return end
         j:Add(a.AnimationPlayed:Connect(function(t)
-            if State.running and State.dances and Dances.shouldStop(p) and Dances.isDance(t, c) then
-                Dances.stop(t)
-            end
+            if State.running then Dances.handle(t, c, p) end
         end))
     end)
 end
@@ -837,8 +862,84 @@ local function listSet(name, mode)
     State.B[k] = (mode == "black") or nil
     local p = findPlayer(k)
     if p then Targets.refresh(p) end
-    Config.save()
     UI.refresh()
+end
+
+---------------------------------------------------------------- Saves ( )
+local Saves = {file = "BeHalal_Saves.json", list = {}}
+
+local function autoFriends()
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= LP then
+            local ok, fr = pcall(function() return LP:IsFriendsWith(p.UserId) end)
+            if ok and fr and not State.B[lower(p.Name)] then State.W[lower(p.Name)] = true end
+        end
+    end
+end
+
+function Saves.init()
+    local d = readJSON(Saves.file)
+    Saves.list = (d and type(d.saves) == "table") and d.saves or {}
+    Saves.placeName = "ID " .. tostring(game.PlaceId)
+    task.spawn(function()
+        local ok, info = pcall(function() return Marketplace:GetProductInfo(game.PlaceId) end)
+        if ok and info and info.Name then Saves.placeName = info.Name end
+    end)
+end
+function Saves.write() writeJSON(Saves.file, {saves = Saves.list}) end
+
+local function keysOf(set, skipMe)
+    local out, me = {}, lower(LP.Name)
+    for k in pairs(set) do if not (skipMe and k == me) then table.insert(out, k) end end
+    return out
+end
+function Saves.snapshot()
+    return {
+        muteMusic = State.muteMusic, noob = State.noob, dances = State.dances, broadDances = State.broadDances,
+        W = keysOf(State.W, true), B = keysOf(State.B, true),
+        animAllow = keysOf(State.animAllow), animBlock = keysOf(State.animBlock),
+        audio = Audio.snapshot(),
+    }
+end
+function Saves.add(name)
+    name = trim(name)
+    if name == "" then name = ((State.lang == "ar") and "\u{62D}\u{641}\u{638} " or "Save ") .. (#Saves.list + 1) end
+    local n = utf8.len(name)
+    if n and n > 28 then name = name:sub(1, utf8.offset(name, 29) - 1) end
+    local place = tostring(game.PlaceId)
+    local entry = {name = name, t = os.time(), place = place, placeName = Saves.placeName, data = Saves.snapshot()}
+    for i, e in ipairs(Saves.list) do
+        if e.name == name and e.place == place then table.remove(Saves.list, i) break end
+    end
+    table.insert(Saves.list, 1, entry)
+    while #Saves.list > 50 do table.remove(Saves.list) end
+    Saves.write()
+end
+function Saves.apply(entry)
+    local d = entry.data or {}
+    for _, k in ipairs({"muteMusic", "noob", "dances", "broadDances"}) do
+        if type(d[k]) == "boolean" then State[k] = d[k] end
+    end
+    State.W, State.B, State.animAllow, State.animBlock = {}, {}, {}, {}
+    if type(d.W) == "table" then for _, n in ipairs(d.W) do State.W[lower(n)] = true end end
+    if type(d.B) == "table" then for _, n in ipairs(d.B) do State.B[lower(n)] = true end end
+    if type(d.animAllow) == "table" then for _, k in ipairs(d.animAllow) do State.animAllow[tostring(k)] = true end end
+    if type(d.animBlock) == "table" then for _, k in ipairs(d.animBlock) do State.animBlock[tostring(k)] = true end end
+    Audio.setGlobalMute(State.muteMusic)
+    Audio.restore(d.audio)
+    Targets.refreshAll()
+    task.spawn(function() autoFriends() Targets.refreshAll() UI.refresh() end)
+end
+function Saves.resetAll()
+    State.muteMusic, State.noob, State.dances, State.broadDances = false, false, true, false
+    State.W, State.B, State.animAllow, State.animBlock = {}, {}, {}, {}
+    Audio.setGlobalMute(false)
+    Audio.restore({})
+    Audio.log, Dances.log = {}, {}
+    Saves.list = {}
+    Saves.write()
+    Targets.refreshAll()
+    task.spawn(function() autoFriends() Targets.refreshAll() UI.refresh() end)
 end
 
 ---------------------------------------------------------------- UI helpers
@@ -861,6 +962,53 @@ function UILib.drawX(parent, color, size, thick)
         }, parent)
         UILib.corner(l, 99)
     end
+end
+-- :    
+function UILib.glow(stroke, J, base, c1, c2)
+    c1, c2 = c1 or Theme.Accent, c2 or Theme.Accent2
+    stroke.Color = Color3.new(1, 1, 1)
+    local g = N("UIGradient", {Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, c1), ColorSequenceKeypoint.new(0.5, c2), ColorSequenceKeypoint.new(1, c1),
+    })}, stroke)
+    local alive = true
+    J:Add(function() alive = false end)
+    task.spawn(function()
+        local t = math.random() * 6
+        while alive and State.running do
+            t = t + 0.06
+            local k = (math.sin(t * 1.6) + 1) / 2
+            stroke.Transparency = 0.5 - 0.38 * k
+            stroke.Thickness = (base or 1.5) + 1.3 * k
+            g.Rotation = (t * 40) % 360
+            task.wait(0.06)
+        end
+    end)
+end
+--     (//)    
+function UILib.halo(target, radius, J)
+    local f = N("Frame", {BackgroundTransparency = 1, BorderSizePixel = 0, ZIndex = 1, Active = false}, target.Parent)
+    UILib.corner(f, radius)
+    local st = N("UIStroke", {Color = Theme.Accent, Thickness = 8, Transparency = 0.85}, f)
+    local function sync()
+        f.Size, f.Position, f.Visible = target.Size, target.Position, target.Visible
+    end
+    sync()
+    J:Add(target:GetPropertyChangedSignal("Position"):Connect(sync))
+    J:Add(target:GetPropertyChangedSignal("Size"):Connect(sync))
+    J:Add(target:GetPropertyChangedSignal("Visible"):Connect(sync))
+    local alive = true
+    J:Add(function() alive = false end)
+    task.spawn(function()
+        local t = math.random() * 6
+        while alive and State.running do
+            t = t + 0.06
+            local k = (math.sin(t * 1.6) + 1) / 2
+            st.Transparency = 0.93 - 0.2 * k
+            st.Thickness = 6 + 6 * k
+            task.wait(0.06)
+        end
+    end)
+    return f
 end
 local WHITE = Color3.new(1, 1, 1)
 local DARK = Color3.fromRGB(10, 24, 16)
@@ -972,13 +1120,13 @@ local function showLangScreen(onDone)
     local card = N("Frame", {Size = UDim2.new(0, cw, 0, ch), Position = UDim2.new(0.5, -cw / 2, 0.5, -ch / 2 + 60), BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, Active = true}, gui)
     UILib.corner(card, 24)
     UILib.gradient(card, Color3.fromRGB(22, 30, 40), Color3.fromRGB(12, 18, 24), 135)
-    UILib.stroke(card, Theme.Accent, 1.5, 0.3)
+    UILib.glow(UILib.stroke(card, Theme.Accent, 1.5, 0.3), Root)
 
     local logo = N("Frame", {Size = UDim2.new(0, 80, 0, 80), Position = UDim2.new(0.5, -40, 0, 22), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0}, card)
     UILib.corner(logo, 40) UILib.stroke(logo, Theme.Accent, 2, 0.2)
-    Label(logo, {Size = UDim2.new(1, 0, 1, 0), Text = "🕌", TextSize = 42, Font = Enum.Font.GothamBold, TextXAlignment = Enum.TextXAlignment.Center})
-    Label(card, {Size = UDim2.new(1, -30, 0, 30), Position = UDim2.new(0, 15, 0, 112), Text = "بي حلال · Be Halal", Font = Enum.Font.GothamBold, TextSize = 22, TextColor3 = Theme.Accent2, TextXAlignment = Enum.TextXAlignment.Center})
-    Label(card, {Size = UDim2.new(1, -30, 0, 18), Position = UDim2.new(0, 15, 0, 146), Text = "اختر اللغة  •  Select Language", TextColor3 = Theme.TextDim, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Center})
+    Label(logo, {Size = UDim2.new(1, 0, 1, 0), Text = "\u{1F54C}", TextSize = 42, Font = Enum.Font.GothamBold, TextXAlignment = Enum.TextXAlignment.Center})
+    Label(card, {Size = UDim2.new(1, -30, 0, 30), Position = UDim2.new(0, 15, 0, 112), Text = "\u{628}\u{64A} \u{62D}\u{644}\u{627}\u{644} \u{B7} Be Halal", Font = Enum.Font.GothamBold, TextSize = 22, TextColor3 = Theme.Accent2, TextXAlignment = Enum.TextXAlignment.Center})
+    Label(card, {Size = UDim2.new(1, -30, 0, 18), Position = UDim2.new(0, 15, 0, 146), Text = "\u{627}\u{62E}\u{62A}\u{631} \u{627}\u{644}\u{644}\u{63A}\u{629}  \u{2022}  Select Language", TextColor3 = Theme.TextDim, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Center})
 
     local function mkb(text, flag, desc, y, lang, col)
         local bc = N("Frame", {Size = UDim2.new(1, -60, 0, 76), Position = UDim2.new(0, 30, 0, y), BackgroundColor3 = Theme.Card, BorderSizePixel = 0}, card)
@@ -988,7 +1136,7 @@ local function showLangScreen(onDone)
         Label(fb, {Size = UDim2.new(1, 0, 1, 0), Text = flag, TextSize = 26, Font = Enum.Font.GothamBold, TextXAlignment = Enum.TextXAlignment.Center})
         Label(bc, {Size = UDim2.new(1, -100, 0, 22), Position = UDim2.new(0, 72, 0, 16), Text = text, Font = Enum.Font.GothamBold, TextSize = 18})
         Label(bc, {Size = UDim2.new(1, -100, 0, 16), Position = UDim2.new(0, 72, 0, 40), Text = desc, TextColor3 = Theme.TextDim, TextSize = 11})
-        Label(bc, {Size = UDim2.new(0, 30, 1, 0), Position = UDim2.new(1, -36, 0, 0), Text = "›", TextColor3 = col, Font = Enum.Font.GothamBold, TextSize = 30, TextXAlignment = Enum.TextXAlignment.Center})
+        Label(bc, {Size = UDim2.new(0, 30, 1, 0), Position = UDim2.new(1, -36, 0, 0), Text = "\u{203A}", TextColor3 = col, Font = Enum.Font.GothamBold, TextSize = 30, TextXAlignment = Enum.TextXAlignment.Center})
         local b = N("TextButton", {Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Text = "", AutoButtonColor = false}, bc)
         b.Activated:Connect(function()
             if chosen then return end
@@ -999,23 +1147,13 @@ local function showLangScreen(onDone)
             onDone(lang)
         end)
     end
-    mkb("العربية", "🇸🇦", "واجهة عربية كاملة", 185, "ar", Theme.Accent)
-    mkb("English", "🇬🇧", "Full English interface", 270, "en", Theme.Accent2)
+    mkb("\u{627}\u{644}\u{639}\u{631}\u{628}\u{64A}\u{629}", "\u{1F1F8}\u{1F1E6}", "\u{648}\u{627}\u{62C}\u{647}\u{629} \u{639}\u{631}\u{628}\u{64A}\u{629} \u{643}\u{627}\u{645}\u{644}\u{629}", 185, "ar", Theme.Accent)
+    mkb("English", "\u{1F1EC}\u{1F1E7}", "Full English interface", 270, "en", Theme.Accent2)
     TweenService:Create(card, TweenInfo.new(0.6, Enum.EasingStyle.Back), {Position = UDim2.new(0.5, -cw / 2, 0.5, -ch / 2)}):Play()
 end
 
----------------------------------------------------------------- Sound manager
-local CATS = {"music", "ambient", "sfx", "ui", "other"}
-local CAT_KEY = {music = "catMusic", ambient = "catAmbient", sfx = "catSfx", ui = "catUi", other = "catOther"}
-local CAT_ICON = {music = "🎵", ambient = "🌿", sfx = "💥", ui = "🖱", other = "📦"}
-local CAT_COLOR = {
-    music = Theme.Accent, ambient = Theme.Accent2, sfx = Theme.Gold,
-    ui = Theme.Info, other = Theme.TextDim,
-}
-
-local function padChip(b)
-    N("UIPadding", {PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10)}, b)
-end
+---------------------------------------------------------------- Shared sound helpers
+local CAT_ICON = {music = "\u{1F3B5}", ambient = "\u{1F33F}", sfx = "\u{1F4A5}", ui = "\u{1F5B1}", other = "\u{1F4E6}"}
 local function sortByName(arr, nameOf, keyOf)
     table.sort(arr, function(a, b)
         local na, nb = lower(nameOf(a)), lower(nameOf(b))
@@ -1024,328 +1162,20 @@ local function sortByName(arr, nameOf, keyOf)
     end)
 end
 
-local function buildSoundManager(J, vp)
-    local MG = J:Add(N("ScreenGui", {Name = "BH_SoundsMgr", ResetOnSpawn = false, DisplayOrder = 60, ZIndexBehavior = Enum.ZIndexBehavior.Sibling}, PG))
-    local pw, ph = math.min(340, vp.X - 20), math.min(540, vp.Y - 40)
-    local panel = N("Frame", {Size = UDim2.new(0, pw, 0, ph), Position = UDim2.new(0.5, -pw / 2, 0.5, -ph / 2), BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, Active = true, Visible = false}, MG)
-    UILib.corner(panel, 18) UILib.gradient(panel, Theme.BG1, Theme.BG3, 135) UILib.stroke(panel, Theme.Accent, 1.5, 0.35)
-
-    local top = N("Frame", {Size = UDim2.new(1, 0, 0, 44), BackgroundTransparency = 1}, panel)
-    makeDraggable(top, panel, J)
-    Label(top, {Size = UDim2.new(1, -60, 0, 32), Position = UDim2.new(0, 14, 0, 8), Text = tr("musicTitle"), TextColor3 = Theme.Accent2, Font = Enum.Font.GothamBold, TextSize = 15})
-    local closeB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -36, 0, 10), BackgroundColor3 = Theme.Card, Text = "✕", TextColor3 = Theme.Danger, TextSize = 14}, 13)
-    UILib.stroke(closeB, Theme.Danger, 1.5, 0.5)
-    J:Add(closeB.Activated:Connect(function() panel.Visible = false end))
-
-    local searchF = N("Frame", {Size = UDim2.new(1, -120, 0, 28), Position = UDim2.new(0, 14, 0, 46), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0}, panel)
-    UILib.corner(searchF, 8)
-    local searchBox = N("TextBox", {
-        Size = UDim2.new(1, -16, 1, 0), Position = UDim2.new(0, 8, 0, 0), BackgroundTransparency = 1, Text = "", PlaceholderText = tr("searchSound"),
-        TextColor3 = Theme.Text, PlaceholderColor3 = Theme.TextDim, Font = Enum.Font.GothamMedium, TextSize = 11,
-        TextXAlignment = Enum.TextXAlignment.Left, ClearTextOnFocus = false, TextTruncate = Enum.TextTruncate.AtEnd,
-    }, searchF)
-    local sortB = Btn(panel, {Size = UDim2.new(0, 92, 0, 28), Position = UDim2.new(1, -106, 0, 46), BackgroundColor3 = Theme.BG3, TextColor3 = Theme.Text, TextSize = 10}, 8)
-    UILib.stroke(sortB, Theme.TextDim, 1, 0.5)
-
-    local chipStrip = N("ScrollingFrame", {
-        Size = UDim2.new(1, -20, 0, 30), Position = UDim2.new(0, 10, 0, 78), BackgroundTransparency = 1, BorderSizePixel = 0,
-        ScrollBarThickness = 0, CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.X, ScrollingDirection = Enum.ScrollingDirection.X,
-    }, panel)
-    N("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder, VerticalAlignment = Enum.VerticalAlignment.Center}, chipStrip)
-    local chipOrder = {"all", "music", "ambient", "sfx", "ui", "other"}
-    local chips = {}
-
-    local tabsF = N("Frame", {Size = UDim2.new(1, -28, 0, 28), Position = UDim2.new(0, 14, 0, 112), BackgroundTransparency = 1}, panel)
-    N("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder}, tabsF)
-    local tabBtns = {}
-
-    local allBtn = Btn(panel, {Size = UDim2.new(1, -28, 0, 26), Position = UDim2.new(0, 14, 0, 144), BackgroundColor3 = Theme.Danger, Text = tr("allMute")})
-    local stopSoloB = Btn(panel, {Size = UDim2.new(0.5, -20, 0, 26), Position = UDim2.new(0.5, 6, 0, 144), BackgroundColor3 = Theme.Info, Text = tr("stopListen"), Visible = false})
-
-    local list = N("ScrollingFrame", {
-        Size = UDim2.new(1, -20, 1, -186), Position = UDim2.new(0, 10, 0, 176), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0,
-        ScrollBarThickness = 3, ScrollBarImageColor3 = Theme.Accent, CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y,
-    }, panel)
-    UILib.corner(list, 12) UILib.padding(list, 6)
-    N("UIListLayout", {Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder}, list)
-
-    local headers = {}
-    for i, c in ipairs(CATS) do
-        local hf = N("Frame", {Size = UDim2.new(1, 0, 0, 22), BackgroundTransparency = 1, LayoutOrder = i * 10000, Visible = false}, list)
-        local lbl = Label(hf, {Size = UDim2.new(1, -6, 1, 0), Position = UDim2.new(0, 4, 0, 0), TextColor3 = CAT_COLOR[c], Font = Enum.Font.GothamBold})
-        headers[c] = {frame = hf, lbl = lbl}
-    end
-    local empty = Label(list, {Size = UDim2.new(1, 0, 0, 60), Text = tr("emptyFilter"), TextColor3 = Theme.TextDim, LayoutOrder = 99999, TextXAlignment = Enum.TextXAlignment.Center})
-
-    local tab, catFilter, query, sortMode = "playing", "all", "", "name"
-    local rows, curGroups, visibleKeys = {}, {}, {}
-    local refresh
-
-    local function makeRow(k)
-        local row = N("Frame", {Size = UDim2.new(1, 0, 0, 80), BackgroundColor3 = Theme.Card, BorderSizePixel = 0, Visible = false}, list)
-        UILib.corner(row, 10)
-        local rowStroke = UILib.stroke(row, Theme.Accent, 1, 0.7)
-        local icon = Label(row, {Size = UDim2.new(0, 22, 0, 22), Position = UDim2.new(0, 8, 0, 6), TextSize = 15, TextXAlignment = Enum.TextXAlignment.Center})
-        local nameLbl = Label(row, {Size = UDim2.new(1, -150, 0, 18), Position = UDim2.new(0, 32, 0, 8), Font = Enum.Font.GothamBold, TextTruncate = Enum.TextTruncate.AtEnd})
-        local nameBox = N("TextBox", {
-            Size = UDim2.new(1, -150, 0, 20), Position = UDim2.new(0, 32, 0, 6), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0, Text = "",
-            PlaceholderText = tr("namePh"), TextColor3 = Theme.Text, PlaceholderColor3 = Theme.TextDim, Font = Enum.Font.GothamMedium,
-            TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, ClearTextOnFocus = false, Visible = false,
-        }, row)
-        UILib.corner(nameBox, 6)
-        local metaLbl = Label(row, {Size = UDim2.new(1, -20, 0, 12), Position = UDim2.new(0, 10, 0, 30), TextColor3 = Theme.TextDim, TextSize = 10, TextTruncate = Enum.TextTruncate.AtEnd})
-        local editB = Btn(row, {Size = UDim2.new(0, 26, 0, 24), Position = UDim2.new(1, -112, 0, 5), BackgroundColor3 = Theme.BG3, Text = "✏️", TextSize = 12}, 6)
-        local muteB = Btn(row, {Size = UDim2.new(0, 76, 0, 24), Position = UDim2.new(1, -82, 0, 5), TextSize = 10}, 6)
-        Label(row, {Size = UDim2.new(0, 20, 0, 24), Position = UDim2.new(0, 8, 0, 48), Text = "🔉", TextSize = 13})
-        local pctL = Label(row, {Size = UDim2.new(0, 40, 0, 24), Position = UDim2.new(1, -130, 0, 48), Text = "100%", Font = Enum.Font.GothamBold, TextSize = 11, TextXAlignment = Enum.TextXAlignment.Right})
-        local listenB = Btn(row, {Size = UDim2.new(0, 76, 0, 24), Position = UDim2.new(1, -86, 0, 48), TextSize = 10}, 6)
-        local slider = makeSlider(row, UDim2.new(0, 30, 0, 48), UDim2.new(1, -168, 0, 24), J, function(v)
-            local g = curGroups[k]
-            local st = Audio.entry(k, g and g.base)
-            st.f = v
-            Audio.commit(k)
-            pctL.Text = math.floor(v * 100 + 0.5) .. "%"
-        end)
-
-        J:Add(muteB.Activated:Connect(function()
-            local g = curGroups[k]
-            local st = Audio.entry(k, g and g.base)
-            st.m = not st.m
-            Audio.commit(k)
-            refresh()
-        end))
-        J:Add(listenB.Activated:Connect(function()
-            if Audio.solo == k then
-                Audio.soloStop()
-            elseif curGroups[k] and curGroups[k].count > 0 then
-                Audio.soloPlay(k)
-            end
-            refresh()
-        end))
-        J:Add(editB.Activated:Connect(function()
-            local st = Audio.settings[k]
-            local g = curGroups[k]
-            nameBox.Text = (st and st.c) or (g and g.base) or ""
-            nameLbl.Visible, nameBox.Visible = false, true
-            nameBox:CaptureFocus()
-        end))
-        J:Add(nameBox.FocusLost:Connect(function()
-            local t2 = string.sub(trim(nameBox.Text), 1, 40)
-            local g = curGroups[k]
-            local st = Audio.entry(k, g and g.base)
-            st.c = (t2 ~= "") and t2 or nil
-            Audio.commit(k)
-            nameBox.Visible, nameLbl.Visible = false, true
-            refresh()
-        end))
-
-        local r = {frame = row}
-        function r.update(g)
-            local st = Audio.settings[k]
-            local muted = st and st.m == true
-            local f = st and st.f or 1
-            icon.Text = CAT_ICON[g.cat]
-            if not nameBox.Visible then nameLbl.Text = g.name end
-            local meta = tr(CAT_KEY[g.cat])
-            if g.len > 0 then meta = meta .. "  ·  ⏱ " .. Audio.fmtTime(g.len) end
-            if g.looped then meta = meta .. " 🔁" end
-            if g.count > 1 then meta = meta .. "  ·  ×" .. g.count end
-            meta = meta .. "  ·  " .. (g.playing and "▶" or "⏸") .. "  ·  " .. g.path
-            metaLbl.Text = meta
-            if not slider.dragging then slider.set(f) end
-            pctL.Text = math.floor(f * 100 + 0.5) .. "%"
-            if muted then
-                muteB.Text, muteB.BackgroundColor3, muteB.TextColor3 = tr("unmuteBtn"), Theme.Success, DARK
-            else
-                muteB.Text, muteB.BackgroundColor3, muteB.TextColor3 = "🔇 " .. tr("mute"), Theme.Danger, WHITE
-            end
-            if Audio.solo == k then
-                listenB.Text, listenB.BackgroundColor3, listenB.TextColor3 = tr("stopShort"), Theme.Gold, DARK
-            elseif g.count > 0 then
-                listenB.Text, listenB.BackgroundColor3, listenB.TextColor3 = tr("listenShort"), Theme.Info, WHITE
-            else
-                listenB.Text, listenB.BackgroundColor3, listenB.TextColor3 = tr("listenShort"), Theme.BG3, Theme.TextDim
-            end
-            rowStroke.Color = muted and Theme.Danger or CAT_COLOR[g.cat]
-        end
-        return r
-    end
-
-    refresh = function()
-        local groups = {}
-        for k, g in pairs(Audio.groups()) do groups[k] = g end
-        for k, st in pairs(Audio.settings) do
-            if st.m and not groups[k] then
-                groups[k] = {key = k, count = 0, playing = false, len = 0, name = st.c or st.n or k, base = st.n or k, path = "—", looped = false, cat = Audio.catCache[k] or "other"}
-            end
-        end
-        curGroups = groups
-
-        local nPlaying, nAll, nMuted = 0, 0, 0
-        local catCount = {all = 0, music = 0, ambient = 0, sfx = 0, ui = 0, other = 0}
-        local byCat = {music = {}, ambient = {}, sfx = {}, ui = {}, other = {}}
-        for k, g in pairs(groups) do
-            local st = Audio.settings[k]
-            local muted = st and st.m
-            if g.count > 0 then nAll = nAll + 1 end
-            if g.playing then nPlaying = nPlaying + 1 end
-            if muted then nMuted = nMuted + 1 end
-            local ok
-            if tab == "muted" then ok = muted
-            elseif tab == "playing" then ok = g.playing
-            else ok = g.count > 0 end
-            if ok and query ~= "" then
-                ok = lower(g.name .. " " .. g.path .. " " .. k):find(query, 1, true) ~= nil
-            end
-            if ok then
-                catCount.all = catCount.all + 1
-                catCount[g.cat] = catCount[g.cat] + 1
-                if catFilter == "all" or catFilter == g.cat then table.insert(byCat[g.cat], g) end
-            end
-        end
-
-        visibleKeys = {}
-        local shown = {}
-        for ci, c in ipairs(CATS) do
-            local arr = byCat[c]
-            if sortMode == "len" then
-                table.sort(arr, function(a, b)
-                    if a.len ~= b.len then return a.len > b.len end
-                    return a.key < b.key
-                end)
-            else
-                sortByName(arr, function(g) return g.name end, function(g) return g.key end)
-            end
-            for i, g in ipairs(arr) do
-                local r = rows[g.key]
-                if not r then r = makeRow(g.key) rows[g.key] = r end
-                r.frame.LayoutOrder = ci * 10000 + i
-                r.frame.Visible = true
-                r.update(g)
-                shown[g.key] = true
-                table.insert(visibleKeys, g.key)
-            end
-            local h = headers[c]
-            h.frame.Visible = #arr > 0
-            h.lbl.Text = CAT_ICON[c] .. " " .. tr(CAT_KEY[c]) .. "  (" .. #arr .. ")"
-        end
-        local hiddenList = {}
-        for k, r in pairs(rows) do
-            if not shown[k] then
-                if not groups[k] then
-                    r.frame:Destroy()
-                    rows[k] = nil
-                else
-                    r.frame.Visible = false
-                    table.insert(hiddenList, k)
-                end
-            end
-        end
-        if #hiddenList > 150 then
-            for _, k in ipairs(hiddenList) do rows[k].frame:Destroy() rows[k] = nil end
-        end
-
-        for _, c in ipairs(chipOrder) do
-            local b = chips[c]
-            local label = (c == "all") and tr("catAll") or (CAT_ICON[c] .. " " .. tr(CAT_KEY[c]))
-            b.Text = label .. " " .. catCount[c]
-            local on = (catFilter == c)
-            b.BackgroundColor3 = on and (c == "all" and Theme.Accent or CAT_COLOR[c]) or Theme.BG3
-            b.TextColor3 = on and DARK or Theme.Text
-        end
-        tabBtns.playing.Text = tr("tabPlaying") .. " (" .. nPlaying .. ")"
-        tabBtns.all.Text = tr("tabAll") .. " (" .. nAll .. ")"
-        tabBtns.muted.Text = tr("tabMuted") .. " (" .. nMuted .. ")"
-        for t, b in pairs(tabBtns) do
-            local on = (tab == t)
-            b.BackgroundColor3 = on and (t == "muted" and Theme.Danger or Theme.Accent) or Theme.BG3
-            b.TextColor3 = on and (t == "muted" and WHITE or DARK) or Theme.Text
-        end
-        if Audio.solo then
-            stopSoloB.Visible = true
-            allBtn.Size = UDim2.new(0.5, -20, 0, 26)
-            allBtn.Text, allBtn.BackgroundColor3 = tr("muteCurrent"), Theme.Danger
-            allBtn.TextColor3 = WHITE
-        else
-            stopSoloB.Visible = false
-            allBtn.Size = UDim2.new(1, -28, 0, 26)
-            if tab == "muted" then
-                allBtn.Text, allBtn.BackgroundColor3, allBtn.TextColor3 = tr("allUnmute") .. " (" .. #visibleKeys .. ")", Theme.Success, DARK
-            else
-                allBtn.Text, allBtn.BackgroundColor3, allBtn.TextColor3 = tr("allMute") .. " (" .. #visibleKeys .. ")", Theme.Danger, WHITE
-            end
-        end
-        sortB.Text = (sortMode == "name") and tr("sortName") or tr("sortLen")
-        empty.Visible = (#visibleKeys == 0)
-    end
-
-    for i, c in ipairs(chipOrder) do
-        local b = Btn(chipStrip, {Size = UDim2.new(0, 50, 0, 26), AutomaticSize = Enum.AutomaticSize.X, BackgroundColor3 = Theme.BG3, TextColor3 = Theme.Text, TextSize = 11, LayoutOrder = i}, 13)
-        padChip(b)
-        chips[c] = b
-        J:Add(b.Activated:Connect(function() catFilter = c refresh() end))
-    end
-    for i, t in ipairs({"playing", "all", "muted"}) do
-        local b = Btn(tabsF, {Size = UDim2.new(1 / 3, -4, 1, 0), BackgroundColor3 = Theme.BG3, TextColor3 = Theme.Text, TextSize = 11, LayoutOrder = i}, 8)
-        tabBtns[t] = b
-        J:Add(b.Activated:Connect(function() tab = t refresh() end))
-    end
-
-    J:Add(searchBox:GetPropertyChangedSignal("Text"):Connect(function()
-        query = lower(trim(searchBox.Text))
-        refresh()
-    end))
-    J:Add(sortB.Activated:Connect(function()
-        sortMode = (sortMode == "name") and "len" or "name"
-        refresh()
-    end))
-    J:Add(allBtn.Activated:Connect(function()
-        if Audio.solo then
-            Audio.muteCurrentSolo()
-        else
-            local snap = {}
-            for _, k in ipairs(visibleKeys) do table.insert(snap, k) end
-            for _, k in ipairs(snap) do
-                if tab == "muted" then
-                    local st = Audio.settings[k]
-                    if st then st.m = false end
-                else
-                    local g = curGroups[k]
-                    Audio.entry(k, g and g.base).m = true
-                end
-                Audio.commit(k)
-            end
-        end
-        refresh()
-    end))
-    J:Add(stopSoloB.Activated:Connect(function()
-        Audio.soloStop()
-        refresh()
-    end))
-
-    local alive = true
-    J:Add(function() alive = false end)
-    task.spawn(function()
-        while alive and State.running do
-            task.wait(0.5)
-            if panel.Visible then pcall(refresh) end
-        end
-    end)
-    return panel, refresh
-end
-
 ---------------------------------------------------------------- Sound log
 local function buildSoundLog(J, vp)
     local SG = J:Add(N("ScreenGui", {Name = "BH_SoundLog", ResetOnSpawn = false, DisplayOrder = 62, ZIndexBehavior = Enum.ZIndexBehavior.Sibling}, PG))
     local pw, ph = math.min(340, vp.X - 20), math.min(500, vp.Y - 40)
     local panel = N("Frame", {Size = UDim2.new(0, pw, 0, ph), Position = UDim2.new(0.5, -pw / 2 + 12, 0.5, -ph / 2 + 12), BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, Active = true, Visible = false}, SG)
-    UILib.corner(panel, 18) UILib.gradient(panel, Theme.BG1, Theme.BG3, 135) UILib.stroke(panel, Theme.Accent2, 1.5, 0.4)
+    UILib.corner(panel, 18) UILib.gradient(panel, Theme.BG1, Theme.BG3, 135) UILib.glow(UILib.stroke(panel, Theme.Accent2, 1.5, 0.4), J)
     local top = N("Frame", {Size = UDim2.new(1, 0, 0, 40), BackgroundTransparency = 1}, panel)
     makeDraggable(top, panel, J)
     Label(top, {Size = UDim2.new(1, -80, 0, 28), Position = UDim2.new(0, 14, 0, 8), Text = tr("soundLogTitle"), TextColor3 = Theme.Accent2, Font = Enum.Font.GothamBold, TextSize = 15})
-    local closeB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -36, 0, 8), BackgroundColor3 = Theme.Card, Text = "✕", TextColor3 = Theme.Danger, TextSize = 14}, 13)
+    local closeB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -36, 0, 8), BackgroundColor3 = Theme.Card, Text = "\u{2715}", TextColor3 = Theme.Danger, TextSize = 14}, 13)
     UILib.stroke(closeB, Theme.Danger, 1.5, 0.5)
     J:Add(closeB.Activated:Connect(function() panel.Visible = false end))
+    local refreshB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -68, 0, 8), BackgroundColor3 = Theme.Card, Text = "\u{1F504}", TextColor3 = Theme.Accent2, TextSize = 13}, 13)
+    UILib.stroke(refreshB, Theme.Accent2, 1.5, 0.5)
 
     local banner = Label(panel, {Size = UDim2.new(1, -28, 0, 18), Position = UDim2.new(0, 14, 0, 40), Font = Enum.Font.GothamBold, TextSize = 11})
     local searchF = N("Frame", {Size = UDim2.new(1, -112, 0, 28), Position = UDim2.new(0, 14, 0, 62), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0}, panel)
@@ -1410,10 +1240,10 @@ local function buildSoundLog(J, vp)
             local live = g ~= nil
             nameL.Text = g and g.name or e.name or k
             local cat = Audio.catCache[k]
-            pathL.Text = (cat and (CAT_ICON[cat] .. " ") or "") .. (e.path or "") .. "  ·  ⏱ " .. Audio.fmtTime(e.len) .. (e.looped and " 🔁" or "") .. ((g and g.count > 1) and ("  ·  ×" .. g.count) or "")
+            pathL.Text = (cat and (CAT_ICON[cat] .. " ") or "") .. (e.path or "") .. "  \u{B7}  \u{23F1} " .. Audio.fmtTime(e.len) .. (e.looped and " \u{1F501}" or "") .. ((g and g.count > 1) and ("  \u{B7}  \u{D7}" .. g.count) or "")
             local state = exempt and tr("stExempt") or (State.muteMusic and tr("stByButton") or tr("stWillMute"))
             local play = (not live) and tr("stGone") or (g.playing and tr("stPlaying") or tr("stIdle"))
-            statL.Text = state .. "  ·  " .. play
+            statL.Text = state .. "  \u{B7}  " .. play
             if Audio.solo == k then
                 listenB.Text, listenB.BackgroundColor3, listenB.TextColor3 = tr("stopShort"), Theme.Gold, DARK
             elseif live then
@@ -1422,9 +1252,9 @@ local function buildSoundLog(J, vp)
                 listenB.Text, listenB.BackgroundColor3, listenB.TextColor3 = tr("listenShort"), Theme.BG3, Theme.TextDim
             end
             if exempt then
-                exemptB.Text, exemptB.BackgroundColor3, exemptB.TextColor3 = "🔊 " .. tr("exemptOn"), Theme.Success, DARK
+                exemptB.Text, exemptB.BackgroundColor3, exemptB.TextColor3 = "\u{1F50A} " .. tr("exemptOn"), Theme.Success, DARK
             else
-                exemptB.Text, exemptB.BackgroundColor3, exemptB.TextColor3 = "🔇 " .. tr("exemptOff"), Theme.Danger, WHITE
+                exemptB.Text, exemptB.BackgroundColor3, exemptB.TextColor3 = "\u{1F507} " .. tr("exemptOff"), Theme.Danger, WHITE
             end
             rowStroke.Color = exempt and Theme.Success or Theme.Accent2
         end
@@ -1468,6 +1298,11 @@ local function buildSoundLog(J, vp)
         query = lower(trim(searchBox.Text))
         refresh()
     end))
+    J:Add(refreshB.Activated:Connect(function()
+        Audio._gc = nil
+        for k, r in pairs(rows) do r.frame:Destroy() rows[k] = nil end
+        refresh()
+    end))
     J:Add(clearB.Activated:Connect(function()
         Audio.log = {}
         refresh()
@@ -1487,22 +1322,29 @@ local function buildSoundLog(J, vp)
     return panel, refresh
 end
 
----------------------------------------------------------------- Animation log
+---------------------------------------------------------------- Dance log
 local function buildAnimLog(J, vp)
     local AG = J:Add(N("ScreenGui", {Name = "BH_AnimLog", ResetOnSpawn = false, DisplayOrder = 61, ZIndexBehavior = Enum.ZIndexBehavior.Sibling}, PG))
-    local pw, ph = math.min(320, vp.X - 20), math.min(440, vp.Y - 40)
+    local pw, ph = math.min(330, vp.X - 20), math.min(480, vp.Y - 40)
     local panel = N("Frame", {Size = UDim2.new(0, pw, 0, ph), Position = UDim2.new(0.5, -pw / 2, 0.5, -ph / 2), BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, Active = true, Visible = false}, AG)
-    UILib.corner(panel, 18) UILib.gradient(panel, Theme.BG1, Theme.BG3, 135) UILib.stroke(panel, Theme.Gold, 1.5, 0.4)
+    UILib.corner(panel, 18) UILib.gradient(panel, Theme.BG1, Theme.BG3, 135)
+    UILib.glow(UILib.stroke(panel, Theme.Gold, 1.5, 0.4), J, 1.5, Theme.Gold, Theme.Accent2)
     local top = N("Frame", {Size = UDim2.new(1, 0, 0, 44), BackgroundTransparency = 1}, panel)
     makeDraggable(top, panel, J)
     Label(top, {Size = UDim2.new(1, -80, 0, 32), Position = UDim2.new(0, 14, 0, 8), Text = tr("animTitle"), TextColor3 = Theme.Gold, Font = Enum.Font.GothamBold, TextSize = 15})
-    local closeB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -36, 0, 10), BackgroundColor3 = Theme.Card, Text = "✕", TextColor3 = Theme.Danger, TextSize = 14}, 13)
+    local closeB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -36, 0, 10), BackgroundColor3 = Theme.Card, Text = "\u{2715}", TextColor3 = Theme.Danger, TextSize = 14}, 13)
     UILib.stroke(closeB, Theme.Danger, 1.5, 0.5)
     J:Add(closeB.Activated:Connect(function() panel.Visible = false end))
-    Label(panel, {Size = UDim2.new(1, -28, 0, 34), Position = UDim2.new(0, 14, 0, 44), Text = tr("animHint"), TextColor3 = Theme.TextDim, TextSize = 11, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
+    local refreshB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -68, 0, 10), BackgroundColor3 = Theme.Card, Text = "\u{1F504}", TextColor3 = Theme.Accent2, TextSize = 13}, 13)
+    UILib.stroke(refreshB, Theme.Accent2, 1.5, 0.5)
+    Label(panel, {Size = UDim2.new(1, -28, 0, 30), Position = UDim2.new(0, 14, 0, 44), Text = tr("animHint"), TextColor3 = Theme.TextDim, TextSize = 11, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
+
+    local tabsF = N("Frame", {Size = UDim2.new(1, -28, 0, 28), Position = UDim2.new(0, 14, 0, 78), BackgroundTransparency = 1}, panel)
+    N("UIListLayout", {FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder}, tabsF)
+    local tabBtns, tab = {}, "all"
 
     local list = N("ScrollingFrame", {
-        Size = UDim2.new(1, -20, 1, -94), Position = UDim2.new(0, 10, 0, 84), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0,
+        Size = UDim2.new(1, -20, 1, -120), Position = UDim2.new(0, 10, 0, 112), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0,
         ScrollBarThickness = 3, ScrollBarImageColor3 = Theme.Gold, CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y,
     }, panel)
     UILib.corner(list, 12) UILib.padding(list, 6)
@@ -1512,24 +1354,33 @@ local function buildAnimLog(J, vp)
     local rows = {}
     local refresh
     local function makeRow(k)
-        local row = N("Frame", {Size = UDim2.new(1, 0, 0, 54), BackgroundColor3 = Theme.Card, BorderSizePixel = 0}, list)
+        local row = N("Frame", {Size = UDim2.new(1, 0, 0, 58), BackgroundColor3 = Theme.Card, BorderSizePixel = 0}, list)
         UILib.corner(row, 10)
         local nameL = Label(row, {Size = UDim2.new(1, -112, 0, 18), Position = UDim2.new(0, 10, 0, 8), Font = Enum.Font.GothamBold, TextTruncate = Enum.TextTruncate.AtEnd})
-        local idL = Label(row, {Size = UDim2.new(1, -112, 0, 14), Position = UDim2.new(0, 10, 0, 28), TextColor3 = Theme.TextDim, TextSize = 10, TextTruncate = Enum.TextTruncate.AtEnd})
-        local btn = Btn(row, {Size = UDim2.new(0, 92, 0, 28), Position = UDim2.new(1, -100, 0.5, -14), TextSize = 10}, 8)
+        local subL = Label(row, {Size = UDim2.new(1, -112, 0, 26), Position = UDim2.new(0, 10, 0, 28), TextColor3 = Theme.TextDim, TextSize = 10, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
+        local btn = Btn(row, {Size = UDim2.new(0, 92, 0, 30), Position = UDim2.new(1, -100, 0.5, -15), TextSize = 10}, 8)
         J:Add(btn.Activated:Connect(function()
-            if State.animAllow[k] then State.animAllow[k] = nil else State.animAllow[k] = true end
-            Config.save()
+            local e = Dances.log[k]
+            if Dances.blocked(k, e and e.kind) then
+                State.animBlock[k] = nil
+                State.animAllow[k] = true
+            else
+                State.animAllow[k] = nil
+                State.animBlock[k] = true
+            end
             refresh()
         end))
         local r = {frame = row}
         function r.update(e)
-            local allowed = State.animAllow[k] == true
+            local kind = e and e.kind
+            local blocked = Dances.blocked(k, kind)
             nameL.Text = e and e.name or k
-            idL.Text = (k:sub(1, 2) == "n:" and "—" or ("ID: " .. k)) .. (e and ("  ·  x" .. e.n) or "")
-            btn.Text = allowed and ("✓ " .. tr("allowedTag")) or ("✕ " .. tr("blockedTag"))
-            btn.BackgroundColor3 = allowed and Theme.Success or Theme.Danger
-            btn.TextColor3 = allowed and DARK or WHITE
+            local tag = (kind == "dance" and tr("tagPlayer")) or (kind == "game" and tr("tagGame")) or tr("tagSaved")
+            local id = (k:sub(1, 2) == "n:") and "\u{2014}" or ("ID " .. k)
+            subL.Text = tag .. "  \u{B7}  " .. id .. ((e and e.who) and ("  \u{B7}  " .. e.who) or "") .. (e and ("  \u{B7}  x" .. e.n) or "")
+            btn.Text = blocked and ("\u{1F6AB} " .. tr("blockedTag")) or ("\u{2713} " .. tr("allowedTag"))
+            btn.BackgroundColor3 = blocked and Theme.Danger or Theme.Success
+            btn.TextColor3 = blocked and WHITE or DARK
         end
         return r
     end
@@ -1537,8 +1388,15 @@ local function buildAnimLog(J, vp)
         local keys = {}
         for k in pairs(Dances.log) do keys[k] = true end
         for k in pairs(State.animAllow) do keys[k] = true end
+        for k in pairs(State.animBlock) do keys[k] = true end
         local arr = {}
-        for k in pairs(keys) do table.insert(arr, k) end
+        for k in pairs(keys) do
+            local e = Dances.log[k]
+            local kind = e and e.kind
+            if tab == "all" or (tab == "players" and kind == "dance") or (tab == "game" and kind == "game") then
+                table.insert(arr, k)
+            end
+        end
         table.sort(arr, function(a, b)
             local ta = Dances.log[a] and Dances.log[a].t or 0
             local tb = Dances.log[b] and Dances.log[b].t or 0
@@ -1557,6 +1415,20 @@ local function buildAnimLog(J, vp)
             if not seen[k] then r.frame:Destroy() rows[k] = nil end
         end
         empty.Visible = (#arr == 0)
+        for t, b in pairs(tabBtns) do
+            local on = (tab == t)
+            b.BackgroundColor3 = on and Theme.Gold or Theme.BG3
+            b.TextColor3 = on and DARK or Theme.Text
+        end
+    end
+    J:Add(refreshB.Activated:Connect(function()
+        for k, r in pairs(rows) do r.frame:Destroy() rows[k] = nil end
+        refresh()
+    end))
+    for i, t in ipairs({{"all", "animAll"}, {"players", "animPlayers"}, {"game", "animGame"}}) do
+        local b = Btn(tabsF, {Size = UDim2.new(1 / 3, -4, 1, 0), BackgroundColor3 = Theme.BG3, TextColor3 = Theme.Text, TextSize = 10, Text = tr(t[2]), LayoutOrder = i}, 8)
+        tabBtns[t[1]] = b
+        J:Add(b.Activated:Connect(function() tab = t[1] refresh() end))
     end
     local alive = true
     J:Add(function() alive = false end)
@@ -1566,6 +1438,110 @@ local function buildAnimLog(J, vp)
             if panel.Visible then pcall(refresh) end
         end
     end)
+    return panel, refresh
+end
+
+---------------------------------------------------------------- Saves panel
+local function buildSaves(J, vp, onChanged)
+    local SG = J:Add(N("ScreenGui", {Name = "BH_Saves", ResetOnSpawn = false, DisplayOrder = 63, ZIndexBehavior = Enum.ZIndexBehavior.Sibling}, PG))
+    local pw, ph = math.min(330, vp.X - 20), math.min(480, vp.Y - 40)
+    local panel = N("Frame", {Size = UDim2.new(0, pw, 0, ph), Position = UDim2.new(0.5, -pw / 2 - 10, 0.5, -ph / 2 - 10), BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, Active = true, Visible = false}, SG)
+    UILib.corner(panel, 18) UILib.gradient(panel, Theme.BG1, Theme.BG3, 135)
+    UILib.glow(UILib.stroke(panel, Theme.Accent, 1.5, 0.4), J)
+    local top = N("Frame", {Size = UDim2.new(1, 0, 0, 44), BackgroundTransparency = 1}, panel)
+    makeDraggable(top, panel, J)
+    Label(top, {Size = UDim2.new(1, -80, 0, 32), Position = UDim2.new(0, 14, 0, 8), Text = "\u{1F4BE}  " .. tr("savesTitle"), TextColor3 = Theme.Accent2, Font = Enum.Font.GothamBold, TextSize = 15})
+    local closeB = Btn(top, {Size = UDim2.new(0, 26, 0, 26), Position = UDim2.new(1, -36, 0, 10), BackgroundColor3 = Theme.Card, Text = "\u{2715}", TextColor3 = Theme.Danger, TextSize = 14}, 13)
+    UILib.stroke(closeB, Theme.Danger, 1.5, 0.5)
+    J:Add(closeB.Activated:Connect(function() panel.Visible = false end))
+
+    local nameF = N("Frame", {Size = UDim2.new(1, -112, 0, 32), Position = UDim2.new(0, 14, 0, 46), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0}, panel)
+    UILib.corner(nameF, 8)
+    local nameBox = N("TextBox", {
+        Size = UDim2.new(1, -16, 1, 0), Position = UDim2.new(0, 8, 0, 0), BackgroundTransparency = 1, Text = "", PlaceholderText = tr("saveNamePh"),
+        TextColor3 = Theme.Text, PlaceholderColor3 = Theme.TextDim, Font = Enum.Font.GothamMedium, TextSize = 12,
+        TextXAlignment = Enum.TextXAlignment.Left, ClearTextOnFocus = false,
+    }, nameF)
+    local saveB = Btn(panel, {Size = UDim2.new(0, 84, 0, 32), Position = UDim2.new(1, -98, 0, 46), BackgroundColor3 = Theme.Accent, TextColor3 = DARK, Text = "\u{1F4BE} " .. tr("saveNow"), TextSize = 11}, 8)
+    Label(panel, {Size = UDim2.new(1, -28, 0, 30), Position = UDim2.new(0, 14, 0, 84), Text = tr("saveHint"), TextColor3 = Theme.TextDim, TextSize = 10, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
+    local status = Label(panel, {Size = UDim2.new(1, -28, 0, 16), Position = UDim2.new(0, 14, 0, 112), Text = "", TextColor3 = Theme.Accent, Font = Enum.Font.GothamBold, TextSize = 11})
+
+    local list = N("ScrollingFrame", {
+        Size = UDim2.new(1, -20, 1, -204), Position = UDim2.new(0, 10, 0, 132), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0,
+        ScrollBarThickness = 3, ScrollBarImageColor3 = Theme.Accent, CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y,
+    }, panel)
+    UILib.corner(list, 12) UILib.padding(list, 6)
+    N("UIListLayout", {Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder}, list)
+
+    local resetB = Btn(panel, {Size = UDim2.new(1, -28, 0, 38), Position = UDim2.new(0, 14, 1, -52), BackgroundColor3 = Theme.Danger, Text = tr("resetAll"), TextSize = 12}, 10)
+
+    local function flash(text)
+        status.Text = text
+        task.delay(1.8, function() if status.Parent and status.Text == text then status.Text = "" end end)
+    end
+
+    local refresh
+    refresh = function()
+        for _, c in ipairs(list:GetChildren()) do
+            if c:IsA("Frame") or c:IsA("TextLabel") then c:Destroy() end
+        end
+        if #Saves.list == 0 then
+            Label(list, {Size = UDim2.new(1, 0, 0, 60), Text = tr("emptySaves"), TextColor3 = Theme.TextDim, TextXAlignment = Enum.TextXAlignment.Center})
+            return
+        end
+        for i, e in ipairs(Saves.list) do
+            local row = N("Frame", {Size = UDim2.new(1, 0, 0, 60), BackgroundColor3 = Theme.Card, BorderSizePixel = 0, LayoutOrder = i}, list)
+            UILib.corner(row, 10)
+            local thisMap = tostring(e.place) == tostring(game.PlaceId)
+            UILib.stroke(row, thisMap and Theme.Accent or Theme.TextDim, 1, 0.7)
+            Label(row, {Size = UDim2.new(1, -128, 0, 18), Position = UDim2.new(0, 10, 0, 8), Text = tostring(e.name), Font = Enum.Font.GothamBold, TextTruncate = Enum.TextTruncate.AtEnd})
+            local sub = (thisMap and ("\u{1F4CD} " .. tr("thisMap")) or ("\u{1F5FA} " .. tostring(e.placeName or e.place)))
+            local okd, ds = pcall(function() return os.date("%d/%m %H:%M", e.t) end)
+            if okd then sub = sub .. "  \u{B7}  " .. ds end
+            Label(row, {Size = UDim2.new(1, -128, 0, 26), Position = UDim2.new(0, 10, 0, 28), Text = sub, TextColor3 = Theme.TextDim, TextSize = 10, TextWrapped = true, TextYAlignment = Enum.TextYAlignment.Top})
+            local loadB = Btn(row, {Size = UDim2.new(0, 70, 0, 30), Position = UDim2.new(1, -118, 0.5, -15), BackgroundColor3 = Theme.Accent, TextColor3 = DARK, Text = "\u{1F4C2} " .. tr("loadShort"), TextSize = 10}, 8)
+            local delB = Btn(row, {Size = UDim2.new(0, 36, 0, 30), Position = UDim2.new(1, -42, 0.5, -15), BackgroundColor3 = Theme.Danger, Text = "\u{1F5D1}", TextSize = 13}, 8)
+            J:Add(loadB.Activated:Connect(function()
+                Saves.apply(e)
+                onChanged()
+            end))
+            J:Add(delB.Activated:Connect(function()
+                for idx, x in ipairs(Saves.list) do
+                    if x == e then table.remove(Saves.list, idx) break end
+                end
+                Saves.write()
+                refresh()
+            end))
+        end
+    end
+
+    J:Add(saveB.Activated:Connect(function()
+        Saves.add(nameBox.Text)
+        nameBox.Text = ""
+        flash(tr("saved"))
+        refresh()
+    end))
+    local armed = false
+    J:Add(resetB.Activated:Connect(function()
+        if not armed then
+            armed = true
+            resetB.Text = tr("resetConfirm")
+            resetB.BackgroundColor3 = Theme.Gold
+            resetB.TextColor3 = DARK
+            task.delay(3, function()
+                if armed and resetB.Parent then
+                    armed = false
+                    resetB.Text = tr("resetAll")
+                    resetB.BackgroundColor3 = Theme.Danger
+                    resetB.TextColor3 = WHITE
+                end
+            end)
+            return
+        end
+        armed = false
+        Saves.resetAll()
+        onChanged()
+    end))
     return panel, refresh
 end
 
@@ -1588,7 +1564,9 @@ function UI.build()
     local rest = UDim2.new(0, 24, 0.5, -baseH / 2)
 
     local M = N("Frame", {Size = UDim2.new(0, baseW, 0, baseH), Position = UI.pos or rest, BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, ClipsDescendants = true, ZIndex = 2}, G)
-    UILib.corner(M, 18) UILib.gradient(M, Theme.BG1, Theme.BG3, 135) UILib.stroke(M, Theme.Accent, 1.5, 0.35)
+    UILib.corner(M, 18) UILib.gradient(M, Theme.BG1, Theme.BG3, 135)
+    UILib.glow(UILib.stroke(M, Theme.Accent, 1.5, 0.35), J)
+    UILib.halo(M, 18, J)
 
     local header = N("Frame", {Size = UDim2.new(1, 0, 0, 72), BackgroundColor3 = Theme.BG1, BorderSizePixel = 0, ZIndex = 3}, M)
     UILib.corner(header, 18) UILib.gradient(header, Color3.fromRGB(22, 32, 42), Color3.fromRGB(30, 46, 54), 90)
@@ -1596,11 +1574,11 @@ function UI.build()
 
     local logo = N("Frame", {Size = UDim2.new(0, 46, 0, 46), Position = UDim2.new(0, 14, 0, 13), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0, ZIndex = 4}, header)
     UILib.corner(logo, 14) UILib.stroke(logo, Theme.Accent, 1.5, 0.2)
-    Label(logo, {Size = UDim2.new(1, 0, 1, 0), Text = "🕌", TextSize = 26, Font = Enum.Font.GothamBold, TextXAlignment = Enum.TextXAlignment.Center, ZIndex = 5})
+    Label(logo, {Size = UDim2.new(1, 0, 1, 0), Text = "\u{1F54C}", TextSize = 26, Font = Enum.Font.GothamBold, TextXAlignment = Enum.TextXAlignment.Center, ZIndex = 5})
     Label(header, {Size = UDim2.new(1, -120, 0, 24), Position = UDim2.new(0, 68, 0, 14), Text = tr("title"), Font = Enum.Font.GothamBold, TextSize = 18, TextColor3 = Theme.Accent2, ZIndex = 4})
     Label(header, {Size = UDim2.new(1, -120, 0, 14), Position = UDim2.new(0, 68, 0, 40), Text = tr("subtitle"), TextColor3 = Theme.TextDim, TextSize = 11, ZIndex = 4})
 
-    local minBtn = Btn(header, {Size = UDim2.new(0, 28, 0, 28), Position = UDim2.new(1, -74, 0, 22), BackgroundColor3 = Theme.Card, Text = "−", TextColor3 = Theme.Accent, TextSize = 20, ZIndex = 4}, 14)
+    local minBtn = Btn(header, {Size = UDim2.new(0, 28, 0, 28), Position = UDim2.new(1, -74, 0, 22), BackgroundColor3 = Theme.Card, Text = "\u{2212}", TextColor3 = Theme.Accent, TextSize = 20, ZIndex = 4}, 14)
     UILib.stroke(minBtn, Theme.Accent, 1.5, 0.5)
     local closeBtn = Btn(header, {Size = UDim2.new(0, 28, 0, 28), Position = UDim2.new(1, -40, 0, 22), BackgroundColor3 = Theme.Card, Text = "", ZIndex = 4}, 14)
     UILib.stroke(closeBtn, Theme.Danger, 1.5, 0.5)
@@ -1647,7 +1625,6 @@ function UI.build()
             sl.Text = isOn and tr("on") or tr("off")
             sl.TextColor3 = isOn and Theme.Accent or Theme.TextDim
             set(isOn)
-            Config.save()
         end))
     end
 
@@ -1659,36 +1636,32 @@ function UI.build()
     end
 
     -- Audio
-    section(tr("sectionAudio"), "♪", 1)
-    toggle(tr("muteMusic"), "🎵", 2, function() return State.muteMusic end, function(s)
+    section(tr("sectionAudio"), "\u{266A}", 1)
+    toggle(tr("muteMusic"), "\u{1F3B5}", 2, function() return State.muteMusic end, function(s)
         State.muteMusic = s
         Audio.setGlobalMute(s)
     end)
-    toggle(tr("saveSettings"), "💾", 3, function() return Audio.autosave end, function(s)
-        Audio.setAutosave(s)
-    end)
-    local musicBtn = actionCard(tr("openMusic"), 4)
-    local logBtn = actionCard(tr("soundLog"), 5)
+    local logBtn = actionCard(tr("soundLog"), 3)
 
     -- Visual
-    section(tr("sectionVisual"), "◈", 10)
-    toggle(tr("noobSkin"), "👕", 11, function() return State.noob end, function(s)
+    section(tr("sectionVisual"), "\u{25C8}", 10)
+    toggle(tr("noobSkin"), "\u{1F455}", 11, function() return State.noob end, function(s)
         State.noob = s
         Targets.refreshAll()
     end)
 
     -- Tools
-    section(tr("sectionTools"), "◆", 20)
-    toggle(tr("stopDance"), "💃", 21, function() return State.dances end, function(s) State.dances = s end)
-    toggle(tr("broadDance"), "🎯", 22, function() return State.broadDances end, function(s) State.broadDances = s end)
-    local suggestBtn = actionCard("🎯  " .. tr("suggest"), 23)
+    section(tr("sectionTools"), "\u{25C6}", 20)
+    toggle(tr("stopDance"), "\u{1F483}", 21, function() return State.dances end, function(s) State.dances = s end)
+    toggle(tr("broadDance"), "\u{1F3AF}", 22, function() return State.broadDances end, function(s) State.broadDances = s end)
+    local suggestBtn = actionCard("\u{1F3AF}  " .. tr("suggest"), 23)
     local animBtn = actionCard(tr("animLog"), 24)
 
     -- Players
-    section(tr("sectionPlayers"), "◆", 30)
+    section(tr("sectionPlayers"), "\u{25C6}", 30)
     local searchBox = N("Frame", {Size = UDim2.new(1, 0, 0, 40), BackgroundColor3 = Theme.Card, BorderSizePixel = 0, LayoutOrder = 31, ZIndex = 4}, scroll)
     UILib.corner(searchBox, 12)
-    Label(searchBox, {Size = UDim2.new(0, 32, 1, 0), Position = UDim2.new(0, 6, 0, 0), Text = "🔍", TextSize = 14, TextXAlignment = Enum.TextXAlignment.Center, ZIndex = 5})
+    Label(searchBox, {Size = UDim2.new(0, 32, 1, 0), Position = UDim2.new(0, 6, 0, 0), Text = "\u{1F50D}", TextSize = 14, TextXAlignment = Enum.TextXAlignment.Center, ZIndex = 5})
     local searchInput = N("TextBox", {
         Size = UDim2.new(1, -40, 1, 0), Position = UDim2.new(0, 34, 0, 0), BackgroundTransparency = 1, Text = "", PlaceholderText = tr("searchPH"),
         TextColor3 = Theme.Text, PlaceholderColor3 = Theme.TextDim, Font = Enum.Font.GothamMedium, TextSize = 12,
@@ -1701,7 +1674,7 @@ function UI.build()
     N("UIListLayout", {Padding = UDim.new(0, 4)}, plScroll)
 
     -- Lists
-    section(tr("sectionLists"), "◆", 40)
+    section(tr("sectionLists"), "\u{25C6}", 40)
     local function listBox(order, height, title, titleCol, strokeCol, addCol, onAdd)
         local f = N("Frame", {Size = UDim2.new(1, 0, 0, height), BackgroundColor3 = Theme.Card, BorderSizePixel = 0, LayoutOrder = order, ZIndex = 4}, scroll)
         UILib.corner(f, 12) UILib.stroke(f, strokeCol, 1, 0.5)
@@ -1725,10 +1698,13 @@ function UI.build()
         J:Add(input.FocusLost:Connect(function(enter) if enter then submit() end end))
         return list
     end
-    local wlL = listBox(41, 130, "✓  " .. tr("whitelist"), Theme.Accent, Theme.Accent, Theme.Accent, function(n) listSet(n, "white") end)
+    local wlL = listBox(41, 130, "\u{2713}  " .. tr("whitelist"), Theme.Accent, Theme.Accent, Theme.Accent, function(n) listSet(n, "white") end)
     local blL = listBox(42, 160, tr("blocked"), Theme.Danger, Theme.Danger, Theme.Danger, function(n) listSet(n, "black") end)
 
-    Label(scroll, {Size = UDim2.new(1, 0, 0, 18), Text = tr("footer") .. "  ·  v" .. VERSION .. "  ·  " .. CREATOR_NAME, TextColor3 = Theme.TextDim, TextSize = 10, TextXAlignment = Enum.TextXAlignment.Center, LayoutOrder = 100, ZIndex = 4})
+    Label(scroll, {Size = UDim2.new(1, 0, 0, 18), Text = tr("footer") .. "  \u{B7}  v" .. VERSION .. "  \u{B7}  " .. CREATOR_NAME, TextColor3 = Theme.TextDim, TextSize = 10, TextXAlignment = Enum.TextXAlignment.Center, LayoutOrder = 100, ZIndex = 4})
+
+    local saveBtn = Btn(scroll, {Size = UDim2.new(1, 0, 0, 48), BackgroundColor3 = Theme.Accent, Text = tr("saveBtn"), TextColor3 = DARK, TextSize = 14, LayoutOrder = 110, ZIndex = 4}, 14)
+    UILib.gradient(saveBtn, Theme.Accent, Theme.Accent2, 0)
 
     -- Rows
     local function mkRow(parent, info, actions)
@@ -1741,7 +1717,7 @@ function UI.build()
         end
         if info.UserId then setAv(info.UserId) else userIdAsync(info.Name, setAv) end
         local dn = (info.DisplayName and info.DisplayName ~= "") and info.DisplayName or info.Name
-        if lower(info.Name) == lower(CREATOR_NAME) then dn = "👑 " .. dn end
+        if lower(info.Name) == lower(CREATOR_NAME) then dn = "\u{1F451} " .. dn end
         Label(row, {Size = UDim2.new(1, -46 - 34 * #actions - 8, 0, 14), Position = UDim2.new(0, 46, 0, 6), Text = dn, Font = Enum.Font.GothamBold, ZIndex = 7, TextTruncate = Enum.TextTruncate.AtEnd})
         Label(row, {Size = UDim2.new(1, -46 - 34 * #actions - 8, 0, 12), Position = UDim2.new(0, 46, 0, 20), Text = "@" .. info.Name, TextColor3 = Theme.TextDim, TextSize = 10, ZIndex = 7, TextTruncate = Enum.TextTruncate.AtEnd})
         for i, a in ipairs(actions) do
@@ -1750,7 +1726,7 @@ function UI.build()
             if a.kind == "x" then
                 UILib.drawX(ab, WHITE, 12, 2)
             else
-                Label(ab, {Size = UDim2.new(1, 0, 1, 0), Text = a.kind == "check" and "✓" or "↩", TextColor3 = DARK, Font = Enum.Font.GothamBlack, TextSize = a.kind == "check" and 18 or 16, TextXAlignment = Enum.TextXAlignment.Center, ZIndex = 8})
+                Label(ab, {Size = UDim2.new(1, 0, 1, 0), Text = a.kind == "check" and "\u{2713}" or "\u{21A9}", TextColor3 = DARK, Font = Enum.Font.GothamBlack, TextSize = a.kind == "check" and 18 or 16, TextXAlignment = Enum.TextXAlignment.Center, ZIndex = 8})
             end
             J:Add(ab.Activated:Connect(a.fn))
         end
@@ -1824,24 +1800,24 @@ function UI.build()
         suggestActive = not suggestActive
         if not suggestActive then
             suggestBtn.BackgroundColor3 = Theme.Card
-            suggestBtn.Text = "🎯  " .. tr("suggest")
+            suggestBtn.Text = "\u{1F3AF}  " .. tr("suggest")
             if suggestPanel then suggestPanel:Destroy() suggestPanel = nil end
             currentTarget = nil
             return
         end
         suggestBtn.BackgroundColor3 = Theme.OnBG
-        suggestBtn.Text = "🎯  " .. tr("suggest") .. "  ●"
+        suggestBtn.Text = "\u{1F3AF}  " .. tr("suggest") .. "  \u{25CF}"
         local sw = math.min(200, vp.X - 20)
         suggestPanel = N("Frame", {Size = UDim2.new(0, sw, 0, 180), Position = UDim2.new(1, -sw - 20, 0.3, 0), BackgroundColor3 = Theme.BG2, BorderSizePixel = 0, Active = true, ZIndex = 20}, G)
         UILib.corner(suggestPanel, 16) UILib.gradient(suggestPanel, Theme.BG1, Theme.BG3, 135) UILib.stroke(suggestPanel, Theme.Accent, 1.5, 0.3)
         local spH = N("Frame", {Size = UDim2.new(1, 0, 0, 32), BackgroundColor3 = Theme.BG1, BorderSizePixel = 0, ZIndex = 21}, suggestPanel)
         UILib.corner(spH, 16)
-        Label(spH, {Size = UDim2.new(1, -16, 1, 0), Position = UDim2.new(0, 12, 0, 0), Text = "🎯  " .. tr("suggest"), TextColor3 = Theme.Accent2, Font = Enum.Font.GothamBold, ZIndex = 22})
+        Label(spH, {Size = UDim2.new(1, -16, 1, 0), Position = UDim2.new(0, 12, 0, 0), Text = "\u{1F3AF}  " .. tr("suggest"), TextColor3 = Theme.Accent2, Font = Enum.Font.GothamBold, ZIndex = 22})
         makeDraggable(spH, suggestPanel, J)
         local av = N("ImageLabel", {Size = UDim2.new(0, 56, 0, 56), Position = UDim2.new(0, 12, 0, 44), BackgroundColor3 = Theme.BG3, BorderSizePixel = 0, ScaleType = Enum.ScaleType.Crop, ZIndex = 22}, suggestPanel)
         UILib.corner(av, 28) UILib.stroke(av, Theme.Accent, 1.5, 0.3)
         local lbl = Label(suggestPanel, {Size = UDim2.new(1, -84, 0, 56), Position = UDim2.new(0, 76, 0, 44), Text = tr("none"), Font = Enum.Font.GothamBold, TextSize = 13, TextWrapped = true, ZIndex = 22})
-        local sW = Btn(suggestPanel, {Size = UDim2.new(0.5, -18, 0, 34), Position = UDim2.new(0, 12, 1, -46), BackgroundColor3 = Theme.Accent, TextColor3 = DARK, Text = "✓ " .. tr("wl"), TextSize = 12, ZIndex = 22}, 10)
+        local sW = Btn(suggestPanel, {Size = UDim2.new(0.5, -18, 0, 34), Position = UDim2.new(0, 12, 1, -46), BackgroundColor3 = Theme.Accent, TextColor3 = DARK, Text = "\u{2713} " .. tr("wl"), TextSize = 12, ZIndex = 22}, 10)
         local sB = Btn(suggestPanel, {Size = UDim2.new(0.5, -18, 0, 34), Position = UDim2.new(1, -12, 1, -46), AnchorPoint = Vector2.new(1, 0), BackgroundColor3 = Theme.Danger, Text = tr("block"), TextSize = 12, ZIndex = 22}, 10)
         sW.Activated:Connect(function() if currentTarget then listSet(currentTarget.Name, "white") end end)
         sB.Activated:Connect(function() if currentTarget then listSet(currentTarget.Name, "black") end end)
@@ -1885,11 +1861,6 @@ function UI.build()
     end))
 
     -- Sub panels
-    local mmPanel, mmRefresh = buildSoundManager(J, vp)
-    J:Add(musicBtn.Activated:Connect(function()
-        mmPanel.Visible = not mmPanel.Visible
-        if mmPanel.Visible then pcall(mmRefresh) end
-    end))
     local slPanel, slRefresh = buildSoundLog(J, vp)
     J:Add(logBtn.Activated:Connect(function()
         slPanel.Visible = not slPanel.Visible
@@ -1900,18 +1871,41 @@ function UI.build()
         alPanel.Visible = not alPanel.Visible
         if alPanel.Visible then pcall(alRefresh) end
     end))
+    local svPanel, svRefresh = buildSaves(J, vp, function()
+        task.defer(function()
+            if State.running then
+                UI.reopen = true
+                UI.build()
+            end
+        end)
+    end)
+    J:Add(saveBtn.Activated:Connect(function()
+        svPanel.Visible = not svPanel.Visible
+        if svPanel.Visible then pcall(svRefresh) end
+    end))
 
-    -- Minimized icon
-    local mini = Btn(G, {Size = UDim2.new(0, 60, 0, 60), Position = M.Position, BackgroundColor3 = Theme.BG2, Text = "🕌", TextSize = 28, Visible = false, ZIndex = 4}, 30)
-    UILib.stroke(mini, Theme.Accent, 2, 0.2)
+    -- Minimized icon (     )
+    local mini = Btn(G, {Size = UDim2.new(0, 60, 0, 60), Position = M.Position, BackgroundColor3 = Theme.BG2, Text = "\u{1F54C}", TextSize = 28, Visible = false, ZIndex = 4}, 30)
+    UILib.glow(UILib.stroke(mini, Theme.Accent, 2, 0.2), J, 2)
+    UILib.halo(mini, 30, J)
     local miniDrag = makeDraggable(mini, mini, J)
+    local stash = {}
     local function setMin(state)
         if state then
             mini.Position = M.Position
+            local all = {slPanel, alPanel, svPanel}
+            if suggestPanel then table.insert(all, suggestPanel) end
+            for _, p in ipairs(all) do
+                if p.Visible then stash[p] = true p.Visible = false end
+            end
             M.Visible, mini.Visible = false, true
         else
             M.Position = mini.Position
             UI.pos = M.Position
+            for p in pairs(stash) do
+                if p.Parent then p.Visible = true end
+            end
+            stash = {}
             M.Visible, mini.Visible = true, false
         end
     end
@@ -1919,6 +1913,12 @@ function UI.build()
     J:Add(mini.Activated:Connect(function() if not miniDrag.moved then setMin(false) end end))
 
     J:Add(closeBtn.Activated:Connect(function() ENV.__BeHalal.destroy() end))
+
+    if UI.reopen then
+        UI.reopen = false
+        svPanel.Visible = true
+        pcall(svRefresh)
+    end
 
     if not UI.pos then
         M.Position = UDim2.new(0, -baseW - 50, 0.5, -baseH / 2)
@@ -1932,7 +1932,6 @@ local Hub = {}
 function Hub.destroy()
     if not State.running then return end
     State.running = false
-    pcall(Config.saveNow)
     pcall(Audio.shutdown)
     pcall(Targets.shutdown)
     pcall(UI.destroy)
@@ -1942,17 +1941,16 @@ end
 ENV.__BeHalal = Hub
 
 ---------------------------------------------------------------- Boot
-Config.apply()
 Audio.init()
+Saves.init()
 
 Root:Add(Players.PlayerAdded:Connect(function(p) task.spawn(onPlayer, p) end))
 Root:Add(Players.PlayerRemoving:Connect(function(p) Targets.remove(p) end))
 for _, p in ipairs(Players:GetPlayers()) do task.spawn(onPlayer, p) end
 
 loop(0.25, function()
-    if not State.dances then return end
     for _, p in ipairs(Players:GetPlayers()) do
-        if p ~= LP and p.Character and Dances.shouldStop(p) then Dances.sweepChar(p.Character) end
+        if p ~= LP and p.Character then Dances.scan(p.Character, p) end
     end
 end)
 loop(1, Targets.refreshAll)
