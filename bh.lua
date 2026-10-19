@@ -1,5 +1,5 @@
 --[[
-    Be Halal | v3.7
+    Be Halal | v3.9
     client side    by EZ_NOOB11220
 
     Modules:
@@ -23,7 +23,7 @@ pcall(function() CoreGui = game:GetService("CoreGui") end)
 local LP = Players.LocalPlayer
 local PG = LP:WaitForChild("PlayerGui")
 local CREATOR_NAME = "EZ_NOOB11220"
-local VERSION = "3.7"
+local VERSION = "3.9"
 
 local ENV = (getgenv and getgenv()) or _G
 if ENV.__BeHalal and type(ENV.__BeHalal.destroy) == "function" then
@@ -144,8 +144,8 @@ local T = {
         secAudio = "\u{627}\u{644}\u{635}\u{648}\u{62A}", secAppearance = "\u{627}\u{644}\u{645}\u{638}\u{647}\u{631}", secMotion = "\u{627}\u{644}\u{62D}\u{631}\u{643}\u{629}",
         muteMusic = "\u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}", muteMusicD = "\u{64A}\u{643}\u{62A}\u{645} \u{645}\u{648}\u{633}\u{64A}\u{642}\u{649} \u{627}\u{644}\u{62E}\u{644}\u{641}\u{64A}\u{629} \u{641}\u{64A} \u{627}\u{644}\u{633}\u{64A}\u{631}\u{641}\u{631}",
         noobSkin = "\u{633}\u{643}\u{646}\u{627}\u{62A} \u{646}\u{648}\u{628}", noobSkinD = "\u{64A}\u{639}\u{631}\u{636} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646} \u{627}\u{644}\u{622}\u{62E}\u{631}\u{64A}\u{646} \u{628}\u{645}\u{638}\u{647}\u{631} \u{627}\u{644}\u{646}\u{648}\u{628}",
-        stopDance = "\u{625}\u{64A}\u{642}\u{627}\u{641} \u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A}", stopDanceD = "\u{64A}\u{648}\u{642}\u{641} \u{631}\u{642}\u{635}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646} \u{627}\u{644}\u{622}\u{62E}\u{631}\u{64A}\u{646} (\u{627}\u{644}\u{625}\u{64A}\u{645}\u{648}\u{62A}\u{627}\u{62A} \u{648}\u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A})",
-        broadDance = "\u{625}\u{64A}\u{642}\u{627}\u{641} \u{634}\u{627}\u{645}\u{644}", broadDanceD = "\u{64A}\u{648}\u{642}\u{641} \u{631}\u{642}\u{635}\u{627}\u{62A} \u{648}\u{62D}\u{631}\u{643}\u{627}\u{62A} \u{627}\u{644}\u{645}\u{627}\u{628} (Action) \u{627}\u{644}\u{644}\u{64A} \u{645}\u{648} \u{645}\u{646} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646}",
+        stopDance = "\u{625}\u{64A}\u{642}\u{627}\u{641} \u{627}\u{644}\u{631}\u{642}\u{635}\u{627}\u{62A}", stopDanceD = "\u{64A}\u{648}\u{642}\u{641} \u{631}\u{642}\u{635}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646} \u{627}\u{644}\u{622}\u{62E}\u{631}\u{64A}\u{646}\u{60C} \u{62D}\u{62A}\u{649} \u{627}\u{644}\u{625}\u{64A}\u{645}\u{648}\u{62A}\u{627}\u{62A} \u{627}\u{644}\u{62E}\u{627}\u{635}\u{629} \u{628}\u{627}\u{644}\u{644}\u{639}\u{628}\u{629}",
+        broadDance = "\u{625}\u{64A}\u{642}\u{627}\u{641} \u{634}\u{627}\u{645}\u{644}", broadDanceD = "\u{64A}\u{648}\u{642}\u{641} \u{623}\u{64A} \u{62D}\u{631}\u{643}\u{629} \u{645}\u{62E}\u{635}\u{635}\u{629} \u{645}\u{646} \u{627}\u{644}\u{645}\u{627}\u{628} (\u{63A}\u{64A}\u{631} \u{627}\u{644}\u{645}\u{634}\u{64A} \u{648}\u{627}\u{644}\u{648}\u{642}\u{648}\u{641} \u{648}\u{627}\u{644}\u{642}\u{641}\u{632})",
         catMusic = "\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}", catAmbient = "\u{623}\u{62C}\u{648}\u{627}\u{621}", catSfx = "\u{645}\u{624}\u{62B}\u{631}\u{627}\u{62A}", catUi = "\u{648}\u{627}\u{62C}\u{647}\u{629}", catOther = "\u{623}\u{62E}\u{631}\u{649}",
         logOn = "\u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}: \u{645}\u{641}\u{639}\u{651}\u{644}", logOff = "\u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}: \u{645}\u{639}\u{637}\u{651}\u{644}",
         logHint = "\u{627}\u{644}\u{623}\u{635}\u{648}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{64A} \u{64A}\u{643}\u{62A}\u{645}\u{647}\u{627} \u{632}\u{631} \u{643}\u{62A}\u{645} \u{627}\u{644}\u{645}\u{648}\u{633}\u{64A}\u{642}\u{649}. \u{627}\u{633}\u{62A}\u{645}\u{639} \u{644}\u{644}\u{635}\u{648}\u{62A} \u{644}\u{62D}\u{627}\u{644}\u{647}\u{60C} \u{623}\u{648} \u{627}\u{633}\u{62A}\u{62B}\u{646}\u{650}\u{647} \u{645}\u{646} \u{627}\u{644}\u{643}\u{62A}\u{645}.",
@@ -156,7 +156,7 @@ local T = {
         stPlaying = "\u{634}\u{63A}\u{651}\u{627}\u{644}", stIdle = "\u{645}\u{62A}\u{648}\u{642}\u{641}", stGone = "\u{627}\u{62E}\u{62A}\u{641}\u{649} \u{645}\u{646} \u{627}\u{644}\u{645}\u{627}\u{628}",
         animHint = "\u{631}\u{642}\u{635}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646} \u{648}\u{62D}\u{631}\u{643}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629} \u{62A}\u{638}\u{647}\u{631} \u{647}\u{646}\u{627}. \u{627}\u{636}\u{63A}\u{637} \u{639}\u{644}\u{649} \u{627}\u{644}\u{632}\u{631} \u{639}\u{634}\u{627}\u{646} \u{62A}\u{62D}\u{62C}\u{628} \u{623}\u{648} \u{62A}\u{633}\u{645}\u{62D}.",
         animAll = "\u{627}\u{644}\u{643}\u{644}", animPlayers = "\u{631}\u{642}\u{635}\u{627}\u{62A} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}\u{64A}\u{646}", animGame = "\u{645}\u{646} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629}",
-        tagPlayer = "\u{631}\u{642}\u{635}\u{629} \u{644}\u{627}\u{639}\u{628}", tagGame = "\u{645}\u{646} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629}", tagSaved = "\u{645}\u{62D}\u{641}\u{648}\u{638}\u{629}",
+        tagPlayer = "\u{631}\u{642}\u{635}\u{629} \u{644}\u{627}\u{639}\u{628}", tagGame = "\u{645}\u{646} \u{627}\u{644}\u{644}\u{639}\u{628}\u{629}", tagOther = "\u{62D}\u{631}\u{643}\u{629} \u{623}\u{62E}\u{631}\u{649}", tagSaved = "\u{645}\u{62D}\u{641}\u{648}\u{638}\u{629}",
         animAllowed = "\u{645}\u{633}\u{645}\u{648}\u{62D}\u{629}", animBlocked = "\u{645}\u{62D}\u{62C}\u{648}\u{628}\u{629}", emptyAnim = "\u{645}\u{627} \u{627}\u{646}\u{631}\u{635}\u{62F}\u{62A} \u{623}\u{64A} \u{62D}\u{631}\u{643}\u{629} \u{628}\u{639}\u{62F}",
         segOnline = "\u{627}\u{644}\u{645}\u{62A}\u{635}\u{644}\u{648}\u{646}", segAllowed = "\u{627}\u{644}\u{645}\u{633}\u{645}\u{648}\u{62D}\u{648}\u{646}", segBlocked = "\u{627}\u{644}\u{645}\u{62D}\u{62C}\u{648}\u{628}\u{648}\u{646}",
         searchPlayer = "\u{627}\u{628}\u{62D}\u{62B} \u{639}\u{646} \u{644}\u{627}\u{639}\u{628}", addPlayer = "\u{627}\u{633}\u{645} \u{627}\u{644}\u{644}\u{627}\u{639}\u{628}", add = "\u{625}\u{636}\u{627}\u{641}\u{629}",
@@ -174,8 +174,8 @@ local T = {
         secAudio = "Audio", secAppearance = "Appearance", secMotion = "Motion",
         muteMusic = "Mute Music", muteMusicD = "Silences background music on the server",
         noobSkin = "Noob Skins", noobSkinD = "Shows other players with the noob look",
-        stopDance = "Stop Dances", stopDanceD = "Stops emotes and dances of other players",
-        broadDance = "Stop Map Dances", broadDanceD = "Stops dance/Action animations that come from the map, not from players",
+        stopDance = "Stop Dances", stopDanceD = "Stops dances of other players, including a game's own emotes",
+        broadDance = "Stop Map Dances", broadDanceD = "Stops any custom map animation (except walking, idle, jumping...)",
         catMusic = "Music", catAmbient = "Ambient", catSfx = "Effects", catUi = "Interface", catOther = "Other",
         logOn = "Mute Music button: on", logOff = "Mute Music button: off",
         logHint = "Sounds caught by the Mute Music button. Listen to one alone, or exempt it from muting.",
@@ -186,7 +186,7 @@ local T = {
         stPlaying = "Playing", stIdle = "Idle", stGone = "Gone from the map",
         animHint = "Player dances and game animations show here. Tap the button to block or allow.",
         animAll = "All", animPlayers = "Player dances", animGame = "From game",
-        tagPlayer = "Player dance", tagGame = "From game", tagSaved = "Saved",
+        tagPlayer = "Player dance", tagGame = "From game", tagOther = "Other motion", tagSaved = "Saved",
         animAllowed = "Allowed", animBlocked = "Blocked", emptyAnim = "No animation detected yet",
         segOnline = "Online", segAllowed = "Allowed", segBlocked = "Blocked",
         searchPlayer = "Search players", addPlayer = "Player name", add = "Add",
@@ -735,36 +735,57 @@ function Dances.keyOf(track)
     return "n:" .. lower(track.Name or "?")
 end
 
--- returns: "dance" = player dance/emote, "game" = map animation, nil = ignore
+local DANCE_WORDS = {"dance", "emote", "floss", "dab", "twerk", "taunt"}
+local RANK = {other = 1, game = 2, dance = 3}
+local LOCO_WORDS = {"walk", "run", "idle", "jump", "fall", "climb", "swim", "sit", "land", "sprint", "crouch", "stand"}
+local function locoName(str)
+    str = lower(str or "")
+    for _, w in ipairs(LOCO_WORDS) do
+        if str:find(w, 1, true) then return true end
+    end
+    return false
+end
+local function danceName(str)
+    str = lower(str or "")
+    for _, w in ipairs(DANCE_WORDS) do
+        if str:find(w, 1, true) then return true end
+    end
+    return false
+end
+
+-- Works on any map. Every animation that plays on a player's character is judged by what it is, not by which game it is:
+--   "dance" = known dance / catalog emote / dance-like name / a looping Action animation (custom emotes)
+--   "game"  = other Action animations (one-shots)
+--   "other" = any other custom animation (logged so you can block it by hand, never blocked automatically)
 function Dances.detect(track, char)
     local a = track.Animation
     local num = a and tostring(a.AnimationId or ""):match("%d+")
     if num and DANCE_IDS[num] then return "dance" end
     if a and a.Parent and a:FindFirstAncestorOfClass("Tool") then return nil end
-    local own = a and a.Parent and char and a:IsDescendantOf(char)
-    -- the character's own Animate script, or an engine-created track: judge by name
-    if own or not a then
-        local names = {lower(track.Name or ""), a and lower(a.Name or "") or "", (a and a.Parent) and lower(a.Parent.Name) or ""}
-        for _, n in ipairs(names) do
-            if n:find("dance") or n:find("emote") then return "dance" end
-        end
+    local inChar = a and a.Parent and char and a:IsDescendantOf(char)
+    local fromAnimate = inChar and a:FindFirstAncestor("Animate") ~= nil
+    if danceName(track.Name) or (a and (danceName(a.Name) or (a.Parent and danceName(a.Parent.Name)))) then
+        return "dance"
     end
-    if own then return nil end
-    -- everything below only matters for Action-class animations
-    if not ACTION_PRI[track.Priority] then return nil end
-    if num then
-        local st = Dances.emoteState(num)
-        if st == true then return "dance" end
-        if st == nil then return nil end          -- still checking, decide on the next scan
+    if fromAnimate then return nil end          -- default walk/idle/jump of the Roblox Animate script
+    if not a then
+        return ACTION_PRI[track.Priority] and "game" or nil
     end
-    return "game"
+    if ACTION_PRI[track.Priority] then
+        if num and Dances.emoteState(num) == true then return "dance" end
+        if track.Looped then return "dance" end
+        return "game"
+    end
+    -- any other custom animation (Idle/Movement/Core priority): ignore plain locomotion, treat the rest as map motion
+    if locoName(track.Name) or locoName(a.Name) or (a.Parent and locoName(a.Parent.Name)) then return nil end
+    return "other"
 end
 
 function Dances.blocked(k, kind)
     if State.animAllow[k] then return false end
     if State.animBlock[k] then return true end
     if kind == "dance" then return State.dances end
-    if kind == "game" then return State.broadDances end
+    if kind == "game" or kind == "other" then return State.broadDances end
     return false
 end
 
@@ -786,7 +807,7 @@ function Dances.record(track, kind, p)
         seenTracks[track] = true
         e.n = e.n + 1
     end
-    if kind == "dance" or not e.kind then e.kind = kind end
+    if not e.kind or (RANK[kind] or 0) > (RANK[e.kind] or 0) then e.kind = kind end
     e.who = (p.DisplayName ~= "" and p.DisplayName) or p.Name
     e.t = os.clock()
 end
@@ -797,17 +818,34 @@ function Dances.stop(t)
     pcall(function() t:AdjustSpeed(0) end)
     pcall(function() t:Stop(0) end)
 end
+Dances.held = setmetatable({}, {__mode = "k"})   -- tracks we keep pinned down for a few seconds
 function Dances.handle(track, char, p)
     local kind = Dances.detect(track, char)
     local k = Dances.keyOf(track)
     if kind then Dances.record(track, kind, p) end
     if Dances.blocked(k, kind) and Dances.shouldStop(p) then
+        Dances.held[track] = {k = k, kind = kind, p = p, untilT = os.clock() + 3}
         Dances.stop(track)
     end
 end
-function Dances.scan(c, p)
+-- runs every frame: if the game restarts/keeps a blocked animation, stop it again right away
+function Dances.hold()
+    local now = os.clock()
+    for t, info in pairs(Dances.held) do
+        if now > info.untilT or not info.p.Parent or not Dances.blocked(info.k, info.kind) or not Dances.shouldStop(info.p) then
+            Dances.held[t] = nil
+        elseif t.IsPlaying then
+            Dances.stop(t)
+        end
+    end
+end
+local function animatorOf(c)
     local h = c:FindFirstChildOfClass("Humanoid")
     local a = h and h:FindFirstChildOfClass("Animator")
+    return a or c:FindFirstChildWhichIsA("Animator", true)
+end
+function Dances.scan(c, p)
+    local a = animatorOf(c)
     if not a then return end
     for _, t in ipairs(a:GetPlayingAnimationTracks()) do Dances.handle(t, c, p) end
 end
@@ -815,7 +853,7 @@ function Dances.hookChar(c, p, j)
     task.spawn(function()
         local h = c:WaitForChild("Humanoid", 5)
         if not h then return end
-        local a = h:FindFirstChildOfClass("Animator") or h:WaitForChild("Animator", 5)
+        local a = h:FindFirstChildOfClass("Animator") or h:WaitForChild("Animator", 5) or animatorOf(c)
         if not a then return end
         j:Add(a.AnimationPlayed:Connect(function(t)
             if State.running then Dances.handle(t, c, p) end
@@ -1575,7 +1613,7 @@ local function pageDances(ctx)
             local kind = e and e.kind
             local blocked = Dances.blocked(k, kind)
             nameL.Text = e and e.name or k
-            local tag = (kind == "dance" and tr("tagPlayer")) or (kind == "game" and tr("tagGame")) or tr("tagSaved")
+            local tag = (kind == "dance" and tr("tagPlayer")) or (kind == "game" and tr("tagGame")) or (kind == "other" and tr("tagOther")) or tr("tagSaved")
             local id = (k:sub(1, 2) == "n:") and "-" or ("ID " .. k)
             subL.Text = tag .. "  \u{B7}  " .. id .. ((e and e.who) and ("  \u{B7}  " .. e.who) or "") .. (e and ("  \u{B7}  x" .. e.n) or "")
             dot.BackgroundColor3 = blocked and Theme.Danger or Theme.Gold
@@ -1594,11 +1632,17 @@ local function pageDances(ctx)
         for k in pairs(keys) do
             local e = Dances.log[k]
             local kind = e and e.kind
-            if tab == "all" or (tab == "players" and kind == "dance") or (tab == "game" and kind == "game") then
+            if tab == "all" or (tab == "players" and kind == "dance") or (tab == "game" and (kind == "game" or kind == "other")) then
                 table.insert(arr, k)
             end
         end
+        local function rankOf(k)
+            local e = Dances.log[k]
+            return e and RANK[e.kind] or 0
+        end
         table.sort(arr, function(a, b)
+            local ra, rb = rankOf(a), rankOf(b)
+            if ra ~= rb then return ra > rb end
             local ta = Dances.log[a] and Dances.log[a].t or 0
             local tb = Dances.log[b] and Dances.log[b].t or 0
             if ta ~= tb then return ta > tb end
@@ -2157,7 +2201,8 @@ Root:Add(Players.PlayerAdded:Connect(function(p) task.spawn(onPlayer, p) end))
 Root:Add(Players.PlayerRemoving:Connect(function(p) Targets.remove(p) end))
 for _, p in ipairs(Players:GetPlayers()) do task.spawn(onPlayer, p) end
 
-loop(0.25, function()
+Root:Add(RunService.Heartbeat:Connect(Dances.hold))
+loop(0.2, function()
     for _, p in ipairs(Players:GetPlayers()) do
         if p ~= LP and p.Character then Dances.scan(p.Character, p) end
     end
